@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>টালিখাতা ক্লোন</title>
+  <meta name="theme-color" content="#c8102e" />
+  <link rel="manifest" href="manifest.json" />
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+  <div id="app">
+    
+    <section id="homeScreen" class="screen active">
+      <header class="topbar-gold">
+        <div class="gold-badge"><i class="fa-solid fa-crown"></i> গোল্ড (ট্রায়াল)</div>
+        <div class="topbar-right-links">
+          <span>ইউজার <i class="fa-solid fa-circle-user"></i></span>
+        </div>
+      </header>
+
+      <header class="main-red-header">
+        <div class="header-row">
+          <button class="profile-dropdown-btn">
+            <span class="user-avatar-initial">M</span>
+            <div class="profile-text">
+              <span class="profile-name">M H Noman Khan</span>
+              <span class="profile-sub">ব্যবসায়িক খাতা ▼</span>
+            </div>
+          </button>
+          <div class="header-actions">
+            <button><i class="fa-regular fa-envelope"></i></button>
+            <button><i class="fa-regular fa-comment-dots"></i></button>
+          </div>
+        </div>
+      </header>
+
+      <section class="quick-grid">
+        <button><div class="icon-box c-red"><i class="fa-solid fa-store"></i></div><span>মাল্টি ব্যবসা</span></button>
+        <button><div class="icon-box c-indigo"><i class="fa-solid fa-boxes-stacked"></i></div><span>স্টক হিসাব</span></button>
+        <button><div class="icon-box c-orange"><i class="fa-solid fa-book"></i></div><span>ব্যবসার নোট</span></button>
+        <button><div class="icon-box c-green"><i class="fa-solid fa-users"></i></div><span>গ্রুপ তাগাদা</span></button>
+        <button><div class="icon-box c-cyan"><i class="fa-solid fa-qrcode"></i></div><span>QR কোড</span></button>
+        <button><div class="icon-box c-purple"><i class="fa-solid fa-cloud-arrow-up"></i></div><span>ডাটা ব্যাকআপ</span></button>
+        <button><div class="icon-box c-pink"><i class="fa-solid fa-comment-sms"></i></div><span>টালি-মেসেজ</span></button>
+        <button><div class="icon-box c-amber"><i class="fa-solid fa-wallet"></i></div><span>ক্যাশবাক্স</span></button>
+      </section>
+
+      <div class="summary-card">
+        <div class="sum-col border-right">
+          <span class="amount text-red" id="totalReceive">৳ ০.০০</span>
+          <span class="lbl">মোট পাবো</span>
+        </div>
+        <div class="sum-col">
+          <span class="amount text-green" id="totalGive">৳ ০.০০</span>
+          <span class="lbl">মোট দেবো</span>
+        </div>
+      </div>
+
+      <div class="search-container">
+        <div class="search-input-wrapper">
+          <i class="fa-solid fa-magnifying-glass search-icon"></i>
+          <input id="searchInput" type="text" placeholder="কাস্টমার খুঁজুন..." />
+        </div>
+        <button class="filter-btn"><i class="fa-solid fa-sliders"></i></button>
+        <button class="download-btn"><i class="fa-solid fa-file-arrow-down"></i></button>
+      </div>
+
+      <div class="list-header-title">
+        <span class="count-label">কাস্টমার ও সাপ্লায়ার (<span id="customerCount">০</span>)</span>
+        <span class="right-indicator"><span class="red-dot"></span>পাবো / দেবো</span>
+      </div>
+
+      <div id="customerList" class="customer-list"></div>
+
+      <button id="openCustomerModal" class="fab-btn">
+        <i class="fa-solid fa-user-plus"></i>
+      </button>
+    </section>
+
+
+    <section id="customerFormScreen" class="screen">
+      <header class="sub-header">
+        <button id="backFromCustomerForm" class="back-btn"><i class="fa-solid fa-arrow-left"></i></button>
+        <h2 id="customerFormTitle">নতুন কাস্টমার যোগ করুন</h2>
+      </header>
+
+      <div class="form-body">
+        <div class="input-group">
+          <label><i class="fa-solid fa-user"></i> নাম</label>
+          <input type="text" id="customerName" placeholder="কাস্টমারের সম্পূর্ণ নাম লিখুন" />
+        </div>
+
+        <div class="input-group">
+          <label><i class="fa-solid fa-phone"></i> মোবাইল নম্বর</label>
+          <input type="tel" id="customerPhone" placeholder="০১XXXXXXXXX" />
+        </div>
+
+        <div id="openingBalContainer" class="input-group">
+          <label><i class="fa-solid fa-money-bill-wave"></i> শুরুর ব্যালেন্স (ঐচ্ছিক)</label>
+          <input type="number" id="customerOpening" placeholder="০.০০" />
+        </div>
+
+        <button id="saveCustomerBtn" class="submit-large-btn">নিশ্চিত করুন</button>
+      </div>
+    </section>
+
+
+    <section id="ledgerScreen" class="screen">
+      <header class="sub-header red-bg">
+        <button id="backToHome" class="back-btn white-text"><i class="fa-solid fa-arrow-left"></i></button>
+        <div class="ledger-profile-summary">
+          <div id="ledgerAvatar" class="avatar-circle">M</div>
+          <div class="ledger-meta">
+            <h3 id="ledgerName">লোডিং...</h3>
+            <span id="ledgerPhone">---</span>
+          </div>
+        </div>
+      </header>
+
+      <div class="ledger-balance-strip">
+        <span id="ledgerBalanceLabel">ব্যালেন্স স্থিতি</span>
+        <span id="ledgerBalance" class="balance-amount">৳ ০.০০</span>
+      </div>
+
+      <div id="transactionList" class="transaction-list-container"></div>
+
+      <div class="ledger-footer-actions">
+        <button id="btnGive" class="action-btn gave-btn">
+          <i class="fa-solid fa-minus-circle"></i> দিলাম (৳)
+        </button>
+        <button id="btnReceive" class="action-btn got-btn">
+          <i class="fa-solid fa-plus-circle"></i> পেলাম (৳)
+        </button>
+      </div>
+    </section>
+
+
+    <div id="successOverlay" class="success-overlay" style="display:none;">
+      <div class="success-card">
+        <div class="checkmark-circle">
+          <i class="fa-solid fa-check"></i>
+        </div>
+        <p id="successMessage">সফলভাবে সম্পন্ন হয়েছে!</p>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="db.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
