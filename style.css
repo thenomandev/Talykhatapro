@@ -1,4 +1,3 @@
-/* সলিড রিসেট ও গ্লোবাল রুলস */
 * {
   margin: 0;
   padding: 0;
@@ -8,467 +7,582 @@
 }
 
 body {
-  background: #e9ecef;
-  color: #212529;
+  background: #eef1f4;
+  color: #1a1a1a;
+}
+
+button, input, textarea {
+  font: inherit;
+}
+
+button {
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+
+input, textarea {
+  width: 100%;
+  border: none;
+  outline: none;
 }
 
 #app {
   max-width: 430px;
   min-height: 100vh;
   margin: auto;
-  background: #ffffff;
+  background: #fbfbfc;
   position: relative;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-  display: flex;
-  flex-direction: column;
+  overflow-x: hidden;
+  box-shadow: 0 0 20px rgba(0,0,0,0.08);
+  padding-bottom: 75px; /* bottom-nav space */
 }
 
 .screen {
   display: none;
-  width: 100%;
   min-height: 100vh;
-  background: #f8f9fa;
-  padding-bottom: 80px;
 }
 
 .screen.active {
   display: block;
 }
 
-/* গোল্ড ট্রায়াল বার */
-.topbar-gold {
-  background: #dfb06c;
-  color: #3e2723;
-  padding: 8px 14px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-weight: 700;
-  font-size: 12px;
-}
-
-.gold-badge i {
-  margin-right: 4px;
-  color: #ff6f00;
-}
-
-/* মেইন রেড হেডার */
-.main-red-header {
+/* PREMIUM RED TOP BAR */
+.topbar.red {
   background: #c8102e;
-  color: #ffffff;
-  padding: 14px;
+  color: #fff;
+  padding: 16px 16px 12px;
 }
 
-.header-row {
+.topbar-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
-.profile-dropdown-btn {
+.account-btn {
+  background: rgba(255, 255, 255, 0.15);
+  color: #fff;
+  padding: 6px 14px 6px 6px;
+  border-radius: 999px;
   display: flex;
+  gap: 8px;
   align-items: center;
-  gap: 10px;
-  border: none;
-  background: none;
-  text-align: left;
-  cursor: pointer;
-  color: white;
+  font-weight: 500;
+  font-size: 13px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
 }
 
-.user-avatar-initial {
-  background: rgba(255, 255, 255, 0.2);
-  width: 38px;
-  height: 38px;
+.avatar-sm {
+  width: 24px;
+  height: 24px;
+  background: #fff;
+  color: #c8102e;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: 700;
-  font-size: 16px;
+  font-size: 12px;
 }
 
-.profile-text {
+.top-icons {
+  display: flex;
+  gap: 16px;
+}
+
+.top-icon-btn {
+  color: #fff;
   display: flex;
   flex-direction: column;
+  align-items: center;
+  font-size: 16px;
+  font-weight: 500;
 }
 
-.profile-name {
-  font-weight: 700;
-  font-size: 15px;
-}
-
-.profile-sub {
-  font-size: 11px;
+.top-icon-btn span {
+  font-size: 10px;
+  margin-top: 2px;
   opacity: 0.9;
 }
 
-.header-actions button {
-  border: none;
-  color: white;
-  font-size: 20px;
-  margin-left: 14px;
-  cursor: pointer;
+.sub-business-tag {
+  font-size: 12px;
+  opacity: 0.85;
+  margin-top: 4px;
+  padding-left: 2px;
 }
 
-/* গ্রিড মেনু বিন্যাস */
+/* QUICK ACTION GRID (SCREENSHOT MATCHED) */
 .quick-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 12px;
-  padding: 16px 14px;
-  background: #ffffff;
+  padding: 16px;
+  background: #fff;
 }
 
-.quick-grid button {
-  border: none;
-  background: none;
+.grid-item {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 6px;
+  text-align: center;
   cursor: pointer;
 }
 
 .icon-box {
-  width: 48px;
-  height: 48px;
-  border-radius: 14px;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 20px;
-  background: #f1f3f4;
+  font-size: 18px;
+  margin-bottom: 6px;
+  background: #fff;
   transition: transform 0.2s;
 }
 
-.quick-grid button:active .icon-box {
-  transform: scale(0.9);
+.grid-item:hover .icon-box {
+  transform: scale(1.05);
 }
 
-.quick-grid button span {
+.grid-item span {
   font-size: 11px;
-  color: #495057;
-  font-weight: 600;
-  text-align: center;
+  font-weight: 500;
+  color: #333;
 }
 
-/* কাস্টম কালার প্যালেট */
-.c-red { color: #e53935; background: #ffebee; }
-.c-indigo { color: #3949ab; background: #e8eaf6; }
-.c-orange { color: #f57c00; background: #fff3e0; }
-.c-green { color: #43a047; background: #e8f5e9; }
-.c-cyan { color: #00acc1; background: #e0f7fa; }
-.c-purple { color: #8e24aa; background: #f3e5f5; }
-.c-pink { color: #d81b60; background: #fce4ec; }
-.c-amber { color: #ffb300; background: #fff8e1; }
+/* ICON COLORS FROM SCREENSHOT */
+.color-1 { border: 1.5px solid #2e7d32; color: #2e7d32; }
+.color-2 { border: 1.5px solid #c62828; color: #c62828; }
+.color-3 { border: 1.5px solid #ef6c00; color: #ef6c00; }
+.color-4 { border: 1.5px solid #43a047; color: #43a047; }
+.color-5 { border: 1.5px solid #7b1fa2; color: #7b1fa2; }
+.color-6 { border: 1.5px solid #1565c0; color: #1565c0; }
+.color-7 { border: 1.5px solid #d84315; color: #d84315; }
+.color-8 { border: 1.5px solid #ff8f00; color: #ff8f00; }
 
-/* সামারি কার্ড প্যানেল */
+/* SUMMARY CARD */
 .summary-card {
   display: flex;
-  background: #ffffff;
-  margin: 10px 14px;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-  border: 1px solid #e0e0e0;
+  background: #fff;
+  margin: 0 16px 16px;
+  border-radius: 16px;
+  padding: 16px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+  border: 1px solid #f0f0f0;
 }
 
 .sum-col {
   flex: 1;
   text-align: center;
-  padding: 14px;
   display: flex;
   flex-direction: column;
+  justify-content: center;
 }
 
-.border-right {
-  border-right: 1px solid #eeeeee;
-}
-
-.sum-col .amount {
-  font-size: 18px;
-  font-weight: 700;
-}
-
-.sum-col .lbl {
+.sum-col small {
+  color: #666;
   font-size: 12px;
-  color: #6c757d;
   margin-top: 4px;
 }
 
-.text-red { color: #dc3545; }
-.text-green { color: #198754; }
-
-/* সার্চ কন্টেইনার */
-.search-container {
-  display: flex;
-  align-items: center;
-  padding: 8px 14px;
-  gap: 10px;
+.sum-col strong {
+  font-size: 22px;
+  font-weight: 700;
 }
 
-.search-input-wrapper {
-  position: relative;
+.sum-divider {
+  width: 1px;
+  background: #f0f0f0;
+  margin: 0 15px;
+}
+
+.receive { color: #d32f2f; }
+.give { color: #2e7d32; }
+
+/* SEARCH & FILTER ROW */
+.search-filter-row {
+  display: flex;
+  gap: 8px;
+  padding: 0 16px 12px;
+  align-items: center;
+}
+
+.search-box {
   flex: 1;
+  position: relative;
+  display: flex;
+  align-items: center;
 }
 
 .search-icon {
   position: absolute;
-  left: 12px;
-  top: 50%;
-  transform: translateY(-50%);
-  color: #6c757d;
-}
-
-.search-container input {
-  width: 100%;
-  background: #ffffff;
-  padding: 10px 14px 10px 36px;
-  border-radius: 24px;
-  border: 1px solid #ced4da;
+  left: 14px;
+  color: #757575;
   font-size: 14px;
-  outline: none;
 }
 
-.filter-btn, .download-btn {
-  border: 1px solid #ced4da;
-  background: white;
+.search-box input {
+  background: #f0f2f5;
+  padding: 10px 12px 10px 38px;
+  border-radius: 20px;
+  font-size: 14px;
+  color: #222;
+}
+
+.search-box input::placeholder {
+  color: #888;
+}
+
+.filter-btn {
   width: 38px;
   height: 38px;
+  background: #f0f2f5;
   border-radius: 50%;
+  color: #444;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #495057;
-  font-size: 15px;
-  cursor: pointer;
+  font-size: 14px;
 }
 
-/* লিস্ট হেডার টাইটেল */
-.list-header-title {
+.list-title-row {
+  padding: 12px 16px;
+  font-weight: 500;
+  font-size: 13px;
+  color: #666;
+  background: #f8f9fa;
+  border-top: 1px solid #f1f1f1;
+}
+
+/* PREMIUM CUSTOMER LIST LIKE APP */
+.customer-list {
+  background: #fff;
+}
+
+.customer-item {
   display: flex;
   justify-content: space-between;
-  padding: 10px 16px;
-  font-size: 12px;
-  color: #6c757d;
-  font-weight: 600;
+  align-items: center;
+  padding: 14px 16px;
+  border-bottom: 1px solid #f5f6f8;
+  cursor: pointer;
+  transition: background 0.2s;
 }
 
-.right-indicator {
+.customer-item:hover {
+  background: #fcfdfe;
+}
+
+.cust-left {
   display: flex;
   align-items: center;
-  gap: 5px;
+  gap: 12px;
 }
 
-.red-dot {
-  width: 6px;
-  height: 6px;
-  background: #dc3545;
+.avatar-circle {
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
-}
-
-/* ডাইনামিক কাস্টমার লিস্ট উইজেট */
-.customer-list {
-  padding: 0 14px;
-}
-
-/* সাব হেডার স্টাইল (অন্যান্য পেইজের জন্য) */
-.sub-header {
-  background: #ffffff;
-  padding: 14px;
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  border-bottom: 1px solid #e0e0e0;
-}
-
-.sub-header.red-bg {
-  background: #c8102e;
-  color: white;
-  border-bottom: none;
-}
-
-.back-btn {
-  border: none;
-  background: none;
-  font-size: 20px;
-  color: #212529;
-  cursor: pointer;
-}
-
-.back-btn.white-text {
-  color: white;
-}
-
-/* ফর্ম ডিজাইন */
-.form-body {
-  padding: 20px 14px;
-}
-
-.input-group {
-  margin-bottom: 16px;
-}
-
-.input-group label {
-  display: block;
-  font-size: 13px;
-  font-weight: 600;
-  margin-bottom: 6px;
-  color: #495057;
-}
-
-.input-group input {
-  width: 100%;
-  padding: 12px 14px;
-  border: 1px solid #ced4da;
-  border-radius: 8px;
-  outline: none;
-  font-size: 14px;
-  background: white;
-}
-
-.submit-large-btn {
-  width: 100%;
-  background: #c8102e;
-  color: white;
-  border: none;
-  padding: 14px;
-  border-radius: 8px;
-  font-size: 16px;
-  font-weight: 700;
-  cursor: pointer;
-  margin-top: 10px;
-}
-
-/* ফ্লোটিং প্লাস অ্যাকশন বাটন (FAB) */
-.fab-btn {
-  position: fixed;
-  bottom: 24px;
-  right: calc(50% - 190px);
-  background: #b71c1c;
-  color: #ffffff;
-  border: none;
-  width: 56px;
-  height: 56px;
-  border-radius: 50%;
-  font-size: 22px;
+  color: #333;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4px 16px rgba(183, 28, 28, 0.4);
-  cursor: pointer;
+  font-weight: 600;
+  font-size: 15px;
+}
+
+/* Random elegant colors for dynamic profile icons */
+.customer-item:nth-child(3n+1) .avatar-circle { background: #c8e6c9; color: #2e7d32; }
+.customer-item:nth-child(3n+2) .avatar-circle { background: #ffecb3; color: #ff8f00; }
+.customer-item:nth-child(3n+3) .avatar-circle { background: #b3e5fc; color: #0288d1; }
+
+.cust-name {
+  font-weight: 600;
+  font-size: 15px;
+  color: #1a1a1a;
+}
+
+.cust-time {
+  font-size: 12px;
+  color: #888;
+  margin-top: 3px;
+}
+
+.cust-right-pane {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.cust-amount {
+  font-weight: 700;
+  font-size: 15px;
+  text-align: right;
+}
+
+.chevron-icon {
+  color: #b0bec5;
+  font-size: 12px;
+}
+
+/* PREMIUM FAB BUTTON FROM IMAGE */
+.fab-circular {
+  position: fixed;
+  bottom: 85px;
+  right: 20px;
+  width: 56px;
+  height: 56px;
+  background: #b51e23;
+  color: #fff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  box-shadow: 0 4px 14px rgba(181,30,35,0.4);
+  z-index: 10;
+  transition: transform 0.2s;
+}
+
+.fab-circular:active {
+  transform: scale(0.9);
+}
+
+/* BOTTOM NAVIGATION MENU BAR */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 430px;
+  background: #fff;
+  border-top: 1px solid #e0e0e0;
+  display: flex;
+  justify-content: space-around;
+  padding: 8px 0 6px;
   z-index: 99;
 }
 
-@media(max-width: 440px) {
-  .fab-btn { right: 20px; }
+.nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: #555;
+  cursor: pointer;
+  flex: 1;
 }
 
-/* লেজার স্ক্রিন কাস্টম ডিজাইন */
-.avatar-circle {
-  width: 40px;
-  height: 40px;
-  background: rgba(255,255,255,0.2);
-  border-radius: 50%;
+.nav-item i {
+  font-size: 18px;
+  margin-bottom: 4px;
+}
+
+.nav-item span {
+  font-size: 11px;
+  font-weight: 500;
+}
+
+.nav-item.active {
+  color: #b51e23;
+}
+
+/* FORM STYLING & LEDGER DETAILS (COMPATIBILITY MAINTAINED) */
+.simple-header {
   display: flex;
   align-items: center;
-  justify-content: center;
-  font-weight: 700;
-}
-
-.ledger-meta h3 {
-  font-size: 16px;
-  font-weight: 700;
-}
-
-.ledger-meta span {
-  font-size: 12px;
-  opacity: 0.8;
-}
-
-.ledger-balance-strip {
+  padding: 14px 16px;
   background: #fff;
-  padding: 14px;
+  border-bottom: 1px solid #eee;
+  position: relative;
+}
+
+.simple-header h2 {
+  font-size: 16px;
+  font-weight: 600;
+  margin-left: 12px;
+}
+
+.back-btn, .more-btn {
+  font-size: 18px;
+  color: #333;
+}
+
+.more-btn { margin-left: auto; }
+
+.ledger-user {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-left: 12px;
+}
+
+.ledger-user .avatar-circle {
+  width: 36px;
+  height: 36px;
+  background-color: #005691;
+  color: white;
+  font-size: 14px;
+}
+
+.status-bar {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 1px solid #e0e0e0;
+  padding: 12px 16px;
+  background: #f8f9fa;
+  border-bottom: 1px solid #eee;
+  font-size: 13px;
 }
 
-.balance-amount {
+.status-left span:last-child {
   font-weight: 700;
-  font-size: 16px;
+  margin-left: 4px;
 }
 
-/* লেজার ফুটারে দিলাম/পেলাম বাটন */
-.ledger-footer-actions {
-  position: fixed;
-  bottom: 0;
-  left: calc(50% - 215px);
-  width: 430px;
-  background: #ffffff;
+.transaction-form {
+  padding: 20px 16px;
+  background: #fff;
+  border-bottom: 1px solid #eee;
+}
+
+.txn-row {
   display: flex;
-  padding: 12px;
   gap: 12px;
-  box-shadow: 0 -4px 10px rgba(0,0,0,0.05);
+  margin-bottom: 14px;
 }
 
-@media(max-width: 430px) {
-  .ledger-footer-actions {
-    left: 0;
-    width: 100%;
-  }
-}
-
-.action-btn {
+.txn-box {
   flex: 1;
-  border: none;
+  position: relative;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+}
+
+.taka-icon {
+  position: absolute;
+  left: 12px;
+  color: #666;
+  font-weight: 600;
+}
+
+.txn-box input {
+  padding: 10px 10px 10px 28px;
+  font-size: 15px;
+}
+
+.txn-note-box {
+  position: relative;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  margin-bottom: 14px;
+}
+
+.desc-icon {
+  position: absolute;
+  left: 12px;
+  color: #666;
+}
+
+.txn-note-box input {
+  padding: 10px 10px 10px 32px;
+  font-size: 15px;
+}
+
+.txn-action-row {
+  display: flex;
+  justify-content: space-between;
+}
+
+.date-pill, .photo-pill {
+  background: #f0f2f5;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 13px;
+  color: #555;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.primary-btn {
+  width: 100%;
+  background: #c8102e;
+  color: #fff;
+  padding: 12px;
+  border-radius: 25px;
+  font-size: 16px;
+  font-weight: 600;
+  margin-top: 10px;
+}
+
+.transaction-list-view {
+  padding: 10px 16px;
+}
+
+.transaction-item {
+  background: #fff;
   padding: 12px;
   border-radius: 8px;
-  font-weight: 700;
-  font-size: 15px;
-  color: white;
+  margin-bottom: 8px;
+  border-left: 4px solid #ccc;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
   display: flex;
+  justify-content: space-between;
   align-items: center;
-  justify-content: center;
-  gap: 6px;
-  cursor: pointer;
 }
 
-.gave-btn { background: #dc3545; }
-.got-btn { background: #198754; }
+.transaction-item .txn-amount.receive { color: #d32f2f; font-weight:700;}
+.transaction-item .txn-amount.give { color: #2e7d32; font-weight:700;}
 
-/* সাকসেস চেক ওভারলে অ্যানিমেশন কম্পোনেন্ট */
-.success-overlay {
+.dropdown-menu {
+  display: none;
+  position: absolute;
+  top: 50px; right: 16px;
+  background: #fff;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  border-radius: 8px;
+  z-index: 100;
+  border: 1px solid #eee;
+}
+
+.dropdown-menu.active { display: block; }
+.menu-item { padding: 10px 16px; font-size: 14px; cursor: pointer; display: flex; align-items: center; gap: 8px; }
+.menu-item:hover { background: #f5f5f5; }
+
+/* RESTRUCTURING REPORT SCREEN SYSTEM */
+.report-view-screen {
   position: absolute;
   top: 0; left: 0; width: 100%; height: 100%;
-  background: rgba(255, 255, 255, 0.96);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
+  background: #fff; z-index: 999;
+  display: flex; flex-direction: column;
 }
+.report-header-actions { display: flex; justify-content: space-between; padding: 14px; background: #f8f9fa; border-bottom: 1px solid #eee; }
+.report-back-btn { color: #005691; font-weight: 600; }
+.report-download-btn { color: #333; font-weight: 600; display: flex; align-items: center; gap: 4px; }
+.share-section { display: flex; justify-content: space-between; padding: 14px; border-bottom: 1px solid #eee; font-weight: 600; }
+.table-header, .report-row { display: grid; grid-template-columns: 1.5fr 1fr 1fr; padding: 10px 14px; font-size: 13px; }
+.table-header { background: #eee; font-weight: 600; }
+.report-row { border-bottom: 1px solid #eee; }
+.rep-details { display: flex; flex-direction: column; }
+.rep-date { font-weight: 600; }
+.rep-time, .rep-note { font-size: 11px; color: #777; }
+.rep-gave { color: #c62828; font-weight: 600; text-align: center; }
+.rep-got { color: #2e7d32; font-weight: 600; text-align: center; }
+.total-footer { display: grid; grid-template-columns: 1.5fr 1fr 1fr; font-weight: 700; background: #fafafa; border-top: 2px solid #ddd; margin-top: auto; }
+.total-label, .total-gave, .total-got { padding: 12px; text-align: center; }
 
-.success-card {
-  text-align: center;
-  animation: scaleUp 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-
-.checkmark-circle {
-  width: 76px;
-  height: 76px;
-  border-radius: 50%;
-  background: #198754;
-  color: white;
-  font-size: 34px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0 auto 16px;
-  box-shadow: 0 4px 12px rgba(25, 135, 84, 0.3);
-}
-
-@keyframes scaleUp {
-  from { transform: scale(0.7); opacity: 0; }
-  to { transform: scale(1); opacity: 1; }
-}
+/* LEGACY FORM COMPATIBILITY */
+.form-body { padding: 20px 16px; }
+.input-item { margin-bottom: 14px; }
+.input-item label { display: block; font-size: 13px; color: #555; margin-bottom: 6px; font-weight: 600; }
+.input-item input { border: 1px solid #ccc; padding: 10px; border-radius: 6px; font-size: 15px; }
+.submit-btn { width: 100%; background: #c8102e; color: #fff; padding: 12px; border-radius: 6px; font-size: 15px; font-weight: 600; margin-top: 10px; }

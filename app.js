@@ -45,7 +45,7 @@ const txnDateBtn = document.getElementById("txnDateBtn");
 const txnDate = document.getElementById("txnDate");
 const saveTxnBtn = document.getElementById("saveTxnBtn");
 
-const liveTimeCounter = document.querySelector(".status-right"); // index.html line match
+const liveTimeCounter = document.getElementById("liveTimeCounter");
 const reportViewContainer = document.getElementById("reportViewContainer");
 const closeReportBtn = document.getElementById("closeReportBtn");
 const reportTxnList = document.getElementById("reportTxnList");
@@ -70,13 +70,13 @@ async function loadDashboard() {
   updateSummary();
 }
 
-/* RENDER HOME CUSTOMER LIST */
+/* RENDER HOME CUSTOMER LIST WITH PREMIUM DESIGN */
 function renderCustomerList(list) {
   customerList.innerHTML = "";
-  customerCount.textContent = list.length;
+  customerCount.textContent = formatBanglaNumber(list.length);
 
   if (list.length === 0) {
-    customerList.innerHTML = `<div style="text-align:center; padding: 40px; color: #777;">কোনো গ্রাহক পাওয়া যায়নি</div>`;
+    customerList.innerHTML = `<div style="text-align:center; padding: 40px; color: #777; font-size:14px;">কোনো গ্রাহক পাওয়া যায়নি</div>`;
     return;
   }
 
@@ -89,22 +89,23 @@ function renderCustomerList(list) {
     let balClass = "";
     
     if (bal > 0) {
-  balText = `পাবো <span class="receive">৳ ${money(bal)}</span>`;
-  balClass = "";
-} else if (bal < 0) {
-  balText = `দেবো <span class="give">৳ ${money(Math.abs(bal))}</span>`;
-  balClass = "";
-}
+      balText = `<span class="receive">৳ ${money(bal)}</span>`;
+    } else if (bal < 0) {
+      balText = `<span class="give">৳ ${money(Math.abs(bal))}</span>`;
+    }
 
     div.innerHTML = `
       <div class="cust-left">
-        <div class="avatar">${cust.name.charAt(0).toUpperCase()}</div>
+        <div class="avatar-circle">${cust.name.charAt(0).toUpperCase()}</div>
         <div>
           <div class="cust-name">${cust.name}</div>
           <div class="cust-time">সক্রিয় হিসাব</div>
         </div>
       </div>
-      <div class="cust-right ${balClass}">${balText}</div>
+      <div class="cust-right-pane">
+        <div class="cust-amount ${balClass}">${balText}</div>
+        <i class="fa-solid fa-chevron-right chevron-icon"></i>
+      </div>
     `;
 
     div.onclick = () => openLedger(cust);
@@ -180,16 +181,16 @@ async function openLedger(customer) {
   currentCustomer.computedBalance = bal;
 
   if (bal >= 0) {
-  if (ledgerBalanceLabel) ledgerBalanceLabel.textContent = "পাবো";
-  ledgerBalance.innerHTML = `৳ ${money(bal)}`;
-  ledgerTopBalance.innerHTML = `৳ ${money(bal)}`;
-  ledgerBalance.style.color = "#b51e23";
-} else {
-  if (ledgerBalanceLabel) ledgerBalanceLabel.textContent = "দেবো";
-  ledgerBalance.innerHTML = `৳ ${money(Math.abs(bal))}`;
-  ledgerTopBalance.innerHTML = `৳ ${money(Math.abs(bal))}`;
-  ledgerBalance.style.color = "#118a4d";
-}
+    if (ledgerBalanceLabel) ledgerBalanceLabel.textContent = "পাবো";
+    ledgerBalance.innerHTML = `৳ ${money(bal)}`;
+    ledgerTopBalance.innerHTML = `৳ ${money(bal)}`;
+    ledgerBalance.style.color = "#d32f2f";
+  } else {
+    if (ledgerBalanceLabel) ledgerBalanceLabel.textContent = "দেবো";
+    ledgerBalance.innerHTML = `৳ ${money(Math.abs(bal))}`;
+    ledgerTopBalance.innerHTML = `৳ ${money(Math.abs(bal))}`;
+    ledgerBalance.style.color = "#2e7d32";
+  }
 
   // Transaction History List Render
   const transactionList = document.getElementById("transactionList");
@@ -203,12 +204,14 @@ async function openLedger(customer) {
       const cls = txn.give > 0 ? "give" : "receive";
       const label = txn.give > 0 ? "দিলাম" : "পেলাম";
 
+      // Style transaction border contextually
+      div.style.borderLeftColor = txn.give > 0 ? "#2e7d32" : "#d32f2f";
+
       div.innerHTML = `
         <div class="txn-note">${txn.note || "লেনদেন"}</div>
         <div class="txn-amount ${cls}">${label}: ৳ ${money(amount)}</div>
       `;
 
-      // Long press or right click to delete transaction
       div.oncontextmenu = async (e) => {
         e.preventDefault();
         if (confirm("এই লেনদেনটি ডিলিট করতে চান?")) {
