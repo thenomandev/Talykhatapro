@@ -15,82 +15,87 @@
   <div id="app">
 
     <section id="homeScreen" class="screen active">
-      <header class="topbar red">
-        <div class="topbar-row">
-          <button class="account-btn">
-            <span class="avatar-sm">M</span>
-            <span>M H Noman Khan</span>
-            <i class="fa-solid fa-chevron-down" style="font-size: 10px;"></i>
-          </button>
-          <div class="top-icons">
-            <button class="top-icon-btn"><i class="fa-regular fa-envelope"></i><span>ইনবক্স</span></button>
-            <button class="top-icon-btn"><i class="fa-regular fa-face-smile"></i><span>হেল্প</span></button>
+      
+      <div class="fixed-top-wrapper">
+        <header class="topbar red">
+          <div class="topbar-row">
+            <button class="account-btn">
+              <span class="avatar-sm">M</span>
+              <span>M H Noman Khan</span>
+              <i class="fa-solid fa-chevron-down" style="font-size: 10px;"></i>
+            </button>
+            <div class="top-icons">
+              <button class="top-icon-btn"><i class="fa-regular fa-envelope"></i><span>ইনবক্স</span></button>
+              <button class="top-icon-btn"><i class="fa-regular fa-face-smile"></i><span>হেল্প</span></button>
+            </div>
+          </div>
+          <div class="sub-business-tag">স্ট্যান্ডার্ড</div>
+        </header>
+
+        <section class="quick-grid">
+          <div class="grid-item">
+            <div class="icon-box color-1"><i class="fa-solid fa-book-open"></i></div>
+            <span>মাল্টি ব্যবসা</span>
+          </div>
+          <div class="grid-item">
+            <div class="icon-box color-2"><i class="fa-solid fa-box-open"></i></div>
+            <span>স্টক হিসাব</span>
+          </div>
+          <div class="grid-item">
+            <div class="icon-box color-3"><i class="fa-solid fa-list-check"></i></div>
+            <span>ব্যবসার নোট</span>
+          </div>
+          <div class="grid-item">
+            <div class="icon-box color-4"><i class="fa-solid fa-bell"></i></div>
+            <span>গ্রুপ তাগাদা</span>
+          </div>
+          <div class="grid-item">
+            <div class="icon-box color-5"><i class="fa-solid fa-qrcode"></i></div>
+            <span>QR কোড</span>
+          </div>
+          <div class="grid-item">
+            <div class="icon-box color-6"><i class="fa-solid fa-cloud-arrow-up"></i></div>
+            <span>ডাটা ব্যাকআপ</span>
+          </div>
+          <div class="grid-item">
+            <div class="icon-box color-7"><i class="fa-solid fa-message"></i></div>
+            <span>টালি-মেসেজ</span>
+          </div>
+          <div class="grid-item">
+            <div class="icon-box color-8"><i class="fa-solid fa-wallet"></i></div>
+            <span>ক্যাশবক্স</span>
+          </div>
+        </section>
+
+        <div class="summary-card">
+          <div class="sum-col">
+            <strong id="totalReceive" class="receive">৳ ০</strong>
+            <small>মোট পাবো</small>
+          </div>
+          <div class="sum-divider"></div>
+          <div class="sum-col">
+            <strong id="totalGive" class="give">৳ ০</strong>
+            <small>মোট দেবো</small>
           </div>
         </div>
-        <div class="sub-business-tag">স্ট্যান্ডার্ড</div>
-      </header>
-
-      <section class="quick-grid">
-        <div class="grid-item">
-          <div class="icon-box color-1"><i class="fa-solid fa-book-open"></i></div>
-          <span>মাল্টি ব্যবসা</span>
-        </div>
-        <div class="grid-item">
-          <div class="icon-box color-2"><i class="fa-solid fa-box-open"></i></div>
-          <span>স্টক হিসাব</span>
-        </div>
-        <div class="grid-item">
-          <div class="icon-box color-3"><i class="fa-solid fa-list-check"></i></div>
-          <span>ব্যবসার নোট</span>
-        </div>
-        <div class="grid-item">
-          <div class="icon-box color-4"><i class="fa-solid fa-bell"></i></div>
-          <span>গ্রুপ তাগাদা</span>
-        </div>
-        <div class="grid-item">
-          <div class="icon-box color-5"><i class="fa-solid fa-qrcode"></i></div>
-          <span>QR কোড</span>
-        </div>
-        <div class="grid-item">
-          <div class="icon-box color-6"><i class="fa-solid fa-cloud-arrow-up"></i></div>
-          <span>ডাটা ব্যাকআপ</span>
-        </div>
-        <div class="grid-item">
-          <div class="icon-box color-7"><i class="fa-solid fa-message"></i></div>
-          <span>টালি-মেসেজ</span>
-        </div>
-        <div class="grid-item">
-          <div class="icon-box color-8"><i class="fa-solid fa-wallet"></i></div>
-          <span>ক্যাশবক্স</span>
-        </div>
-      </section>
-
-      <div class="summary-card">
-        <div class="sum-col">
-          <strong id="totalReceive" class="receive">৳ ০</strong>
-          <small>মোট পাবো</small>
-        </div>
-        <div class="sum-divider"></div>
-        <div class="sum-col">
-          <strong id="totalGive" class="give">৳ ০</strong>
-          <small>মোট দেবো</small>
-        </div>
       </div>
 
-      <div class="search-filter-row">
-        <div class="search-box">
-          <i class="fa-solid fa-magnifying-glass search-icon"></i>
-          <input id="searchInput" type="text" placeholder="খুঁজুন" />
+      <div class="scrollable-content">
+        <div class="search-filter-row">
+          <div class="search-box">
+            <i class="fa-solid fa-magnifying-glass search-icon"></i>
+            <input id="searchInput" type="text" placeholder="খুঁজুন" />
+          </div>
+          <button class="filter-btn"><i class="fa-solid fa-sliders"></i></button>
+          <button class="filter-btn"><i class="fa-solid fa-download"></i></button>
         </div>
-        <button class="filter-btn"><i class="fa-solid fa-sliders"></i></button>
-        <button class="filter-btn"><i class="fa-solid fa-download"></i></button>
-      </div>
 
-      <div class="list-title-row">
-        <span>কাস্টমার <span id="customerCount">০</span> / সাপ্লায়ার ০</span>
-      </div>
+        <div class="list-title-row">
+          <span>কাস্টমার <span id="customerCount">০</span> / সাপ্লায়ার ০</span>
+        </div>
 
-      <div id="customerList" class="customer-list"></div>
+        <div id="customerList" class="customer-list"></div>
+      </div>
 
       <button id="openCustomerModal" class="fab-circular">
         <i class="fa-solid fa-user-plus"></i>
@@ -138,7 +143,7 @@
           <label>শрующих ব্যালেন্স (ঐচ্ছিক)</label>
           <input id="customerOpening" type="number" placeholder="০.০০" />
         </div>
-        <button id="saveCustomerBtn" class="submit-btn">সংরক্ষণ করুন</button>
+        <button id="saveCustomerBtn" class="submit-btn">সংরक्षण করুন</button>
       </div>
     </section>
 
