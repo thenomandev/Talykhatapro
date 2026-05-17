@@ -22,6 +22,7 @@
             <span>▼</span>
           </button>
           <div class="top-icons">
+            <button id="openCustomerModalTop"><i class="fa-solid fa-user-plus"></i></button>
             <button><i class="fa-regular fa-envelope"></i></button>
             <button><i class="fa-regular fa-comment"></i></button>
           </div>
@@ -61,6 +62,25 @@
       <button id="openCustomerModal" class="fab-circle">
         <i class="fa-solid fa-user-plus"></i>
       </button>
+
+      <nav class="bottom-nav">
+        <button class="nav-item active">
+          <i class="fa-solid fa-house"></i>
+          <span>হোম</span>
+        </button>
+        <button class="nav-item">
+          <i class="fa-solid fa-wallet"></i>
+          <span>ক্যাশ</span>
+        </button>
+        <button class="nav-item">
+          <i class="fa-solid fa-bell"></i>
+          <span>তগাদা</span>
+        </button>
+        <button class="nav-item">
+          <i class="fa-solid fa-bars"></i>
+          <span>আরও</span>
+        </button>
+      </nav>
     </section>
 
     <section id="customerFormScreen" class="screen">
@@ -106,6 +126,14 @@
         <button class="action-btn"><i class="fa-solid fa-message"></i> এসএমএস</button>
       </div>
 
+      <div style="display:none;" id="ledgerTopBalance">০</div>
+      <div id="transactionList" class="transaction-list"></div>
+
+      <div class="ledger-footer">
+        <button id="btnGive" class="footer-btn give-btn">দিলাম ৳</button>
+        <button id="btnReceive" class="footer-btn receive-btn">পেলাম ৳</button>
+      </div>
+
       <div id="txnModal" class="bottom-sheet" style="display: none;">
         <div class="sheet-header">
           <span id="txnModalTitle" class="sheet-title">আমি পেলাম</span>
@@ -123,43 +151,33 @@
             <button id="txnDateBtn" class="date-btn">📅 ১৭ মে, ২০২৬</button>
             <button class="attach-btn"><i class="fa-solid fa-camera"></i> ছবি</button>
           </div>
-          <div class="footer-container">
-            <button id="saveTxnBtn" class="primary-btn">নিশ্চিত</button>
-          </div>
+          <button id="saveTxnBtn" class="primary-btn">নিশ্চিত</button>
         </div>
-
-        <div id=\"reportViewContainer\" class=\"report-view-screen\" style=\"display: none;\">
-          <div class=\"report-header-actions\">
-            <button id=\"closeReportBtn\" class=\"report-back-btn\"><i class=\"fa-solid fa-arrow-left\"></i> রিপোর্ট বন্ধ করুন</button>
-            <button class=\"report-download-btn\"><i class=\"fa-solid fa-download\"></i> ডাউনলোড</button>
-          </div>
-          <div class=\"share-section\">
-            <span>রিপোর্ট শেয়ার</span>
-            <label class=\"switch\">
-              <input type=\"checkbox\" checked>
-              <span class=\"slider\"></span>
-            </label>
-          </div>
-          <div class=\"table-header\">
-            <div>লেনদেনের বিবরণ</div>
-            <div style=\"text-align: center;\">দিলাম</div>
-            <div style=\"text-align: right; padding-right: 15px;\">পেলাম</div>
-          </div>
-          <div id=\"reportTxnList\"></div>
-          <div class=\"total-footer\">
-            <div class=\"total-label\">মোট</div>
-            <div class=\"total-gave\" id=\"reportTotalGave\">০.০০</div>
-            <div class=\"total-got\" id=\"reportTotalGot\">০.০০</div>
-          </div>
-        </div>
-
-        <div style="display:none;" id="ledgerTopBalance">০</div>
-        <div id="transactionList" class="transaction-list"></div>
       </div>
 
-      <div class="ledger-footer">
-        <button id="btnGive" class="footer-btn give-btn">দিলাম ৳</button>
-        <button id="btnReceive" class="footer-btn receive-btn">পেলাম ৳</button>
+      <div id="reportViewContainer" class="report-view-screen" style="display: none;">
+        <div class="report-header-actions">
+          <button id="closeReportBtn" class="report-back-btn"><i class="fa-solid fa-arrow-left"></i> রিপোর্ট বন্ধ করুন</button>
+          <button class="report-download-btn"><i class="fa-solid fa-download"></i> ডাউনলোড</button>
+        </div>
+        <div class="share-section">
+          <span>রিপোর্ট শেয়ার</span>
+          <label class="switch">
+            <input type="checkbox" checked>
+            <span class="slider"></span>
+          </label>
+        </div>
+        <div class="table-header">
+          <div>লেনদেনের বিবরণ</div>
+          <div style="text-align: center;">দিলাম</div>
+          <div style="text-align: right; padding-right: 15px;">পেলাম</div>
+        </div>
+        <div id="reportTxnList"></div>
+        <div class="total-footer">
+          <div class="total-label">মোট</div>
+          <div class="total-gave" id="reportTotalGave">০.০০</div>
+          <div class="total-got" id="reportTotalGot">০.০০</div>
+        </div>
       </div>
     </section>
 

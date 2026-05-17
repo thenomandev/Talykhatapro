@@ -15,6 +15,7 @@ const totalGive = document.getElementById("totalGive");
 const searchInput = document.getElementById("searchInput");
 
 const openCustomerModal = document.getElementById("openCustomerModal");
+const openCustomerModalTop = document.getElementById("openCustomerModalTop");
 const backFromCustomerForm = document.getElementById("backFromCustomerForm");
 const saveCustomerBtn = document.getElementById("saveCustomerBtn");
 
@@ -30,11 +31,30 @@ const ledgerName = document.getElementById("ledgerName");
 const ledgerBalance = document.getElementById("ledgerBalance");
 const ledgerBalanceLabel = document.getElementById("ledgerBalanceLabel");
 
+// লেজার স্ক্রিনের অন্যান্য অ্যাকশন উইজেটস
+const btnGive = document.getElementById("btnGive");
+const btnReceive = document.getElementById("btnReceive");
+const txnModal = document.getElementById("txnModal");
+const txnModalTitle = document.getElementById("txnModalTitle");
+const closeTxnModal = document.getElementById("closeTxnModal");
+const saveTxnBtn = document.getElementById("saveTxnBtn");
+const txnAmount = document.getElementById("txnAmount");
+const txnNote = document.getElementById("txnNote");
+const txnDateBtn = document.getElementById("txnDateBtn");
+const transactionList = document.getElementById("transactionList");
+
+const reportBtn = document.getElementById("reportBtn");
+const reportViewContainer = document.getElementById("reportViewContainer");
+const closeReportBtn = document.getElementById("closeReportBtn");
+const reportTxnList = document.getElementById("reportTxnList");
+const reportTotalGave = document.getElementById("reportTotalGave");
+const reportTotalGot = document.getElementById("reportTotalGot");
+
 /* INITIAL LOAD */
 window.addEventListener("DOMContentLoaded", async () => {
   await loadDashboard();
 
-  // প্রতি ৩০ সেকেন্ড পর পর হোম স্ক্রিনের টাইম কাউন্টার লাইভ আপডেট করার জন্য ইন্টারভাল সেটআপ
+  // প্রতি ৩০ সেকেন্ড পর পর হোম লিস্টের লাইভ টাইম কাউন্টার অটো আপডেট হবে
   setInterval(() => {
     if (homeScreen.classList.contains("active")) {
       const q = searchInput ? searchInput.value.toLowerCase() : "";
@@ -52,7 +72,6 @@ async function loadDashboard() {
     c.computedBalance = calcBalance(c, txns);
   }
 
-  // সর্টিং: নাম অনুযায়ী সাজানো
   customers.sort((a, b) => a.name.localeCompare(b.name, "bn"));
 
   const q = searchInput ? searchInput.value.toLowerCase() : "";
@@ -62,7 +81,7 @@ async function loadDashboard() {
   updateSummary();
 }
 
-/* ১ নম্বর স্ক্রিনশটের মতো লিস্ট রেন্ডার এবং লাইভ টাইম কাউন্ট লজিক */
+/* কাস্টমার লিস্ট রেন্ডারার এবং লাইভ টাইম জেনারেটর (১ নম্বর স্ক্রিনশটের অনুকরণে) */
 async function renderCustomerList(list) {
   customerList.innerHTML = "";
   customerCount.textContent = list.length;
@@ -81,7 +100,7 @@ async function renderCustomerList(list) {
     let balText = "০.০০";
     let balClass = "";
     
-    // ১ নম্বর স্ক্রিনশটের মতো কারেন্সি সিম্বল (৳) ছাড়া শুধুমাত্র পিউর অ্যামাউন্ট দেখাবে
+    // ১ নম্বর স্ক্রিনশটের মতো কারেন্সি সিম্বল (৳) রিমুভ করা হয়েছে
     if (bal > 0) {
       balText = formatBanglaNumber(moneyWithoutSymbol(bal));
       balClass = "receive"; 
@@ -93,7 +112,7 @@ async function renderCustomerList(list) {
       balClass = "";
     }
 
-    // লাইভ শেষ ট্রানজেকশন বা কাস্টমার তৈরি করার সময় থেকে সেকেন্ড/মিনিট/ঘণ্টা/দিন কাউন্ট লজিক
+    // লাইভ শেষ ট্রানজেকশন ট্র্যাকিং এর উপর ভিত্তি করে লাইভ সেকেন্ড/মিনিট/ঘণ্টা/দিন কাউন্ট লজিক
     const txns = await getTransactions(cust.id);
     let referenceTime = cust.createdAt || Date.now();
     if (txns && txns.length > 0) {
@@ -117,7 +136,6 @@ async function renderCustomerList(list) {
       timeText = `${formatBanglaNumber(diffDays)} দিন`;
     }
 
-    // প্রিমিয়াম লাইট কালার শেডের ব্যাকগ্রাউন্ড আইকন বণ্টন
     const premiumBgClass = `avatar-premium-${i % 5}`;
 
     div.innerHTML = `
@@ -140,7 +158,7 @@ async function renderCustomerList(list) {
   }
 }
 
-/* ড্যাশবোর্ড সামারি কারেকশন (৳ সিম্বল ছাড়া একই লেআউট) */
+/* ড্যাশবোর্ড সামারি কারেকশন (৳ সিম্বল ছাড়া) */
 function updateSummary() {
   let rec = 0;
   let giv = 0;
@@ -153,7 +171,6 @@ function updateSummary() {
   totalGive.textContent = formatBanglaNumber(moneyWithoutSymbol(giv));
 }
 
-/* নতুন হেল্পার ফাংশন: যা কারেন্সি সাইন ছাড়া ডেসিমালসহ ডাটা রিটার্ন করবে */
 function moneyWithoutSymbol(v) {
   let parsed = parseFloat(v);
   if (isNaN(parsed) || parsed === 0) return "০.০০";
@@ -163,17 +180,27 @@ function moneyWithoutSymbol(v) {
   });
 }
 
-/* CUSTOMER INTERACTION & SAVE EVENT */
-if (openCustomerModal) {
-  openCustomerModal.onclick = () => {
-    customerFormTitle.textContent = "নতুন গ্রাহক যোগ করুন";
-    customerName.value = "";
-    customerPhone.value = "";
-    customerOpening.value = "";
-    if (openingBalContainer) openingBalContainer.style.display = "block";
-    switchScreen(customerFormScreen);
-  };
+function moneyWithSymbol(v) {
+  let parsed = parseFloat(v);
+  if (isNaN(parsed)) return "০.০০";
+  return parsed.toLocaleString("en-US", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  });
 }
+
+/* CORE EVENT HANDLERS */
+const triggerCustomerModal = () => {
+  customerFormTitle.textContent = "নতুন গ্রাহক যোগ করুন";
+  customerName.value = "";
+  customerPhone.value = "";
+  customerOpening.value = "";
+  if (openingBalContainer) openingBalContainer.style.display = "block";
+  switchScreen(customerFormScreen);
+};
+
+if (openCustomerModal) openCustomerModal.onclick = triggerCustomerModal;
+if (openCustomerModalTop) openCustomerModalTop.onclick = triggerCustomerModal;
 
 if (backFromCustomerForm) {
   backFromCustomerForm.onclick = async () => {
@@ -213,7 +240,6 @@ if (saveCustomerBtn) {
   };
 }
 
-/* LIVE SEARCH */
 if (searchInput) {
   searchInput.oninput = () => {
     const q = searchInput.value.toLowerCase();
@@ -222,7 +248,179 @@ if (searchInput) {
   };
 }
 
-/* UTILS & MATH COMPUTATION */
+/* LEDGER & TRANSACTION SCREEN MANAGEMENT (সংরক্ষিত ও অপরিবর্তিত) */
+async function openLedger(cust) {
+  currentCustomer = cust;
+  if (ledgerName) ledgerName.textContent = cust.name;
+  if (ledgerAvatar) ledgerAvatar.textContent = cust.name.charAt(0).toUpperCase();
+  
+  await refreshLedgerList();
+  switchScreen(ledgerScreen);
+}
+
+async function refreshLedgerList() {
+  if (!currentCustomer) return;
+  const txns = await getTransactions(currentCustomer.id);
+  const bal = calcBalance(currentCustomer, txns);
+  currentCustomer.computedBalance = bal;
+
+  if (ledgerBalance) {
+    if (bal > 0) {
+      ledgerBalance.textContent = "৳ " + formatBanglaNumber(moneyWithSymbol(bal));
+      if (ledgerBalanceLabel) ledgerBalanceLabel.textContent = "পাবো";
+    } else if (bal < 0) {
+      ledgerBalance.textContent = "৳ " + formatBanglaNumber(moneyWithSymbol(Math.abs(bal)));
+      if (ledgerBalanceLabel) ledgerBalanceLabel.textContent = "দেবো";
+    } else {
+      ledgerBalance.textContent = "৳ ০.০০";
+      if (ledgerBalanceLabel) ledgerBalanceLabel.textContent = "পরিশোধ";
+    }
+  }
+
+  if (transactionList) {
+    transactionList.innerHTML = "";
+    if (txns.length === 0) {
+      transactionList.innerHTML = `<div style="text-align:center; padding:30px; color:#aaa;">কোনো লেনদেন নেই</div>`;
+      return;
+    }
+
+    txns.forEach(t => {
+      const item = document.createElement("div");
+      item.className = "txn-item";
+      
+      const d = new Date(t.createdAt);
+      const dateStr = d.toLocaleDateString("bn-BD", { day: "numeric", month: "short", year: "numeric" });
+      const timeStr = d.toLocaleTimeString("bn-BD", { hour: "2-digit", minute: "2-digit" });
+
+      let amtText = "০.০০";
+      let styleClass = "";
+      if (t.give > 0) {
+        amtText = "দিলাম ৳ " + formatBanglaNumber(moneyWithSymbol(t.give));
+        styleClass = "give";
+      } else {
+        amtText = "পেলাম ৳ " + formatBanglaNumber(moneyWithSymbol(t.receive));
+        styleClass = "receive";
+      }
+
+      item.innerHTML = `
+        <div class="txn-left-meta">
+          <span class="txn-date-label">${dateStr}</span>
+          <span class="txn-time-label">${timeStr}</span>
+          ${t.note ? `<span class="txn-note-label">${t.note}</span>` : ""}
+        </div>
+        <div class="txn-right-val ${styleClass}">${amtText}</div>
+      `;
+      transactionList.appendChild(item);
+    });
+  }
+}
+
+/* TRANSACTION ACTIONS */
+if (btnGive) {
+  btnGive.onclick = () => {
+    txnModalTitle.textContent = "আমি দিলাম (গ্রাহক পেলো)";
+    txnAmount.value = "";
+    txnNote.value = "";
+    selectedTxnDate = new Date();
+    updateTxnDateButton();
+    txnModal.style.display = "block";
+  };
+}
+
+if (btnReceive) {
+  btnReceive.onclick = () => {
+    txnModalTitle.textContent = "আমি পেলাম (গ্রাহক দিলো)";
+    txnAmount.value = "";
+    txnNote.value = "";
+    selectedTxnDate = new Date();
+    updateTxnDateButton();
+    txnModal.style.display = "block";
+  };
+}
+
+if (closeTxnModal) {
+  closeTxnModal.onclick = () => { txnModal.style.display = "none"; };
+}
+
+if (saveTxnBtn) {
+  saveTxnBtn.onclick = async () => {
+    const val = parseFloat(txnAmount.value) || 0;
+    if (val <= 0) {
+      alert("সঠিক পরিমাণ লিখুন!");
+      return;
+    }
+    const isGive = txnModalTitle.textContent.includes("দিলাম");
+    const txn = {
+      id: "txn_" + Date.now(),
+      customerId: currentCustomer.id,
+      give: isGive ? val : 0,
+      receive: isGive ? 0 : val,
+      note: txnNote.value.trim(),
+      createdAt: selectedTxnDate.getTime()
+    };
+
+    await addTransaction(txn);
+    txnModal.style.display = "none";
+    await refreshLedgerList();
+  };
+}
+
+if (backToHome) {
+  backToHome.onclick = async () => {
+    currentCustomer = null;
+    await loadDashboard();
+    switchScreen(homeScreen);
+  };
+}
+
+/* REPORT GENERATOR IMPLEMENTATION */
+if (reportBtn) {
+  reportBtn.onclick = async () => {
+    if (!currentCustomer) return;
+    const txns = await getTransactions(currentCustomer.id);
+    if (reportTxnList) {
+      reportTxnList.innerHTML = "";
+      let tGave = 0;
+      let tGot = 0;
+
+      txns.forEach(t => {
+        tGave += (t.give || 0);
+        tGot += (t.receive || 0);
+
+        const row = document.createElement("div");
+        row.className = "rep-item";
+
+        const d = new Date(t.createdAt);
+        const dStr = d.toLocaleDateString("bn-BD", { day: "numeric", month: "short", year: "numeric" });
+        const tStr = d.toLocaleTimeString("bn-BD", { hour: "2-digit", minute: "2-digit" });
+
+        row.innerHTML = `
+          <div class="rep-details">
+            <span class="rep-date">${dStr}</span>
+            <span class="rep-time">${tStr}</span>
+            ${t.note ? `<span class="rep-note">${t.note}</span>` : ""}
+            <span class="rep-tag">এন্ট্রি: অনলাইন</span>
+          </div>
+          <div class="rep-gave">${t.give > 0 ? formatBanglaNumber(moneyWithSymbol(t.give)) : "-"}</div>
+          <div class="rep-got">${t.receive > 0 ? formatBanglaNumber(moneyWithSymbol(t.receive)) : "-"}</div>
+        `;
+        reportTxnList.appendChild(row);
+      });
+
+      if (reportTotalGave) reportTotalGave.textContent = formatBangTotalGave = formatBanglaNumber(moneyWithSymbol(tGave));
+      if (reportTotalGot) reportTotalGot.textContent = formatBanglaNumber(moneyWithSymbol(tGot));
+    }
+    if (reportViewContainer) reportViewContainer.style.display = "flex";
+  };
+}
+
+if (closeReportBtn) {
+  closeReportBtn.onclick = () => {
+    if (reportViewContainer) reportViewContainer.style.display = "none";
+  };
+}
+
+/* HELPERS */
 function switchScreen(screen) {
   document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
   screen.classList.add("active");
@@ -239,40 +437,17 @@ function calcBalance(cust, txns) {
   return bal; 
 }
 
+// ডেট বাটন আপডেট লজিক
+function updateTxnDateButton() {
+  if (txnDateBtn) {
+    txnDateBtn.textContent = "📅 " + selectedTxnDate.toLocaleDateString("bn-BD", { day: "numeric", month: "short" });
+  }
+}
+
 function formatBanglaNumber(str) {
   const englishToBangla = {
     '0': '০', '1': '১', '2': '২', '3': '৩', '4': '৪',
     '5': '৫', '6': '৬', '7': '৭', '8': '৮', '9': '৯'
   };
   return str.toString().replace(/[0-9]/g, w => englishToBangla[w] || w);
-}
-
-// অন্যান্য লেজার ও রিপোর্ট ফাংশনালিটি পরিচালনার জন্য পূর্বের ব্যাকআপ মেথড (সুরক্ষিত রাখা হয়েছে)
-function openLedger(cust) {
-  currentCustomer = cust;
-  if (ledgerName) ledgerName.textContent = cust.name;
-  if (ledgerAvatar) ledgerAvatar.textContent = cust.name.charAt(0).toUpperCase();
-  
-  let bal = cust.computedBalance || 0;
-  if (ledgerBalance) {
-    if (bal > 0) {
-      ledgerBalance.textContent = "৳ " + formatBanglaNumber(moneyWithoutSymbol(bal));
-      if (ledgerBalanceLabel) ledgerBalanceLabel.textContent = "পাবো";
-    } else if (bal < 0) {
-      ledgerBalance.textContent = "৳ " + formatBanglaNumber(moneyWithoutSymbol(Math.abs(bal)));
-      if (ledgerBalanceLabel) ledgerBalanceLabel.textContent = "দেবো";
-    } else {
-      ledgerBalance.textContent = "৳ ০.০০";
-      if (ledgerBalanceLabel) ledgerBalanceLabel.textContent = "পরিশোধ";
-    }
-  }
-  switchScreen(ledgerScreen);
-}
-
-if (backToHome) {
-  backToHome.onclick = async () => {
-    currentCustomer = null;
-    await loadDashboard();
-    switchScreen(homeScreen);
-  };
 }
