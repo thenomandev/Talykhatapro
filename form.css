@@ -177,6 +177,8 @@ input:checked + .slider:before {
 
 .form-body {
   padding:20px 14px;
+  min-height:calc(100dvh - 80px);
+  background:#fff;
 }
 
 .input-item {

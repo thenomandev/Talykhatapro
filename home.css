@@ -270,6 +270,11 @@
   font-weight:700;
 }
 
+.avatar.green{ background:#d9f5d7; }
+.avatar.yellow{ background:#f7efc2; }
+.avatar.blue{ background:#dfe7f7; }
+.avatar.pink{ background:#f7dce0; }
+
 .cust-name{
   font-size:14px;
   font-weight:500;

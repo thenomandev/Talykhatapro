@@ -56,6 +56,7 @@ const reportTotalGot = document.getElementById("reportTotalGot");
 window.addEventListener("DOMContentLoaded", async () => {
   await loadDashboard();
   updateTxnDateButton();
+  history.replaceState({screen:"home"}, "");
 });
 
 async function loadDashboard() {
@@ -116,7 +117,7 @@ const amountClass =
     div.innerHTML = `
       <div class="cust-left">
         <div class="avatar ${colorClass}">
-          ${cust.name.charAt(0).toUpperCase()}
+          ${cust.name.split(" ").map(n => n.charAt(0)).join("").slice(0,2).toUpperCase()}
         </div>
 
         <div>
@@ -185,6 +186,7 @@ function startLiveTimer(cust, txns) {
 async function openLedger(customer) {
   currentCustomer = customer;
   switchScreen(ledgerScreen);
+history.pushState({screen:"ledger"}, "");
   
   ledgerName.textContent = customer.name;
   ledgerAvatar.textContent = customer.name.charAt(0).toUpperCase();
@@ -331,6 +333,7 @@ if (optEdit) {
     customerPhone.value = currentCustomer.phone || "";
     if (openingBalContainer) openingBalContainer.style.display = "none"; 
     switchScreen(customerFormScreen);
+history.pushState({screen:"form"}, "");
   };
 }
 
@@ -435,6 +438,7 @@ if (openCustomerModal) {
     customerOpening.value = "";
     if (openingBalContainer) openingBalContainer.style.display = "block";
     switchScreen(customerFormScreen);
+history.pushState({screen:"form"}, "");
   };
 }
 
@@ -490,3 +494,22 @@ if (txnDate) {
     }
   };
 }
+
+window.onpopstate = async function () {
+  if (customerFormScreen.classList.contains("active")) {
+    if (currentCustomer) {
+      switchScreen(ledgerScreen);
+    } else {
+      await loadDashboard();
+      switchScreen(homeScreen);
+    }
+    return;
+  }
+
+  if (ledgerScreen.classList.contains("active")) {
+    if (liveInterval) clearInterval(liveInterval);
+    await loadDashboard();
+    switchScreen(homeScreen);
+    return;
+  }
+};
