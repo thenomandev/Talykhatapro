@@ -170,12 +170,14 @@
 /* LAYER 3 */
 
 .gold-main-scroll{
-  position:relative;
+  position:absolute;
+  left:0;
+  right:0;
+  bottom:0;
+  top:300px;
   z-index:260;
-  height:calc(100% - 255px);
-  margin-top:-8px;
   background:#fff;
-  border-radius:26px 26px 0 0;
+  border-radius:32px 32px 0 0;
   overflow-y:auto;
   -webkit-overflow-scrolling:touch;
   box-shadow:0 -2px 10px rgba(0,0,0,.05);
