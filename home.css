@@ -271,3 +271,15 @@
   height:58px !important;
   bottom:82px !important;
 }
+
+.red-amount{
+  color:#b51e23 !important;
+}
+
+.green-amount{
+  color:#118a4d !important;
+}
+
+.zero-amount{
+  color:#666 !important;
+}

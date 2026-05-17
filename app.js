@@ -87,9 +87,13 @@ function renderCustomerList(list) {
 
     const bal = cust.computedBalance || 0;
     const absBal = Math.abs(bal);
+const amountClass =
+  bal < 0 ? "green-amount" :
+  bal > 0 ? "red-amount" :
+  "zero-amount";
 
     const avatarColors = ["green","yellow","blue","pink"];
-    const colorClass = avatarColors[cust.name.charCodeAt(0) % 4];
+    const colorClass = avatarColors[list.indexOf(cust) % 4];
 
     let timeText = "এইমাত্র";
 
@@ -122,7 +126,7 @@ function renderCustomerList(list) {
       </div>
 
 <div class="cust-right">
-  <span class="cust-amount">${money(absBal)}</span>
+  <span class="cust-amount ${amountClass}">${money(absBal)}</span>
   <i class="fa-solid fa-chevron-right"></i>
 </div>
     `;
