@@ -73,7 +73,7 @@ async function loadDashboard() {
 /* RENDER HOME CUSTOMER LIST */
 function renderCustomerList(list) {
   customerList.innerHTML = "";
-  customerCount.textContent = list.length;
+  customerCount.textContent = `${formatBanglaNumber(list.length)} / সাপ্লায়ার ০`;
 
   if (list.length === 0) {
     customerList.innerHTML =
@@ -121,9 +121,10 @@ function renderCustomerList(list) {
         </div>
       </div>
 
-      <div class="cust-right">
-        ${money(absBal)}
-      </div>
+<div class="cust-right">
+  <span class="cust-amount">${money(absBal)}</span>
+  <i class="fa-solid fa-chevron-right"></i>
+</div>
     `;
 
     div.onclick = () => openLedger(cust);
@@ -140,8 +141,8 @@ function updateSummary() {
     if (b > 0) rec += b;
     if (b < 0) giv += Math.abs(b);
   });
-  totalReceive.textContent = `৳ ${money(rec)}`;
-  totalGive.textContent = `৳ ${money(giv)}`;
+  totalReceive.textContent = money(rec);
+totalGive.textContent = money(giv);
 }
 
 /* LIVE TIME COUNTER LOOP */
