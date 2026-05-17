@@ -1,210 +1,220 @@
-/* =========================================
-   GOLD APP HOME ENGINE
+/* =========================
+   GOLD REAL CLONE ENGINE
    PART 1
-========================================= */
+========================= */
 
 #homeScreen{
-  background:linear-gradient(90deg,#c8ab62 0%, #e4cf95 100%);
+  background:linear-gradient(180deg,#c9ab63 0%,#dfca8d 100%);
   overflow:hidden;
-  position:relative;
 }
 
-.gold-home-shell{
+.gold-home-engine{
   width:100%;
   height:100%;
-  display:flex;
-  flex-direction:column;
-  overflow:hidden;
   position:relative;
+  overflow:hidden;
 }
 
-.tk-home-header{
-  flex-shrink:0;
-  padding:14px 16px 12px;
+.gold-fixed-top{
   position:relative;
   z-index:300;
+  flex-shrink:0;
 }
 
-.tk-top-row{
+.gold-header-top{
   display:flex;
   align-items:center;
   justify-content:space-between;
+  padding:14px 14px 8px;
 }
 
-.tk-account-btn{
-  height:44px;
-  padding:0 16px;
+.gold-business-pill{
+  height:42px;
+  padding:0 14px;
   border-radius:999px;
-  background:#ffffff;
-  color:#111;
+  background:#fff7d8;
   display:flex;
   align-items:center;
   gap:10px;
   font-size:14px;
   font-weight:700;
+  color:#4a3a12;
+  box-shadow:0 2px 8px rgba(0,0,0,.08);
 }
 
-.tk-top-actions{
+.gold-crown{
+  width:24px;
+  height:24px;
+  border-radius:50%;
+  background:#f2d36a;
   display:flex;
   align-items:center;
-  gap:18px;
+  justify-content:center;
+  font-size:12px;
 }
 
-.tk-top-actions button{
-  color:#111;
-  font-size:22px;
+.gold-top-tools{
+  display:flex;
+  gap:10px;
 }
 
-.tk-home-title{
-  margin-top:10px;
-  font-size:18px;
+.gold-tool-btn{
+  width:62px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:4px;
+  color:#4a3a12;
+  font-size:11px;
   font-weight:600;
-  color:#111;
 }
 
-.gold-fixed-layer{
-  flex-shrink:0;
-  background:#f7f4eb;
-  border-radius:30px 30px 0 0;
-  margin-top:10px;
-  position:relative;
-  z-index:220;
+.gold-tool-btn i{
+  width:34px;
+  height:34px;
+  border-radius:50%;
+  background:#fff7d8;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:15px;
+  box-shadow:0 2px 8px rgba(0,0,0,.08);
 }
 
-.tk-grid{
+.gold-trial-text{
+  padding:0 16px 10px;
+  font-size:13px;
+  font-weight:700;
+  color:#4a3a12;
+}
+
+.gold-app-panel{
+  background:#f8f5ec;
+  border-radius:28px 28px 0 0;
+  padding:18px 12px 14px;
+}
+
+.gold-feature-grid{
   display:grid;
   grid-template-columns:repeat(4,1fr);
-  gap:18px 10px;
-  padding:18px 14px 22px;
+  gap:18px 8px;
 }
 
-.tk-grid button{
+.gold-feature-grid button{
   display:flex;
   flex-direction:column;
   align-items:center;
   justify-content:flex-start;
   gap:8px;
-  font-size:12px;
-  font-weight:400;
-  color:#111;
-  line-height:1.3;
+  color:#222;
+  font-size:11px;
+  font-weight:500;
+  line-height:1.25;
 }
 
-.tk-grid i{
-  font-size:28px;
+.gold-feature-grid i{
+  font-size:26px;
 }
 
-.tk-grid button:nth-child(1) i{color:#1ca83b;}
-.tk-grid button:nth-child(2) i{color:#d32f2f;}
-.tk-grid button:nth-child(3) i{color:#ff8f00;}
-.tk-grid button:nth-child(4) i{color:#1ca83b;}
-.tk-grid button:nth-child(5) i{color:#d32f2f;}
-.tk-grid button:nth-child(6) i{color:#1ca83b;}
-.tk-grid button:nth-child(7) i{color:#d32f2f;}
-.tk-grid button:nth-child(8) i{color:#ff9800;}
+.gold-feature-grid button:nth-child(1) i{color:#1ca83b;}
+.gold-feature-grid button:nth-child(2) i{color:#d32f2f;}
+.gold-feature-grid button:nth-child(3) i{color:#ff8f00;}
+.gold-feature-grid button:nth-child(4) i{color:#1ca83b;}
+.gold-feature-grid button:nth-child(5) i{color:#d32f2f;}
+.gold-feature-grid button:nth-child(6) i{color:#1ca83b;}
+.gold-feature-grid button:nth-child(7) i{color:#d32f2f;}
+.gold-feature-grid button:nth-child(8) i{color:#ff9800;}
 
-/* =========================================
-   PART 2
-========================================= */
+/* LAYER 2 */
 
-.tk-summary-layer{
-  flex-shrink:0;
+.gold-summary-layer{
   position:relative;
-  z-index:260;
+  z-index:220;
   margin-top:-8px;
-  padding:0 14px 10px;
-  background:transparent;
+  padding:0 12px;
 }
 
-.tk-summary{
-  background:#fffdf8;
+.gold-summary-card{
+  background:#fff;
   border-radius:22px;
-  padding:22px 14px;
+  padding:18px 12px;
   display:flex;
   align-items:center;
   justify-content:space-between;
-  box-shadow:0 6px 18px rgba(0,0,0,.08);
+  box-shadow:0 5px 18px rgba(0,0,0,.08);
 }
 
-.tk-sum-box{
+.gold-sum-box{
   flex:1;
   text-align:center;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
 }
 
-.tk-sum-box div{
+.gold-sum-box div{
   font-size:18px;
   font-weight:600;
-  line-height:1;
 }
 
-.tk-sum-box small{
+.gold-sum-box small{
+  display:block;
   margin-top:6px;
-  font-size:13px;
-  font-weight:400;
-  color:#222;
+  font-size:12px;
+  color:#444;
 }
 
-.tk-divider{
+.gold-sum-divider{
   width:1px;
-  height:64px;
+  height:58px;
   background:#ddd;
 }
 
-.tk-scroll-layer{
-  flex:1;
+/* LAYER 3 */
+
+.gold-main-scroll{
+  position:relative;
+  z-index:260;
+  height:calc(100% - 255px);
+  margin-top:-14px;
+  background:#fff;
+  border-radius:26px 26px 0 0;
   overflow-y:auto;
   -webkit-overflow-scrolling:touch;
-  background:#ffffff;
-  border-radius:26px 26px 0 0;
-  margin-top:-16px;
-  position:relative;
-  z-index:280;
   box-shadow:0 -2px 10px rgba(0,0,0,.05);
 }
 
-/* =========================================
-   PART 3 FINAL
-========================================= */
-
-.tk-search-row{
+.gold-search-block{
   position:sticky;
   top:0;
   z-index:300;
   display:flex;
-  align-items:center;
   gap:10px;
-  padding:12px 14px 14px;
-  background:#ffffff;
+  align-items:center;
+  padding:14px 14px 12px;
+  background:#fff;
 }
 
-.tk-search-box{
+.gold-search-box{
   flex:1;
   height:46px;
-  background:#f2f2f2;
   border-radius:999px;
+  background:#f2f2f2;
   display:flex;
   align-items:center;
-  gap:12px;
-  padding:0 18px;
+  gap:10px;
+  padding:0 16px;
 }
 
-.tk-search-box i{
-  font-size:16px;
-  color:#666;
+.gold-search-box i{
+  color:#777;
+  font-size:15px;
 }
 
-.tk-search-box input{
+.gold-search-box input{
   background:transparent;
   font-size:14px;
-  font-weight:400;
-  color:#666;
+  color:#444;
 }
 
-.tk-circle-btn{
+.gold-round-btn{
   width:46px;
   height:46px;
   border-radius:50%;
@@ -214,24 +224,17 @@
   justify-content:center;
 }
 
-.tk-circle-btn i{
-  font-size:16px;
-  color:#666;
-}
-
-.tk-list-header{
+.gold-customer-header{
   position:sticky;
   top:72px;
   z-index:290;
-  background:#ffffff;
+  background:#fff;
   padding:0 16px 10px;
   font-size:13px;
   font-weight:500;
-  color:#333;
 }
 
-.tk-customer-list{
-  background:#ffffff;
+.gold-customer-list{
   padding-bottom:120px;
 }
 
@@ -239,55 +242,41 @@
   display:flex;
   justify-content:space-between;
   align-items:center;
-  padding:16px;
+  padding:15px 16px;
 }
 
 .cust-left{
   display:flex;
   align-items:center;
-  gap:14px;
+  gap:12px;
 }
 
 .avatar{
-  width:56px;
-  height:56px;
+  width:50px;
+  height:50px;
   border-radius:50%;
   display:flex;
   align-items:center;
   justify-content:center;
-  font-size:22px;
-  font-weight:800;
-  color:#111;
+  font-size:20px;
+  font-weight:700;
 }
 
-.avatar.green{background:#d8f7d8;}
-.avatar.yellow{background:#fff3bf;}
-.avatar.blue{background:#dce8ff;}
-.avatar.pink{background:#ffe0e8;}
-
 .cust-name{
-  font-size:15px;
-  font-weight:600;
+  font-size:14px;
+  font-weight:500;
 }
 
 .cust-time{
-  margin-top:4px;
   font-size:12px;
-  color:#666;
-  font-weight:400;
+  color:#777;
+  margin-top:3px;
 }
 
 .cust-right{
   display:flex;
   align-items:center;
-  gap:16px;
-  font-size:16px;
-  font-weight:400;
-}
-
-.cust-right i{
-  color:#111;
-  font-size:16px;
+  gap:14px;
 }
 
 .red-amount{
@@ -305,18 +294,19 @@
   font-weight:400 !important;
 }
 
-.tk-fab{
+.gold-fab{
   position:fixed;
   right:20px;
   bottom:82px;
-  width:58px;
-  height:58px;
+  width:56px;
+  height:56px;
   border-radius:50%;
   background:#d50000;
   color:#fff;
   display:flex;
   align-items:center;
   justify-content:center;
-  box-shadow:0 10px 24px rgba(0,0,0,.22);
   z-index:999;
+  box-shadow:0 10px 24px rgba(0,0,0,.22);
 }
+

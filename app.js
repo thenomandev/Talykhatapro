@@ -67,7 +67,7 @@ async function loadDashboard() {
   }
   
   renderCustomerList(customers);
-  updateSummary();
+updateSummary();
 }
 
 /* RENDER HOME CUSTOMER LIST */
