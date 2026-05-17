@@ -199,7 +199,7 @@
 
     <div class="input-item" id="openingBalContainer">
       <label>শুরুর ব্যালেন্স (ঐচ্ছিক)</label>
-      <input id="customerOpening" type="number" placeholder="০.০০" />
+      <input id="customerOpening" type="text" inputmode="none" readonly placeholder="০.০০" class="money-input" />
     </div>
 
     <button id="saveCustomerBtn" class="submit-btn">
@@ -264,12 +264,12 @@
 
       <div class="txn-box">
         <span class="taka-icon">৳</span>
-        <input id="txnGive" type="number" placeholder="দিলাম/বেচা" />
+        <input id="txnGive" type="text" inputmode="none" readonly placeholder="দিলাম/বেচা" class="money-input" />
       </div>
 
       <div class="txn-box">
         <span class="taka-icon">৳</span>
-        <input id="txnReceive" type="number" placeholder="পেলাম" />
+        <input id="txnReceive" type="text" inputmode="none" readonly placeholder="পেলাম" class="money-input" />
       </div>
 
     </div>
@@ -341,6 +341,45 @@
 <script src="db.js"></script>
 <script src="utils.js"></script>
 <script src="app.js"></script>
+
+<div id="calcModal" class="calc-modal">
+  <div class="calc-sheet">
+
+    <div class="calc-display-wrap">
+      <input id="calcDisplay" type="text" readonly value="0">
+    </div>
+
+    <div class="calc-grid">
+      <button class="calc-btn op" data-val="%">%</button>
+      <button class="calc-btn op" data-val="/">÷</button>
+      <button class="calc-btn op" data-val="*">×</button>
+      <button class="calc-btn danger" id="calcClear">C</button>
+
+      <button class="calc-btn" data-val="7">7</button>
+      <button class="calc-btn" data-val="8">8</button>
+      <button class="calc-btn" data-val="9">9</button>
+      <button class="calc-btn op" data-val="-">−</button>
+
+      <button class="calc-btn" data-val="4">4</button>
+      <button class="calc-btn" data-val="5">5</button>
+      <button class="calc-btn" data-val="6">6</button>
+      <button class="calc-btn op" data-val="+">+</button>
+
+      <button class="calc-btn" data-val="1">1</button>
+      <button class="calc-btn" data-val="2">2</button>
+      <button class="calc-btn" data-val="3">3</button>
+      <button class="calc-btn" id="calcBack">⌫</button>
+
+      <button class="calc-btn" data-val="00">00</button>
+      <button class="calc-btn" data-val="0">0</button>
+      <button class="calc-btn" data-val=".">.</button>
+      <button class="calc-btn success" id="calcEqual">=</button>
+    </div>
+
+    <button id="calcDone" class="calc-done-btn">ঠিক আছে</button>
+
+  </div>
+</div>
 
 </body>
 </html>

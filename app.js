@@ -45,6 +45,17 @@ const txnDateBtn = document.getElementById("txnDateBtn");
 const txnDate = document.getElementById("txnDate");
 const saveTxnBtn = document.getElementById("saveTxnBtn");
 
+const calcModal = document.getElementById("calcModal");
+const calcDisplay = document.getElementById("calcDisplay");
+const calcClear = document.getElementById("calcClear");
+const calcBack = document.getElementById("calcBack");
+const calcEqual = document.getElementById("calcEqual");
+const calcDone = document.getElementById("calcDone");
+const moneyInputs = document.querySelectorAll(".money-input");
+
+let activeMoneyInput = null;
+let calcExpression = "0";
+
 const liveTimeCounter = document.querySelector(".status-right"); // index.html line match
 const reportViewContainer = document.getElementById("reportViewContainer");
 const closeReportBtn = document.getElementById("closeReportBtn");
@@ -521,5 +532,71 @@ window.onpopstate = async function () {
     await loadDashboard();
     switchScreen(homeScreen);
     return;
+  }
+};
+
+function openCalculator(input){
+  activeMoneyInput = input;
+  calcExpression = input.value || "0";
+  calcDisplay.value = calcExpression;
+  calcModal.classList.add("show");
+}
+
+function closeCalculator(){
+  calcModal.classList.remove("show");
+}
+
+moneyInputs.forEach(input=>{
+  input.addEventListener("click", ()=>{
+    openCalculator(input);
+  });
+});
+
+document.querySelectorAll(".calc-btn[data-val]").forEach(btn=>{
+  btn.addEventListener("click", ()=>{
+    const val = btn.dataset.val;
+
+    if(calcExpression === "0" && !["+", "-", "*", "/", "%", "."].includes(val)){
+      calcExpression = val;
+    }else{
+      calcExpression += val;
+    }
+
+    calcDisplay.value = calcExpression;
+  });
+});
+
+calcClear.onclick = ()=>{
+  calcExpression = "0";
+  calcDisplay.value = calcExpression;
+};
+
+calcBack.onclick = ()=>{
+  calcExpression = calcExpression.slice(0,-1);
+  if(!calcExpression) calcExpression = "0";
+  calcDisplay.value = calcExpression;
+};
+
+calcEqual.onclick = ()=>{
+  try{
+    let result = eval(calcExpression.replace(/%/g,"/100"));
+    calcExpression = String(result);
+    calcDisplay.value = calcExpression;
+  }catch{
+    calcDisplay.value = "Error";
+  }
+};
+
+calcDone.onclick = ()=>{
+  if(activeMoneyInput){
+    activeMoneyInput.value =
+      calcDisplay.value === "Error" ? "" : calcDisplay.value;
+  }
+  closeCalculator();
+};
+
+calcModal.onclick = (e)=>{
+  if(e.target === calcModal){
+    closeCalculator();
   }
 };
