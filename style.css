@@ -1,532 +1,63 @@
-* {
+*{
   margin:0;
   padding:0;
   box-sizing:border-box;
-  font-family: 'Noto Sans Bengali', Arial, sans-serif;
+  font-family:'Noto Sans Bengali', Arial, sans-serif;
   -webkit-tap-highlight-color:transparent;
 }
 
-body {
+body{
   background:#efefef;
   color:#222;
 }
 
-button, input, textarea {
+button,
+input,
+textarea{
   font:inherit;
 }
 
-button {
+button{
   border:none;
   background:none;
   cursor:pointer;
 }
 
-input, textarea {
+input,
+textarea{
   width:100%;
   border:none;
   outline:none;
 }
 
-#app {
+#app{
   max-width:430px;
   min-height:100vh;
   margin:auto;
   background:#ffffff;
   position:relative;
   overflow:hidden;
-  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  box-shadow:0 0 10px rgba(0,0,0,0.1);
 }
 
-.screen {
+.screen{
   display:none;
   min-height:100vh;
-  padding-bottom:75px; /* বটম নেভিগেশন বারের জন্য স্পেস রাখা হয়েছে */
+  padding-bottom:20px;
 }
 
-.screen.active {
+.screen.active{
   display:block;
 }
 
-/* TOP BAR */
-.topbar.red {
-  background:#c8102e;
-  color:#fff;
-  padding:18px 14px 14px;
+.receive{
+  color:#b51e23;
 }
 
-.topbar-row {
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
+.give{
+  color:#118a4d;
 }
 
-.account-btn {
-  background:#fff;
-  color:#111;
-  padding:10px 16px;
-  border-radius:20px;
-  font-weight:600;
-  font-size:14px;
-  display:flex;
-  align-items:center;
-  gap:8px;
+.transaction-list{
+  display:none;
 }
-
-.top-icons {
-  display:flex;
-  gap:18px;
-  align-items: center;
-}
-
-.top-icons button {
-  color:#fff;
-  font-size:20px;
-}
-
-.dashboard-title {
-  font-size:22px;
-  font-weight:700;
-  margin-top:14px;
-}
-
-/* অন্যান্য সাধারণ স্ক্রিন টপবার */
-.topbar:not(.red) {
-  background:#ffffff;
-  color:#111;
-  padding:15px;
-  display:flex;
-  align-items:center;
-  gap:15px;
-  border-bottom:1px solid #e0e0e0;
-}
-
-.back-btn {
-  font-size:20px;
-  color:#222;
-}
-
-.title {
-  font-size:18px;
-  font-weight:600;
-}
-
-/* FORM ELEMENTS */
-.form-container {
-  padding:20px 15px;
-}
-
-.input-group {
-  margin-bottom:20px;
-}
-
-.input-group label {
-  display:block;
-  font-size:14px;
-  font-weight:500;
-  color:#555;
-  margin-bottom:8px;
-}
-
-.input-group input {
-  border:1px solid #ccc;
-  padding:12px;
-  border-radius:6px;
-  font-size:16px;
-}
-
-.input-group input:focus {
-  border-color:#c8102e;
-}
-
-.primary-btn {
-  background:#c8102e;
-  color:#fff;
-  width:100%;
-  padding:14px;
-  border-radius:6px;
-  font-size:16px;
-  font-weight:600;
-  text-align:center;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-
-/* LEDGER SCREEN & ACTIONS */
-.ledger-header-left {
-  display:flex;
-  align-items:center;
-  gap:12px;
-}
-
-.avatar {
-  width: 40px;
-  height: 40px;
-  background: #fff;
-  color: #c8102e;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 700;
-  font-size: 16px;
-}
-
-.ledger-name {
-  font-weight:600;
-  font-size:16px;
-}
-
-.ledger-bal-label {
-  font-size:12px;
-  opacity:0.8;
-}
-
-.ledger-top-bal {
-  font-size:20px;
-  font-weight:700;
-}
-
-.ledger-actions {
-  display:flex;
-  justify-content:space-around;
-  padding:12px 10px;
-  border-bottom:1px solid #eee;
-  background:#fff;
-}
-
-.action-btn {
-  display:flex;
-  align-items:center;
-  gap:6px;
-  font-size:14px;
-  font-weight:500;
-  color:#555;
-}
-
-/* BOTTOM SHEET DIALOG */
-.bottom-sheet {
-  position:fixed;
-  bottom:0;
-  left:0;
-  right:0;
-  background:#fff;
-  border-top-left-radius:16px;
-  border-top-right-radius:16px;
-  box-shadow: 0 -4px 15px rgba(0,0,0,0.15);
-  z-index:1000;
-  max-width:430px;
-  margin:auto;
-  padding-bottom:10px;
-}
-
-.sheet-header {
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  padding:15px;
-  border-bottom:1px solid #eee;
-}
-
-.sheet-title {
-  font-size:16px;
-  font-weight:600;
-}
-
-.close-btn {
-  font-size:20px;
-  color:#777;
-}
-
-.sheet-body {
-  padding:20px 15px;
-}
-
-.amount-input-row {
-  display:flex;
-  align-items:center;
-  border-bottom:2px solid #c8102e;
-  padding-bottom:5px;
-}
-
-.currency-label {
-  font-size:28px;
-  font-weight:700;
-  margin-right:10px;
-}
-
-.amount-input-row input {
-  font-size:32px;
-  font-weight:700;
-  color:#111;
-}
-
-.date-attach-row {
-  display:flex;
-  justify-content:space-between;
-  margin-top:20px;
-  margin-bottom:20px;
-}
-
-.date-btn, .attach-btn {
-  background:#f5f5f5;
-  padding:8px 14px;
-  border-radius:20px;
-  font-size:14px;
-  color:#333;
-}
-
-.ledger-footer {
-  position:absolute;
-  bottom:0;
-  left:0;
-  right:0;
-  display:flex;
-  height:60px;
-  border-top:1px solid #e0e0e0;
-  background:#fff;
-  z-index:90;
-}
-
-.footer-btn {
-  flex:1;
-  font-size:16px;
-  font-weight:600;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-}
-
-.give-btn { background:#ffeded; color:#c62828; }
-.receive-btn { background:#e8f5e9; color:#2e7d32; }
-
-/* TRANSACTION ITEMS */
-.transaction-list {
-  padding: 10px 15px 80px 15px;
-  background: #fafafa;
-}
-
-.txn-item {
-  display: flex;
-  justify-content: space-between;
-  background: #fff;
-  padding: 12px;
-  border-radius: 6px;
-  margin-bottom: 10px;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-}
-
-.txn-left-meta {
-  display: flex;
-  flex-direction: column;
-}
-
-.txn-date-label { font-weight: 700; font-size: 14px; }
-.txn-time-label { font-size: 11px; color: #888; margin-top: 2px; }
-.txn-note-label { font-size: 12px; color: #666; margin-top: 4px; }
-.txn-right-val { font-size: 16px; font-weight: 700; display: flex; align-items: center; }
-
-/* REPORT SCREEN STYLES */
-.report-view-screen {
-  position: fixed;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background: #fff;
-  z-index: 2000;
-  max-width: 430px;
-  margin: auto;
-  display: flex;
-  flex-direction: column;
-}
-
-.report-header-actions {
-  display: flex;
-  justify-content: space-between;
-  background: #c8102e;
-  padding: 15px;
-  color: #fff;
-}
-
-.report-back-btn, .report-download-btn { color: #fff; font-size: 15px; font-weight: 600; }
-.share-section { display: flex; justify-content: space-between; padding: 15px; background: #fdf2f2; border-bottom: 1px solid #f5c6cb; font-size: 14px; font-weight: 600; color: #a71d2a; }
-.table-header { display: grid; grid-template-columns: 1.5fr 1fr 1fr; background: #f5f5f5; padding: 10px 15px; font-weight: 700; font-size: 13px; border-bottom: 1px solid #e0e0e0; }
-
-.rep-item { display: grid; grid-template-columns: 1.5fr 1fr 1fr; padding: 12px 15px; border-bottom: 1px solid #eee; font-size: 14px; }
-.rep-details { display: flex; flex-direction: column; }
-.rep-date { font-weight: 700; font-size: 14px; }
-.rep-time { font-size: 12px; color: #888; margin-top:2px; }
-.rep-note { font-size: 12px; color: #aaa; margin-top:2px; }
-.rep-tag { background-color: #fff5f5; color: #c62828; padding: 3px 8px; border-radius: 12px; font-size: 11px; width: fit-content; margin-top: 8px; font-weight: 600; }
-.rep-gave { background-color: #fff5f5; color: #c62828; font-weight: 700; display: flex; align-items: center; justify-content: center; }
-.rep-got { color: #333; font-weight: 600; display: flex; align-items: center; justify-content: center; }
-
-.total-footer { display: grid; grid-template-columns: 1.5fr 1fr 1fr; border-top: 2px solid #e0e0e0; font-weight: 700; font-size: 15px; background-color: #ffffff; margin-top: auto; }
-.total-label { padding: 15px; color: #333; }
-.total-gave { background-color: #fff5f5; color: #c62828; display: flex; align-items: center; justify-content: center; }
-.total-got { display: flex; align-items: center; justify-content: center; color: #333; }
-
-
-/* --- অরিজিনাল বটম নেভিগেশন বার ডিজাইন (সংরক্ষিত ও ফিক্সড) --- */
-.bottom-nav {
-  position: absolute;
-  bottom: 0; left: 0; right: 0;
-  height: 65px;
-  background: #ffffff;
-  border-top: 1px solid #e2e2e2;
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  z-index: 100;
-}
-
-.nav-item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  color: #666;
-  font-size: 12px;
-  gap: 4px;
-}
-
-.nav-item.active {
-  color: #c8102e;
-  font-weight: 600;
-}
-
-.nav-item i {
-  font-size: 20px;
-}
-
-
-/* --- ১ নম্বর স্ক্রিনশটের হুবহু কপি ডিজাইন রুলস (হোম স্ক্রিন কাস্টমাইজেশন) --- */
-.summary-card {
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  background: #fff;
-  padding: 15px 10px;
-  margin: 12px;
-  border-radius: 8px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-}
-
-.sum-col {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  flex: 1;
-}
-
-.sum-col strong {
-  font-size: 24px;
-  font-weight: 700;
-}
-
-.sum-col small {
-  font-size: 13px;
-  color: #666;
-  margin-top: 4px;
-}
-
-.sum-divider {
-  width: 1px;
-  height: 40px;
-  background: #eee;
-}
-
-.receive { color: #b51e23; }
-.give { color: #118a4d; }
-
-.search-section-row {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 0 12px 12px;
-}
-
-.search-wrapper {
-  position: relative;
-  flex: 1;
-}
-
-.search-icon {
-  position: absolute;
-  left: 14px;
-  top: 50%;
-  transform: translateY(-50%);
-  color: #777;
-}
-
-.search-section-row input {
-  background: #f2f2f2;
-  padding: 10px 12px 10px 38px;
-  border-radius: 20px;
-  font-size: 15px;
-}
-
-.action-icon-btn {
-  background: #f2f2f2;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 16px;
-  color: #444;
-}
-
-.list-title-row {
-  font-size: 14px;
-  color: #666;
-  padding: 10px 14px;
-  font-weight: 500;
-}
-
-/* কাস্টমার যোগ করার ফ্লোটিং বাটন (বটম ন্যাভের ঠিক উপরে ভেসে থাকবে) */
-.fab-circle {
-  position: fixed;
-  bottom: 80px;
-  right: 20px;
-  background: #c8102e;
-  color: #fff;
-  width: 56px;
-  height: 56px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 20px;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-  z-index: 999;
-}
-
-.customer-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 12px 14px;
-  border-bottom: 1px solid #f5f5f5;
-}
-
-.cust-left {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.cust-time {
-  font-size: 12px;
-  color: #888;
-  margin-top: 2px;
-}
-
-.cust-right {
-  font-size: 17px;
-  font-weight: 700;
-  text-align: right;
-}
-
-/* হালকা ও মার্জিত প্রিমিয়াম কালার ওভারলে ব্যাকগ্রাউন্ড */
-.avatar-premium-0 { background: #e3f2fd !important; color: #0d47a1 !important; }
-.avatar-premium-1 { background: #e8f5e9 !important; color: #1b5e20 !important; }
-.avatar-premium-2 { background: #fff3e0 !important; color: #e65100 !important; }
-.avatar-premium-3 { background: #f3e5f5 !important; color: #4a148c !important; }
-.avatar-premium-4 { background: #efebe9 !important; color: #4e342e !important; }
