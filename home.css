@@ -89,7 +89,7 @@
 }
 
 .gold-app-panel{
-  background:#f8f5ec;
+  background:#f9f5ea;
   border-radius:28px 28px 0 0;
   padding:81px 12px 30px;
   position:relative;
@@ -100,7 +100,7 @@
   display:grid;
   grid-template-columns:repeat(4,1fr);
   gap:18px 8px;
-  margin-top:-82px;
+  margin-top:-50px;
 }
 
 .gold-feature-grid button{
