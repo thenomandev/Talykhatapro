@@ -2,262 +2,346 @@
 <html lang="bn">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-  <title>তালিখাতা - ক্লোন</title>
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>তালিখাতা</title>
 
-  <meta name="theme-color" content="#ffffff" />
+  <meta name="theme-color" content="#c8ab62" />
   <link rel="manifest" href="manifest.json" />
 
-  <!-- Global + Screen Styles -->
   <link rel="stylesheet" href="style.css" />
-  <!-- 100% redesigned home.css (exact screenshot match) -->
   <link rel="stylesheet" href="home.css" />
   <link rel="stylesheet" href="ledger.css" />
   <link rel="stylesheet" href="form.css" />
 
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
+  <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
 
 <div id="app">
 
-  <!-- =================  HOME SCREEN - 100% screenshot replication ================= -->
-  <section id="homeScreen" class="screen active">
-    <div class="home-container">
+<section id="homeScreen" class="screen active">
 
-      <!-- HEADER: Noman + (গাজি জিয়াল) + inbox/help -->
-      <div class="home-header">
-        <div class="business-info">
-          <div class="business-name">Noman</div>
-          <div class="business-sub">(গাজি জিয়াল)</div>
-        </div>
-        <div class="header-actions">
-          <div class="header-action-icon">
-            <i class="fa-regular fa-envelope"></i>
-            <span>ইনবক্সে ছেড়</span>
-          </div>
-          <div class="header-action-icon">
-            <i class="fa-regular fa-face-smile"></i>
-            <span>হেল্প</span>
-          </div>
-        </div>
+<div class="gold-home-engine">
+
+  <!-- LAYER 1 FIXED -->
+  <div class="gold-fixed-top">
+
+    <div class="gold-header-top">
+
+      <button class="gold-business-pill">
+        <span class="gold-crown">
+          <i class="fa-solid fa-crown"></i>
+        </span>
+
+        <span id="topBusinessName">আপনার দোকানের নাম</span>
+
+        <i class="fa-solid fa-chevron-down"></i>
+      </button>
+
+      <div class="gold-top-tools">
+
+        <button class="gold-tool-btn">
+          <i class="fa-regular fa-envelope"></i>
+          <span>ইনবক্স</span>
+        </button>
+
+        <button class="gold-tool-btn">
+          <i class="fa-regular fa-circle-question"></i>
+          <span>হেল্প</span>
+        </button>
+
       </div>
 
-      <!-- FEATURE GRID (8 items as per screenshot) -->
-      <div class="feature-grid">
-        <div class="feature-item">
-          <div class="feature-icon icon-biz"><i class="fa-solid fa-book-open"></i></div>
-          <span>মাল্লি বরসা</span>
-        </div>
-        <div class="feature-item">
-          <div class="feature-icon icon-stock"><i class="fa-solid fa-box-open"></i></div>
-          <span>ইক হিসাব</span>
-        </div>
-        <div class="feature-item">
-          <div class="feature-icon icon-notes"><i class="fa-solid fa-list-check"></i></div>
-          <span>বরসার নাট</span>
-        </div>
-        <div class="feature-item">
-          <div class="feature-icon icon-reminder"><i class="fa-regular fa-bell"></i></div>
-          <span>গুপ তাগাদা</span>
-        </div>
-        <div class="feature-item">
-          <div class="feature-icon icon-qr"><i class="fa-solid fa-table-cells-large"></i></div>
+    </div>
+
+    <div class="gold-trial-text">
+      গোল্ড (ট্রায়াল)
+    </div>
+
+    <div class="gold-app-panel">
+
+      <section class="gold-feature-grid">
+
+        <button>
+          <i class="fa-solid fa-book-open"></i>
+          <span>মাল্টি ব্যবসা</span>
+        </button>
+
+        <button>
+          <i class="fa-solid fa-cube"></i>
+          <span>স্টক হিসাব</span>
+        </button>
+
+        <button>
+          <i class="fa-regular fa-note-sticky"></i>
+          <span>ব্যবসার নোট</span>
+        </button>
+
+        <button>
+          <i class="fa-regular fa-bell"></i>
+          <span>গ্রুপ তাগাদা</span>
+        </button>
+
+<button>
+          <i class="fa-solid fa-qrcode"></i>
           <span>QR কোড</span>
-        </div>
-        <div class="feature-item">
-          <div class="feature-icon icon-backup"><i class="fa-solid fa-cloud-arrow-up"></i></div>
-          <span>ভাট বাকজ্যাপ</span>
-        </div>
-        <div class="feature-item">
-          <div class="feature-icon icon-msg"><i class="fa-regular fa-comment-dots"></i></div>
-          <span>টালি-মেসজ</span>
-        </div>
-        <div class="feature-item">
-          <div class="feature-icon icon-cash"><i class="fa-solid fa-wallet"></i></div>
-          <span>কাশবন্ধু</span>
-        </div>
-      </div>
-
-      <!-- SUMMARY CARD : মোট পাবে / মোট দেবো -->
-      <div class="summary-card">
-        <div class="summary-item">
-          <div class="summary-value" id="totalReceive">০</div>
-          <div class="summary-label">মোট পাবে</div>
-        </div>
-        <div class="summary-divider"></div>
-        <div class="summary-item">
-          <div class="summary-value" id="totalGive">০</div>
-          <div class="summary-label">মোট দেবা</div>
-        </div>
-      </div>
-
-      <!-- SEARCH + FILTER + DOWNLOAD -->
-      <div class="search-toolbar">
-        <div class="search-box">
-          <i class="fa-solid fa-magnifying-glass"></i>
-          <input type="text" id="searchInput" placeholder="খাঁজ" />
-        </div>
-        <button class="round-icon" id="filterBtn">
-          <i class="fa-solid fa-sliders"></i>
         </button>
-        <button class="round-icon" id="downloadBtn">
-          <i class="fa-solid fa-download"></i>
+
+        <button>
+          <i class="fa-solid fa-cloud-arrow-up"></i>
+          <span>ডাটা ব্যাকআপ</span>
         </button>
+
+        <button>
+          <i class="fa-regular fa-message"></i>
+          <span>টালি-মেসেজ</span>
+        </button>
+
+        <button>
+          <i class="fa-regular fa-inbox"></i>
+          <span>ক্যাশবক্স</span>
+        </button>
+
+      </section>
+
+    </div>
+
+  </div>
+
+  <!-- LAYER 2 -->
+  <div class="gold-summary-layer">
+
+    <div class="gold-summary-card">
+
+      <div class="gold-sum-box">
+        <div id="totalReceive" class="receive">০</div>
+        <small>মোট পাবো</small>
       </div>
 
-      <!-- CUSTOMER HEADER : কাষ্টমার & সাপ্লায়ার + পাবে/দেবা indicator -->
-      <div class="customer-header-row">
-        <div class="customer-title">
-          কাষ্টমার <span id="customerCount">০ / সাপ্লায়ার ০</span>
-        </div>
-        <div class="pabo-debo-badge">
-          <span class="pabo">পাবে</span> / <span class="debo">দেবা</span>
-        </div>
+      <div class="gold-sum-divider"></div>
+
+      <div class="gold-sum-box">
+        <div id="totalGive" class="give">০</div>
+        <small>মোট দেবো</small>
       </div>
 
-      <!-- CUSTOMER DYNAMIC LIST (exact row style as screenshot) -->
-      <div id="customerList" class="customer-list-container"></div>
+    </div>
 
-      <!-- FLOATING ACTION BUTTON (ADD) -->
-      <button id="openCustomerModal" class="fab-add">
-        <i class="fa-solid fa-user-plus"></i>
+  </div>
+
+  <!-- LAYER 3 -->
+  <div class="gold-main-scroll">
+
+    <div class="gold-search-block">
+
+      <div class="gold-search-box">
+        <i class="fa-solid fa-magnifying-glass"></i>
+
+        <input
+          id="searchInput"
+          type="text"
+          placeholder="খোঁজ"
+        />
+      </div>
+
+      <button id="filterBtn" class="gold-round-btn">
+        <i class="fa-solid fa-sliders"></i>
       </button>
 
-      <!-- BOTTOM NAVIGATION BAR (টালি, কাশবন্ধু, ওয়ালেট, মেঁলু) -->
-      <div class="bottom-nav">
-        <div class="nav-item active">
-          <i class="fa-solid fa-book"></i>
-          <span>টালি</span>
-        </div>
-        <div class="nav-item">
-          <i class="fa-solid fa-wallet"></i>
-          <span>কাশবন্ধু</span>
-        </div>
-        <div class="nav-item">
-          <i class="fa-solid fa-id-card"></i>
-          <span>ওয়ালেট</span>
-        </div>
-        <div class="nav-item">
-          <i class="fa-solid fa-bars"></i>
-          <span>মেঁলু</span>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- =================  CUSTOMER FORM SCREEN (unchanged but fully functional) ================= -->
-  <section id="customerFormScreen" class="screen">
-    <header class="simple-header">
-      <button id="backFromCustomerForm" class="back-btn">
-        <i class="fa-solid fa-arrow-left"></i>
+      <button id="downloadBtn" class="gold-round-btn">
+        <i class="fa-solid fa-download"></i>
       </button>
-      <h2 id="customerFormTitle">নতুন গ্রাহক যোগ করুন</h2>
-    </header>
-    <div class="form-body">
-      <div class="input-item">
-        <label>গ্রাহকের নাম</label>
-        <input id="customerName" type="text" placeholder="নাম লিখুন" />
-      </div>
-      <div class="input-item">
-        <label>মোবাইল নম্বর</label>
-        <input id="customerPhone" type="tel" placeholder="মোবাইল নম্বর লিখুন" />
-      </div>
-      <div class="input-item" id="openingBalContainer">
-        <label>শুরুর ব্যালেন্স (ঐচ্ছিক)</label>
-        <input id="customerOpening" type="number" placeholder="০.০০" />
-      </div>
-      <button id="saveCustomerBtn" class="submit-btn">সংরক্ষণ করুন</button>
-    </div>
-  </section>
 
-  <!-- =================  LEDGER SCREEN (functional untouched) ================= -->
-  <section id="ledgerScreen" class="screen">
-    <header class="simple-header">
-      <button id="backToHome" class="back-btn">
-        <i class="fa-solid fa-arrow-left"></i>
+    </div>
+
+<div class="gold-customer-header">
+      কাস্টমার <span id="customerCount">০</span>
+    </div>
+
+    <div id="customerList" class="gold-customer-list"></div>
+
+  </div>
+
+  <button id="openCustomerModal" class="gold-fab">
+    <i class="fa-solid fa-user-plus"></i>
+  </button>
+
+</div>
+
+</section>
+
+<!-- CUSTOMER FORM -->
+<section id="customerFormScreen" class="screen">
+
+  <header class="simple-header">
+    <button id="backFromCustomerForm" class="back-btn">
+      <i class="fa-solid fa-arrow-left"></i>
+    </button>
+
+    <h2 id="customerFormTitle">নতুন গ্রাহক যোগ করুন</h2>
+  </header>
+
+  <div class="form-body">
+
+    <div class="input-item">
+      <label>গ্রাহকের নাম</label>
+      <input id="customerName" type="text" placeholder="নাম লিখুন" />
+    </div>
+
+    <div class="input-item">
+      <label>মোবাইল নম্বর</label>
+      <input id="customerPhone" type="tel" placeholder="মোবাইল নম্বর লিখুন" />
+    </div>
+
+    <div class="input-item" id="openingBalContainer">
+      <label>শুরুর ব্যালেন্স (ঐচ্ছিক)</label>
+      <input id="customerOpening" type="number" placeholder="০.০০" />
+    </div>
+
+    <button id="saveCustomerBtn" class="submit-btn">
+      সংরক্ষণ করুন
+    </button>
+
+  </div>
+
+</section>
+
+<!-- LEDGER -->
+<section id="ledgerScreen" class="screen">
+
+  <header class="simple-header">
+    <button id="backToHome" class="back-btn">
+      <i class="fa-solid fa-arrow-left"></i>
+    </button>
+
+    <div class="ledger-user">
+      <div id="ledgerAvatar" class="avatar">A</div>
+
+      <div class="user-info">
+        <h2 id="ledgerName">Customer</h2>
+      </div>
+    </div>
+
+    <button id="deleteCustomerBtn" class="more-btn">
+      <i class="fa-solid fa-ellipsis-vertical"></i>
+    </button>
+
+    <div id="threeDotMenu" class="dropdown-menu">
+      <div class="menu-item" id="optTagada">
+        <i class="fa-regular fa-bell"></i> তাগাদা পাঠাই
+      </div>
+
+      <div class="menu-item" id="optReport">
+        <i class="fa-regular fa-file-pdf"></i> রিপোর্ট
+      </div>
+
+      <div class="menu-item" id="optEdit">
+        <i class="fa-regular fa-pen-to-square"></i> এডিট
+      </div>
+
+      <div class="menu-item" id="optDelete" style="color:#c62828;">
+        <i class="fa-regular fa-trash-can"></i> ডিলিট
+      </div>
+    </div>
+  </header>
+
+  <div class="status-bar">
+    <div class="status-left">
+      <span id="ledgerBalanceLabel">পাবো</span>
+      <span id="ledgerBalance">৳ ০</span>
+    </div>
+
+    <div class="status-right" id="liveTimeCounter">(এইমাত্র)</div>
+  </div>
+
+  <div class="transaction-form" id="ledgerFormContainer">
+
+    <div class="txn-row">
+
+      <div class="txn-box">
+        <span class="taka-icon">৳</span>
+        <input id="txnGive" type="number" placeholder="দিলাম/বেচা" />
+      </div>
+
+      <div class="txn-box">
+        <span class="taka-icon">৳</span>
+        <input id="txnReceive" type="number" placeholder="পেলাম" />
+      </div>
+
+    </div>
+
+    <div class="txn-note-box">
+      <i class="fa-regular fa-file-lines desc-icon"></i>
+      <input id="txnNote" type="text" placeholder="বিবরণ" />
+    </div>
+
+    <div class="txn-action-row">
+      <button type="button" class="date-pill" id="txnDateBtn">📅 আজ</button>
+      <input type="date" id="txnDate" hidden>
+
+      <button type="button" class="photo-pill">
+        <i class="fa-solid fa-camera"></i> ছবি
       </button>
-      <div class="ledger-user">
-        <div id="ledgerAvatar" class="avatar">A</div>
-        <div class="user-info">
-          <h2 id="ledgerName">Customer</h2>
-        </div>
-      </div>
-      <button id="deleteCustomerBtn" class="more-btn">
-        <i class="fa-solid fa-ellipsis-vertical"></i>
+    </div>
+
+    <div class="footer-container">
+      <button id="saveTxnBtn" class="primary-btn">নিশ্চিত</button>
+    </div>
+
+  </div>
+
+  <div id="reportViewContainer" class="report-view-screen" style="display:none;">
+    <div class="report-header-actions">
+
+      <button id="closeReportBtn" class="report-back-btn">
+        <i class="fa-solid fa-arrow-left"></i> রিপোর্ট বন্ধ করুন
       </button>
-      <div id="threeDotMenu" class="dropdown-menu">
-        <div class="menu-item" id="optTagada"><i class="fa-regular fa-bell"></i> তাগাদা পাঠাই</div>
-        <div class="menu-item" id="optReport"><i class="fa-regular fa-file-pdf"></i> রিপোর্ট</div>
-        <div class="menu-item" id="optEdit"><i class="fa-regular fa-pen-to-square"></i> এডিট</div>
-        <div class="menu-item" id="optDelete" style="color:#c62828;"><i class="fa-regular fa-trash-can"></i> ডিলিট</div>
-      </div>
-    </header>
 
-    <div class="status-bar">
-      <div class="status-left">
-        <span id="ledgerBalanceLabel">পাবো</span>
-        <span id="ledgerBalance">৳ ০</span>
-      </div>
-      <div class="status-right" id="liveTimeCounter">(এইমাত্র)</div>
+      <button class="report-download-btn">
+        <i class="fa-solid fa-download"></i> ডাউনলোড
+      </button>
+
     </div>
 
-    <div class="transaction-form" id="ledgerFormContainer">
-      <div class="txn-row">
-        <div class="txn-box">
-          <span class="taka-icon">৳</span>
-          <input id="txnGive" type="number" placeholder="দিলাম/বেচা" />
-        </div>
-        <div class="txn-box">
-          <span class="taka-icon">৳</span>
-          <input id="txnReceive" type="number" placeholder="পেলাম" />
-        </div>
-      </div>
-      <div class="txn-note-box">
-        <i class="fa-regular fa-file-lines desc-icon"></i>
-        <input id="txnNote" type="text" placeholder="বিবরণ" />
-      </div>
-      <div class="txn-action-row">
-        <button type="button" class="date-pill" id="txnDateBtn">📅 আজ</button>
-        <input type="date" id="txnDate" hidden>
-        <button type="button" class="photo-pill"><i class="fa-solid fa-camera"></i> ছবি</button>
-      </div>
-      <div class="footer-container">
-        <button id="saveTxnBtn" class="primary-btn">নিশ্চিত</button>
-      </div>
+    <div class="share-section">
+      <span>রিপোর্ট শেয়ার</span>
+
+      <label class="switch">
+        <input type="checkbox" checked>
+        <span class="slider"></span>
+      </label>
     </div>
 
-    <div id="reportViewContainer" class="report-view-screen" style="display:none;">
-      <div class="report-header-actions">
-        <button id="closeReportBtn" class="report-back-btn"><i class="fa-solid fa-arrow-left"></i> রিপোর্ট বন্ধ করুন</button>
-        <button class="report-download-btn"><i class="fa-solid fa-download"></i> ডাউনলোড</button>
-      </div>
-      <div class="share-section">
-        <span>রিপোর্ট শেয়ার</span>
-        <label class="switch"><input type="checkbox" checked><span class="slider"></span></label>
-      </div>
-      <div class="table-header">
-        <div>লেনদেনের বিবরণ</div>
-        <div style="text-align:center;">দিলাম</div>
-        <div style="text-align:right;padding-right:15px;">পেলাম</div>
-      </div>
-      <div id="reportTxnList"></div>
-      <div class="total-footer">
-        <div class="total-label">মোট</div>
-        <div class="total-gave" id="reportTotalGave">০.০০</div>
-        <div class="total-got" id="reportTotalGot">০.০০</div>
-      </div>
+    <div class="table-header">
+      <div>লেনদেনের বিবরণ</div>
+      <div style="text-align:center;">দিলাম</div>
+      <div style="text-align:right;padding-right:15px;">পেলাম</div>
     </div>
 
-    <div style="display:none;" id="ledgerTopBalance">০</div>
-    <div id="transactionList" class="transaction-list"></div>
-  </section>
+    <div id="reportTxnList"></div>
+
+    <div class="total-footer">
+      <div class="total-label">মোট</div>
+      <div class="total-gave" id="reportTotalGave">০.০০</div>
+      <div class="total-got" id="reportTotalGot">০.০০</div>
+    </div>
+  </div>
+
+  <div style="display:none;" id="ledgerTopBalance">০</div>
+  <div id="transactionList" class="transaction-list"></div>
+
+</section>
 
 </div>
 
 <script src="db.js"></script>
 <script src="utils.js"></script>
 <script src="app.js"></script>
+
 </body>
 </html>
