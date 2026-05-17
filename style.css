@@ -76,3 +76,19 @@ textarea{
 .transaction-list{
   display:none;
 }
+
+html::before{
+  content:"";
+  position:fixed;
+  top:0;
+  left:0;
+  right:0;
+  height:2px;
+  background:linear-gradient(
+    90deg,
+    #CCA965 0%,
+    #E0C284 50%,
+    #EAD5AA 100%
+  );
+  z-index:99999;
+}
