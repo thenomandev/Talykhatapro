@@ -84,20 +84,19 @@
   margin:6px 14px 14px;
   background:#fafafa;
   border-radius:22px;
-  padding:16px 14px;
-  display:flex;
-  align-items:center;
-}
-  background:#fafafa;
-  border-radius:22px;
   padding:22px 14px;
   display:flex;
   align-items:center;
+  justify-content:space-between;
 }
 
 .tk-sum-box{
   flex:1;
   text-align:center;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
 }
 
 .tk-sum-box div{
@@ -309,4 +308,19 @@
   color:#111 !important;
   line-height:1.3;
   font-family:"Noto Sans Bengali", sans-serif;
+}
+
+.tk-grid button{
+  display:flex !important;
+  flex-direction:column !important;
+  align-items:center !important;
+  justify-content:flex-start !important;
+  gap:8px !important;
+  background:none !important;
+
+  font-size:12px !important;
+  font-weight:400 !important;
+  color:#111 !important;
+  line-height:1.3 !important;
+  font-family:"Noto Sans Bengali", sans-serif !important;
 }
