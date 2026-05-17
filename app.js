@@ -45,7 +45,7 @@ const txnDateBtn = document.getElementById("txnDateBtn");
 const txnDate = document.getElementById("txnDate");
 const saveTxnBtn = document.getElementById("saveTxnBtn");
 
-const liveTimeCounter = document.querySelector(".status-right"); // index.html line match
+const liveTimeCounter = document.querySelector(".status-right"); 
 const reportViewContainer = document.getElementById("reportViewContainer");
 const closeReportBtn = document.getElementById("closeReportBtn");
 const reportTxnList = document.getElementById("reportTxnList");
@@ -67,10 +67,10 @@ async function loadDashboard() {
   }
   
   renderCustomerList(customers);
-updateSummary();
+  updateSummary();
 }
 
-/* RENDER HOME CUSTOMER LIST */
+/* RENDER HOME CUSTOMER LIST - SCREENSHOT MATCHED EDIT */
 function renderCustomerList(list) {
   customerList.innerHTML = "";
   customerCount.textContent = `${formatBanglaNumber(list.length)} / সাপ্লায়ার ০`;
@@ -81,19 +81,23 @@ function renderCustomerList(list) {
     return;
   }
 
-  list.forEach(cust => {
+  // index এর ভিত্তিতে কালার ডিস্ট্রিবিউশন করার জন্য জেনুইন লুপ ব্যবহার
+  list.forEach((cust, index) => {
     const div = document.createElement("div");
     div.className = "customer-item";
 
     const bal = cust.computedBalance || 0;
     const absBal = Math.abs(bal);
-const amountClass =
-  bal < 0 ? "green-amount" :
-  bal > 0 ? "red-amount" :
-  "zero-amount";
+    
+    // স্ক্রিনশট অনুসারে: পাবো (পজিটিভ) = লাল (#b51e23), দেবো (নেগেটিভ) = সবুজ (#118a4d)
+    const amountClass =
+      bal > 0 ? "red-amount" :
+      bal < 0 ? "green-amount" :
+      "zero-amount";
 
-    const avatarColors = ["green","yellow","blue","pink"];
-    const colorClass = avatarColors[list.indexOf(cust) % 4];
+    // স্ক্রিনশটের ৪টি বৃত্তের ব্যাকগ্রাউন্ড কালার মিক্সিং সেটআপ
+    const avatarColors = ["green", "yellow", "blue", "pink"];
+    const colorClass = avatarColors[index % 4];
 
     let timeText = "এইমাত্র";
 
@@ -113,22 +117,21 @@ const amountClass =
       timeText = `${formatBanglaNumber(days)} দিন`;
     }
 
+    // স্ক্রিনশটের অবিকল স্ট্রাকচার ও আইকন ইনজেকশন
     div.innerHTML = `
       <div class="cust-left">
         <div class="avatar ${colorClass}">
-          ${cust.name.charAt(0).toUpperCase()}
+          ${cust.name.substring(0, 2).toUpperCase()}
         </div>
-
         <div>
           <div class="cust-name">${cust.name}</div>
           <div class="cust-time">${timeText}</div>
         </div>
       </div>
-
-<div class="cust-right">
-  <span class="cust-amount ${amountClass}">${money(absBal)}</span>
-  <i class="fa-solid fa-chevron-right"></i>
-</div>
+      <div class="cust-right">
+        <span class="cust-amount ${amountClass}">${money(absBal)}</span>
+        <i class="fa-solid fa-chevron-right"></i>
+      </div>
     `;
 
     div.onclick = () => openLedger(cust);
@@ -146,7 +149,7 @@ function updateSummary() {
     if (b < 0) giv += Math.abs(b);
   });
   totalReceive.textContent = formatBanglaNumber(Math.round(rec));
-totalGive.textContent = formatBanglaNumber(Math.round(giv));
+  totalGive.textContent = formatBanglaNumber(Math.round(giv));
 }
 
 /* LIVE TIME COUNTER LOOP */
@@ -187,7 +190,7 @@ async function openLedger(customer) {
   switchScreen(ledgerScreen);
   
   ledgerName.textContent = customer.name;
-  ledgerAvatar.textContent = customer.name.charAt(0).toUpperCase();
+  ledgerAvatar.textContent = customer.name.substring(0, 2).toUpperCase();
   
   if (threeDotMenu) threeDotMenu.classList.remove("active");
   if (reportViewContainer) reportViewContainer.style.display = "none";
@@ -199,16 +202,16 @@ async function openLedger(customer) {
   currentCustomer.computedBalance = bal;
 
   if (bal >= 0) {
-  if (ledgerBalanceLabel) ledgerBalanceLabel.textContent = "পাবো";
-  ledgerBalance.innerHTML = `৳ ${money(bal)}`;
-  ledgerTopBalance.innerHTML = `৳ ${money(bal)}`;
-  ledgerBalance.style.color = "#b51e23";
-} else {
-  if (ledgerBalanceLabel) ledgerBalanceLabel.textContent = "দেবো";
-  ledgerBalance.innerHTML = `৳ ${money(Math.abs(bal))}`;
-  ledgerTopBalance.innerHTML = `৳ ${money(Math.abs(bal))}`;
-  ledgerBalance.style.color = "#118a4d";
-}
+    if (ledgerBalanceLabel) ledgerBalanceLabel.textContent = "পাবো";
+    ledgerBalance.innerHTML = `৳ ${money(bal)}`;
+    ledgerTopBalance.innerHTML = `৳ ${money(bal)}`;
+    ledgerBalance.style.color = "#b51e23";
+  } else {
+    if (ledgerBalanceLabel) ledgerBalanceLabel.textContent = "দেবো";
+    ledgerBalance.innerHTML = `৳ ${money(Math.abs(bal))}`;
+    ledgerTopBalance.innerHTML = `৳ ${money(Math.abs(bal))}`;
+    ledgerBalance.style.color = "#118a4d";
+  }
 
   // Transaction History List Render
   const transactionList = document.getElementById("transactionList");
@@ -227,7 +230,6 @@ async function openLedger(customer) {
         <div class="txn-amount ${cls}">${label}: ৳ ${money(amount)}</div>
       `;
 
-      // Long press or right click to delete transaction
       div.oncontextmenu = async (e) => {
         e.preventDefault();
         if (confirm("এই লেনদেনটি ডিলিট করতে চান?")) {
@@ -468,7 +470,6 @@ if (searchInput) {
 }
 
 /* UTILS & MATH COMPUTATION */
-
 function updateTxnDateButton() {
   if (txnDateBtn) {
     txnDateBtn.textContent = "📅 " + selectedTxnDate.toLocaleDateString("bn-BD", { day: "numeric", month: "short" });
