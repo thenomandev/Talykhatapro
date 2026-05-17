@@ -4,7 +4,12 @@
 ========================= */
 
 #homeScreen{
-  background:linear-gradient(180deg,#c9ab63 0%,#dfca8d 100%);
+  background:linear-gradient(
+    180deg,
+    #CCA965 0%,
+    #E0C284 50%,
+    #EAD5AA 100%
+  );
   overflow:hidden;
 }
 
