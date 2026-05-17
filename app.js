@@ -76,35 +76,54 @@ function renderCustomerList(list) {
   customerCount.textContent = list.length;
 
   if (list.length === 0) {
-    customerList.innerHTML = `<div style="text-align:center; padding: 40px; color: #777;">কোনো গ্রাহক পাওয়া যায়নি</div>`;
+    customerList.innerHTML =
+      `<div style="text-align:center;padding:40px;color:#777;">কোনো গ্রাহক পাওয়া যায়নি</div>`;
     return;
   }
 
   list.forEach(cust => {
     const div = document.createElement("div");
     div.className = "customer-item";
-    
+
     const bal = cust.computedBalance || 0;
-    let balText = "৳ ০.০০";
-    let balClass = "";
-    
-    if (bal > 0) {
-  balText = `পাবো <span class="receive">৳ ${money(bal)}</span>`;
-  balClass = "";
-} else if (bal < 0) {
-  balText = `দেবো <span class="give">৳ ${money(Math.abs(bal))}</span>`;
-  balClass = "";
-}
+    const absBal = Math.abs(bal);
+
+    const avatarColors = ["green","yellow","blue","pink"];
+    const colorClass = avatarColors[cust.name.charCodeAt(0) % 4];
+
+    let timeText = "এইমাত্র";
+
+    const refTime = cust.createdAt || Date.now();
+    const diffMs = Date.now() - refTime;
+    const mins = Math.floor(diffMs / 60000);
+    const hours = Math.floor(mins / 60);
+    const days = Math.floor(hours / 24);
+
+    if (mins < 1) {
+      timeText = "এইমাত্র";
+    } else if (mins < 60) {
+      timeText = `${formatBanglaNumber(mins)} মিনিট`;
+    } else if (hours < 24) {
+      timeText = `${formatBanglaNumber(hours)} ঘণ্টা`;
+    } else {
+      timeText = `${formatBanglaNumber(days)} দিন`;
+    }
 
     div.innerHTML = `
       <div class="cust-left">
-        <div class="avatar">${cust.name.charAt(0).toUpperCase()}</div>
+        <div class="avatar ${colorClass}">
+          ${cust.name.charAt(0).toUpperCase()}
+        </div>
+
         <div>
           <div class="cust-name">${cust.name}</div>
-          <div class="cust-time">সক্রিয় হিসাব</div>
+          <div class="cust-time">${timeText}</div>
         </div>
       </div>
-      <div class="cust-right ${balClass}">${balText}</div>
+
+      <div class="cust-right">
+        ${money(absBal)}
+      </div>
     `;
 
     div.onclick = () => openLedger(cust);

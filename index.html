@@ -17,60 +17,80 @@
 
   <div id="app">
 
-    <section id="homeScreen" class="screen active">
-      <header class="topbar red">
-        <div class="topbar-row">
-          <button class="account-btn">
-            <span>M H Noman Khan</span>
-            <span>▼</span>
-          </button>
-          <div class="top-icons">
-            <button><i class="fa-regular fa-envelope"></i></button>
-            <button><i class="fa-regular fa-comment"></i></button>
-          </div>
-        </div>
-        <div class="dashboard-title">ড্যাশবোর্ড</div>
-      </header>
+<section id="homeScreen" class="screen active">
 
-      <section class="quick-grid">
-        <button>মাল্টি ব্যবসা</button>
-        <button>স্টক হিসাব</button>
-        <button>ব্যবসার নোট</button>
-        <button>গ্রুপ তাগাদা</button>
-        <button>QR কোড</button>
-        <button>ডাটা ব্যাকআপ</button>
-        <button>টালি-মেসেজ</button>
-        <button>ক্যাশ</button>
-      </section>
-
-      <div class="summary-card">
-        <div class="sum-col">
-          <small>পাবো (মোট)</small>
-          <strong id="totalReceive" class="receive">৳ ০</strong>
-        </div>
-        <div class="sum-divider"></div>
-        <div class="sum-col">
-          <small>দেবো (মোট)</small>
-          <strong id="totalGive" class="give">৳ ০</strong>
-        </div>
-      </div>
-
-      <div class="search-row">
-        <input id="searchInput" type="text" placeholder="গ্রাহক খুঁজুন..." />
-      </div>
-
-      <div class="list-title-row">
-        <span>গ্রাহক তালিকা (<span id="customerCount">০</span>)</span>
-      </div>
-
-      <div id="customerList" class="customer-list"></div>
-
-      <button id="openCustomerModal" class="fab">
-        <span>+ গ্রাহক যোগ করুন</span>
+  <header class="topbar red premium-home">
+    <div class="topbar-row">
+      <button class="account-btn premium-account">
+        <span>M H Noman Khan</span>
+        <span>▼</span>
       </button>
+
+      <div class="top-icons">
+        <button><i class="fa-regular fa-envelope"></i></button>
+        <button><i class="fa-regular fa-circle-question"></i></button>
+      </div>
+    </div>
+
+    <div class="dashboard-title">হোম</div>
+  </header>
+
+  <div class="home-shell">
+
+    <section class="quick-grid premium-grid">
+      <button><i class="fa-solid fa-book-open"></i><span>মাল্টি ব্যবসা</span></button>
+      <button><i class="fa-solid fa-box"></i><span>স্টক হিসাব</span></button>
+      <button><i class="fa-regular fa-note-sticky"></i><span>ব্যবসার নোট</span></button>
+      <button><i class="fa-regular fa-bell"></i><span>গ্রুপ তাগাদা</span></button>
+      <button><i class="fa-solid fa-qrcode"></i><span>QR কোড</span></button>
+      <button><i class="fa-solid fa-cloud-arrow-up"></i><span>ডাটা ব্যাকআপ</span></button>
+      <button><i class="fa-regular fa-message"></i><span>টালি-মেসেজ</span></button>
+      <button><i class="fa-regular fa-wallet"></i><span>ক্যাশবক্স</span></button>
     </section>
 
-    <section id="customerFormScreen" class="screen">
+    <div class="summary-card premium-summary">
+      <div class="sum-col">
+        <strong id="totalReceive" class="receive">০.০০</strong>
+        <small>মোট পাবো</small>
+      </div>
+
+      <div class="sum-divider"></div>
+
+      <div class="sum-col">
+        <strong id="totalGive" class="give">০.০০</strong>
+        <small>মোট দেবো</small>
+      </div>
+    </div>
+
+    <div class="search-toolbar">
+      <div class="search-box">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input id="searchInput" type="text" placeholder="খোঁজ">
+      </div>
+
+      <button class="circle-tool" id="filterBtn">
+        <i class="fa-solid fa-sliders"></i>
+      </button>
+
+      <button class="circle-tool" id="downloadBtn">
+        <i class="fa-solid fa-download"></i>
+      </button>
+    </div>
+
+    <div class="list-title-row premium-list-title">
+      <span>কাস্টমার <span id="customerCount">০</span></span>
+    </div>
+
+    <div id="customerList" class="customer-list premium-customer-list"></div>
+
+  </div>
+
+  <button id="openCustomerModal" class="fab-mini">
+    <i class="fa-solid fa-user-plus"></i>
+  </button>
+
+</section>
+
       <header class="simple-header">
         <button id="backFromCustomerForm" class="back-btn"><i class="fa-solid fa-arrow-left"></i></button>
         <h2 id="customerFormTitle">নতুন গ্রাহক যোগ করুন</h2>
