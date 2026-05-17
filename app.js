@@ -93,9 +93,6 @@ const amountClass =
   bal > 0 ? "red-amount" :
   "zero-amount";
 
-    const avatarColors = ["green","yellow","blue","pink"];
-    const colorClass = avatarColors[list.indexOf(cust) % 4];
-
     let timeText = "এইমাত্র";
 
     const refTime = cust.createdAt || Date.now();
@@ -116,7 +113,7 @@ const amountClass =
 
     div.innerHTML = `
       <div class="cust-left">
-        <div class="avatar ${colorClass}">
+        <div class="avatar" style="background:${cust.avatarColor || '#d9e2f3'};">
           ${cust.name.trim().length >= 2
   ? cust.name.trim().substring(0,2).toUpperCase()
   : cust.name.trim().charAt(0).toUpperCase()}
