@@ -6,9 +6,18 @@
   -webkit-tap-highlight-color:transparent;
 }
 
-body{
+html,body{
+  width:100%;
+  height:100%;
+  overflow:hidden;
   background:#efefef;
   color:#222;
+}
+
+body{
+  display:flex;
+  justify-content:center;
+  align-items:stretch;
 }
 
 button,
@@ -31,19 +40,19 @@ textarea{
 }
 
 #app{
+  width:100%;
   max-width:430px;
-  min-height:100vh;
-  margin:auto;
+  height:100dvh;
   background:#ffffff;
   position:relative;
   overflow:hidden;
-  box-shadow:0 0 10px rgba(0,0,0,0.1);
+  box-shadow:0 0 10px rgba(0,0,0,0.10);
 }
 
 .screen{
   display:none;
-  min-height:100vh;
-  padding-bottom:20px;
+  width:100%;
+  height:100%;
 }
 
 .screen.active{

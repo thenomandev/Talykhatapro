@@ -1,36 +1,26 @@
 /* =========================================
-   SAFE FULL HYBRID GOLD REBUILD
-   PART 1 / 4
+   GOLD APP HOME ENGINE
+   PART 1
 ========================================= */
 
-html,body{
-  margin:0;
-  padding:0;
-  height:100%;
-  overflow:hidden;
-  font-family:"Noto Sans Bengali",sans-serif;
-}
-
-#app{
-  height:100dvh;
-  overflow:hidden;
-}
-
 #homeScreen{
-  height:100dvh;
+  background:linear-gradient(90deg,#c8ab62 0%, #e4cf95 100%);
+  overflow:hidden;
+  position:relative;
+}
+
+.gold-home-shell{
+  width:100%;
+  height:100%;
   display:flex;
   flex-direction:column;
   overflow:hidden;
-  background:linear-gradient(90deg,#c8ab62 0%, #e4cf95 100%);
+  position:relative;
 }
-
-/* HEADER */
 
 .tk-home-header{
   flex-shrink:0;
-  padding:12px 16px 14px;
-  background:transparent;
-  color:#111;
+  padding:14px 16px 12px;
   position:relative;
   z-index:300;
 }
@@ -45,26 +35,23 @@ html,body{
   height:44px;
   padding:0 16px;
   border-radius:999px;
-  background:#fff;
+  background:#ffffff;
   color:#111;
   display:flex;
   align-items:center;
   gap:10px;
   font-size:14px;
   font-weight:700;
-  border:none;
 }
 
 .tk-top-actions{
   display:flex;
   align-items:center;
-  gap:16px;
+  gap:18px;
 }
 
 .tk-top-actions button{
-  background:none;
-  border:none;
-  color:#fff;
+  color:#111;
   font-size:22px;
 }
 
@@ -72,38 +59,23 @@ html,body{
   margin-top:10px;
   font-size:18px;
   font-weight:600;
-  color:#fff;
+  color:#111;
 }
 
-/* BODY WRAPPER */
-
-.tk-home-body{
-  flex:1;
-  display:flex;
-  flex-direction:column;
-  overflow:hidden;
+.gold-fixed-layer{
+  flex-shrink:0;
+  background:#f7f4eb;
+  border-radius:30px 30px 0 0;
+  margin-top:10px;
   position:relative;
-  background:transparent;
-  margin:0;
-  padding:0;
+  z-index:220;
 }
-
-/* =========================================
-   PART 2 / 4
-========================================= */
-
-/* ICON GRID */
 
 .tk-grid{
-  flex-shrink:0;
   display:grid;
   grid-template-columns:repeat(4,1fr);
   gap:18px 10px;
   padding:18px 14px 22px;
-  background:#f7f4eb;
-  border-radius:32px 32px 0 0;
-  position:relative;
-  z-index:220;
 }
 
 .tk-grid button{
@@ -112,15 +84,10 @@ html,body{
   align-items:center;
   justify-content:flex-start;
   gap:8px;
-  background:none;
-  border:none;
-
-  /* KEEP ORIGINAL TYPOGRAPHY */
   font-size:12px;
   font-weight:400;
   color:#111;
   line-height:1.3;
-  font-family:"Noto Sans Bengali",sans-serif;
 }
 
 .tk-grid i{
@@ -136,25 +103,27 @@ html,body{
 .tk-grid button:nth-child(7) i{color:#d32f2f;}
 .tk-grid button:nth-child(8) i{color:#ff9800;}
 
-/* SUMMARY LAYER */
+/* =========================================
+   PART 2
+========================================= */
 
 .tk-summary-layer{
   flex-shrink:0;
   position:relative;
-  z-index:180;
-  background:#f7f4eb;
-  padding-bottom:10px;
+  z-index:260;
+  margin-top:-8px;
+  padding:0 14px 10px;
+  background:transparent;
 }
 
 .tk-summary{
-  margin:0 14px;
   background:#fffdf8;
   border-radius:22px;
   padding:22px 14px;
   display:flex;
   align-items:center;
   justify-content:space-between;
-  box-shadow:0 2px 8px rgba(0,0,0,.04);
+  box-shadow:0 6px 18px rgba(0,0,0,.08);
 }
 
 .tk-sum-box{
@@ -173,7 +142,6 @@ html,body{
 }
 
 .tk-sum-box small{
-  display:block;
   margin-top:6px;
   font-size:13px;
   font-weight:400;
@@ -186,36 +154,31 @@ html,body{
   background:#ddd;
 }
 
-/* =========================================
-   PART 3 / 4
-========================================= */
-
-/* MAIN SCROLL ENGINE */
-
 .tk-scroll-layer{
   flex:1;
   overflow-y:auto;
   -webkit-overflow-scrolling:touch;
-  overscroll-behavior:contain;
-  background:#fff;
+  background:#ffffff;
   border-radius:26px 26px 0 0;
-  margin-top:-18px;
+  margin-top:-16px;
   position:relative;
-  z-index:250;
-  box-shadow:0 -2px 10px rgba(0,0,0,.04);
+  z-index:280;
+  box-shadow:0 -2px 10px rgba(0,0,0,.05);
 }
 
-/* SEARCH BAR */
+/* =========================================
+   PART 3 FINAL
+========================================= */
 
 .tk-search-row{
   position:sticky;
   top:0;
-  z-index:260;
+  z-index:300;
   display:flex;
   align-items:center;
   gap:10px;
   padding:12px 14px 14px;
-  background:#fff;
+  background:#ffffff;
 }
 
 .tk-search-box{
@@ -236,12 +199,9 @@ html,body{
 
 .tk-search-box input{
   background:transparent;
-  border:none;
-  outline:none;
   font-size:14px;
   font-weight:400;
   color:#666;
-  width:100%;
 }
 
 .tk-circle-btn{
@@ -252,7 +212,6 @@ html,body{
   display:flex;
   align-items:center;
   justify-content:center;
-  border:none;
 }
 
 .tk-circle-btn i{
@@ -260,27 +219,19 @@ html,body{
   color:#666;
 }
 
-/* LIST HEADER */
-
 .tk-list-header{
   position:sticky;
   top:72px;
-  z-index:255;
-  background:#fff;
+  z-index:290;
+  background:#ffffff;
   padding:0 16px 10px;
   font-size:13px;
   font-weight:500;
   color:#333;
 }
 
-/* =========================================
-   PART 4 / 4 FINAL
-========================================= */
-
-/* CUSTOMER LIST */
-
 .tk-customer-list{
-  background:#fff;
+  background:#ffffff;
   padding-bottom:120px;
 }
 
@@ -289,7 +240,6 @@ html,body{
   justify-content:space-between;
   align-items:center;
   padding:16px;
-  border:none;
 }
 
 .cust-left{
@@ -355,8 +305,6 @@ html,body{
   font-weight:400 !important;
 }
 
-/* FAB */
-
 .tk-fab{
   position:fixed;
   right:20px;
@@ -371,9 +319,4 @@ html,body{
   justify-content:center;
   box-shadow:0 10px 24px rgba(0,0,0,.22);
   z-index:999;
-  border:none;
-}
-
-.tk-fab i{
-  font-size:26px;
 }
