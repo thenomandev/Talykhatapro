@@ -4,7 +4,13 @@
 ========================= */
 
 #homeScreen{
-  background:linear-gradient(180deg,#c9ab63 0%,#dfca8d 100%);
+  background:linear-gradient(
+    90deg,
+    #cdb66d 0%,
+    #d8c27b 30%,
+    #e4d08f 65%,
+    #f1e0a9 100%
+  );
   overflow:hidden;
 }
 
@@ -55,11 +61,13 @@
 
 .gold-top-tools{
   display:flex;
-  gap:10px;
+  gap:20px;
+  align-items:flex-start;
+  padding-top:6px;
 }
 
 .gold-tool-btn{
-  width:62px;
+  width:82px;
   display:flex;
   flex-direction:column;
   align-items:center;
@@ -173,7 +181,7 @@
   position:relative;
   z-index:260;
   height:calc(100% - 255px);
-  margin-top:-8px;
+  margin-top:-95px;
   background:#fff;
   border-radius:26px 26px 0 0;
   overflow-y:auto;
