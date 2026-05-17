@@ -180,7 +180,7 @@
 .gold-main-scroll{
   position:relative;
   z-index:501;
-  height:calc(100% - 300px);
+  height:calc(100% - 1000px);
   margin-top:-8px;
   background:#fff;
   border-radius:26px 26px 0 0;
