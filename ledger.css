@@ -40,9 +40,9 @@
 }
 
 #ledgerName {
-  font-size:18px;
-  font-weight:700;
-  color:#1a1a1a;
+  font-size: inherit;
+  font-weight: inherit;
+  color: inherit;
 }
 
 .dropdown-menu {
