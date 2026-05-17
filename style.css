@@ -48,7 +48,7 @@ textarea{
   width:100%;
   max-width:430px;
   min-height:100dvh;
-  background:transparent;
+  background:#fff;
   position:relative;
   overflow:hidden;
   box-shadow:0 0 10px rgba(0,0,0,.10);
