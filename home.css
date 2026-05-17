@@ -11,6 +11,7 @@
     #EAD5AA 100%
   );
   overflow:hidden;
+  height:100dvh;
 }
 
 .gold-home-engine{
@@ -180,7 +181,7 @@
 .gold-main-scroll{
   position:relative;
   z-index:300;
-  height:calc(100% - 200px);
+  height:calc(100dvh - 200px);
   margin-top:-8px;
   background:#fff;
   border-radius:26px 26px 0 0;
