@@ -117,7 +117,9 @@ const amountClass =
     div.innerHTML = `
       <div class="cust-left">
         <div class="avatar ${colorClass}">
-          ${cust.name.split(" ").map(n => n.charAt(0)).join("").slice(0,2).toUpperCase()}
+          ${cust.name.trim().length >= 2
+  ? cust.name.trim().substring(0,2).toUpperCase()
+  : cust.name.trim().charAt(0).toUpperCase()}
         </div>
 
         <div>
@@ -189,8 +191,14 @@ async function openLedger(customer) {
 history.pushState({screen:"ledger"}, "");
   
   ledgerName.textContent = customer.name;
-  ledgerAvatar.textContent = customer.name.charAt(0).toUpperCase();
-  
+
+ledgerAvatar.textContent =
+  customer.name.trim().length >= 2
+    ? customer.name.trim().substring(0,2).toUpperCase()
+    : customer.name.trim().charAt(0).toUpperCase();
+
+ledgerAvatar.style.background = customer.avatarColor || "#0b61a4";
+
   if (threeDotMenu) threeDotMenu.classList.remove("active");
   if (reportViewContainer) reportViewContainer.style.display = "none";
   
