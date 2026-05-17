@@ -96,7 +96,7 @@
 .gold-app-panel{
   background:#f9f5ea;
   border-radius:28px 28px 0 0;
-  padding:81px 12px 40px;
+  padding:81px 12px 61px;
   position:relative;
   z-index:200;
 }
@@ -179,8 +179,8 @@
 
 .gold-main-scroll{
   position:relative;
-  z-index:501;
-  height:calc(100% - 1000px);
+  z-index:300;
+  height:calc(100% - 200px);
   margin-top:-8px;
   background:#fff;
   border-radius:26px 26px 0 0;
