@@ -417,13 +417,18 @@ if (saveCustomerBtn) {
       const updated = customers.find(c => c.id === currentCustomer.id);
       await openLedger(updated || currentCustomer);
     } else {
-      const newCust = {
-        id: Date.now().toString(),
-        name: name,
-        phone: phone,
-        openingBalance: opening,
-        createdAt: Date.now()
-      };
+     
+ const avatarColors = ["#c8e6c9", "#f3e5ab", "#d9e2f3", "#f6d6dc"];
+const randomColor = avatarColors[Math.floor(Math.random() * avatarColors.length)];
+
+const newCust = {
+  id: Date.now().toString(),
+  name: name,
+  phone: phone,
+  openingBalance: opening,
+  createdAt: Date.now(),
+  avatarColor: randomColor
+};
       
       await addCustomer(newCust);
       await loadDashboard();
