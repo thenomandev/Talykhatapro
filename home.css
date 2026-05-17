@@ -102,9 +102,10 @@
 
 .tk-sum-box small{
   display:block;
-  margin-top:10px;
-  font-size:14px;
-  font-weight:600;
+  margin-top:8px;
+  font-size:13px;
+  font-weight:500;
+  color:#333;
 }
 
 .tk-divider{
@@ -158,9 +159,9 @@
 
 .tk-list-header{
   padding:0 16px 10px;
-  font-size:14px;
-  font-weight:700;
-  color:#222;
+  font-size:13px;
+  font-weight:500;
+  color:#333;
 }
 
 .tk-customer-list{
@@ -200,14 +201,15 @@
 .avatar.pink{background:#ffe0e8;}
 
 .cust-name{
-  font-size:17px;
-  font-weight:700;
+  font-size:15px;
+  font-weight:600;
 }
 
 .cust-time{
   margin-top:4px;
-  font-size:13px;
-  color:#777;
+  font-size:12px;
+  color:#666;
+  font-weight:400;
 }
 
 .cust-right{
@@ -246,7 +248,8 @@
 }
 
 .tk-sum-box div{
-  font-size:22px !important;
+  font-size:20px !important;
+  font-weight:700 !important;
 }
 
 .cust-right{
