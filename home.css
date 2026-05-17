@@ -100,7 +100,7 @@
   display:grid;
   grid-template-columns:repeat(4,1fr);
   gap:18px 8px;
-  margin-top:-50px;
+  margin-top:-71px;
 }
 
 .gold-feature-grid button{
@@ -175,7 +175,7 @@
 .gold-main-scroll{
   position:relative;
   z-index:501;
-  height:calc(100% - 255px);
+  height:calc(100% - 200px);
   margin-top:-8px;
   background:#fff;
   border-radius:26px 26px 0 0;
