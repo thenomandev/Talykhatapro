@@ -145,8 +145,8 @@ function updateSummary() {
     if (b > 0) rec += b;
     if (b < 0) giv += Math.abs(b);
   });
-  totalReceive.textContent = money(rec);
-totalGive.textContent = money(giv);
+  totalReceive.textContent = formatBanglaNumber(Math.round(rec));
+totalGive.textContent = formatBanglaNumber(Math.round(giv));
 }
 
 /* LIVE TIME COUNTER LOOP */

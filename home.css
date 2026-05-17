@@ -102,10 +102,10 @@
 
 .tk-sum-box small{
   display:block;
-  margin-top:8px;
+  margin-top:6px;
   font-size:13px;
-  font-weight:500;
-  color:#333;
+  font-weight:400;
+  color:#222;
 }
 
 .tk-divider{
@@ -248,16 +248,16 @@
 }
 
 .tk-sum-box div{
-  font-size:20px !important;
-  font-weight:700 !important;
+  font-size:18px !important;
+  font-weight:600 !important;
 }
 
 .cust-right{
   display:flex;
   align-items:center;
   gap:16px;
-  color:#b51e23;
-  font-size:18px !important;
+  font-size:16px !important;
+  font-weight:400 !important;
 }
 
 .cust-amount{
@@ -277,12 +277,16 @@
 
 .red-amount{
   color:#b51e23 !important;
+  font-weight:400 !important;
 }
 
 .green-amount{
   color:#118a4d !important;
+  font-weight:400 !important;
 }
 
 .zero-amount{
   color:#666 !important;
+  font-weight:400 !important;
 }
+
