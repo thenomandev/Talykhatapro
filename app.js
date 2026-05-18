@@ -44,6 +44,19 @@ const txnNote = document.getElementById("txnNote");
 const txnDateBtn = document.getElementById("txnDateBtn");
 const txnDate = document.getElementById("txnDate");
 const saveTxnBtn = document.getElementById("saveTxnBtn");
+function updateSaveBtnState(){
+  if(!saveTxnBtn) return;
+
+  const hasAmount =
+    (parseFloat(txnGive.value) || 0) > 0 ||
+    (parseFloat(txnReceive.value) || 0) > 0;
+
+  if(hasAmount){
+    saveTxnBtn.classList.add("active");
+  }else{
+    saveTxnBtn.classList.remove("active");
+  }
+}
 
 const moneyInputs = document.querySelectorAll(".money-input");
 const calcKeys = document.querySelectorAll(".calc-key");
@@ -394,6 +407,7 @@ await updateCustomer(currentCustomer);
     txnGive.value = "";
     txnReceive.value = "";
     txnNote.value = "";
+updateSaveBtnState();
     selectedTxnDate = new Date();
     updateTxnDateButton();
 
@@ -548,9 +562,7 @@ function hideCalculator(){
 }
 
 function hideKeyboard(){
-  if(isTextInput(document.activeElement)){
-    document.activeElement.blur();
-  }
+  return;
 }
 
 function closeTransientUI(){
@@ -603,12 +615,14 @@ async function handleUniversalBack(){
 
 moneyInputs.forEach(input=>{
   const activateInput = ()=>{
-    hideKeyboard();
+  activeMoneyInput = input;
+  calcExpression = input.value || "";
 
-    activeMoneyInput = input;
-    calcExpression = input.value || "";
-    inlineCalculator.classList.add("show");
-  };
+  input.focus();
+  input.setSelectionRange(input.value.length, input.value.length);
+
+  inlineCalculator.classList.add("show");
+};
 
   input.addEventListener("pointerdown", activateInput);
 });
@@ -643,6 +657,12 @@ else if(val === "="){
     );
 
     activeMoneyInput.value = calcExpression;
+activeMoneyInput.focus();
+activeMoneyInput.setSelectionRange(
+  activeMoneyInput.value.length,
+  activeMoneyInput.value.length
+);
+updateSaveBtnState();
   }catch{
     calcExpression = "";
     activeMoneyInput.value = "";
@@ -654,6 +674,12 @@ else if(val === "="){
     }
 
     activeMoneyInput.value = calcExpression;
+activeMoneyInput.focus();
+activeMoneyInput.setSelectionRange(
+  activeMoneyInput.value.length,
+  activeMoneyInput.value.length
+);
+updateSaveBtnState();
   });
 });
 
