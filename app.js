@@ -505,7 +505,11 @@ if (txnDate) {
 }
 
 window.onpopstate = async function () {
-  await handleUniversalBack();
+  const handled = await handleUniversalBack();
+
+  if(handled){
+    history.pushState({screen:"ui"}, "");
+  }
 };
 
 const inlineCalculator = document.getElementById("inlineCalculator");
@@ -546,6 +550,15 @@ function hasTransientUIOpen(){
 async function handleUniversalBack(){
   if(hasTransientUIOpen()){
     closeTransientUI();
+
+    if(ledgerScreen.classList.contains("active")){
+      history.replaceState({screen:"ledger"}, "");
+    }else if(customerFormScreen.classList.contains("active")){
+      history.replaceState({screen:"form"}, "");
+    }else{
+      history.replaceState({screen:"home"}, "");
+    }
+
     return true;
   }
 
