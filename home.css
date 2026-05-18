@@ -27,6 +27,7 @@
   position:relative;
   z-index:300;
   flex-shrink:0;
+  padding-top: env(safe-area-inset-top);
 }
 
 .gold-header-top{
