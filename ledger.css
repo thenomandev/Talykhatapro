@@ -203,9 +203,13 @@
   bottom:0;
   background:#fff;
   z-index:9999;
-  display:grid;
+  display:none;
   grid-template-columns:repeat(4,1fr);
   border-top:1px solid #ddd;
+}
+
+.inline-calculator.show{
+  display:grid;
 }
 
 .calc-key{

@@ -530,10 +530,13 @@ window.onpopstate = async function () {
   }
 };
 
+const inlineCalculator = document.getElementById("inlineCalculator");
+
 moneyInputs.forEach(input=>{
   const activateInput = ()=>{
     activeMoneyInput = input;
     calcExpression = input.value || "";
+    inlineCalculator.classList.add("show");
   };
 
   input.addEventListener("click", activateInput);
@@ -552,15 +555,18 @@ calcKeys.forEach(key=>{
     else if(val === "BACK"){
       calcExpression = calcExpression.slice(0,-1);
     }
-    else if(val === "="){
-      try{
-        calcExpression = String(
-          eval(calcExpression.replace(/%/g,"/100"))
-        );
-      }catch{
-        calcExpression = "";
-      }
-    }
+    
+else if(val === "="){
+  try{
+    calcExpression = String(
+      eval(calcExpression.replace(/%/g,"/100"))
+    );
+    inlineCalculator.classList.remove("show");
+  }catch{
+    calcExpression = "";
+  }
+}
+
     else{
       calcExpression += val;
     }
