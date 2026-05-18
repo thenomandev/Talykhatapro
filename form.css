@@ -211,33 +211,31 @@ input:checked + .slider:before {
   margin-top:10px;
 }
 
-/* PREMIUM ROUND BOX INPUT DESIGN FOR AMOUNT & BIBORON */
-.money-input, #txnNote, #customerName, #customerPhone, #searchInput {
-  width: 100%;
-  height: 48px;
-  border: 1px solid #dcdcdc !important;
-  border-radius: 12px !important; /* Beautiful round boxes */
-  padding: 0 16px !important;
-  font-size: 16px;
-  font-weight: 500;
-  background-color: #fdfdfd !important;
-  color: #222222;
-  outline: none !important;
-  box-sizing: border-box;
-  margin-bottom: 12px;
-  /* Smooth animation transition on active/focus click */
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
-}
-
-/* LIVE BLINKING CURSOR COLOR */
+/* PREMIUM MODAL ROUND BOXES WITH SMOOTH ANIMATION */
 .money-input, #txnNote {
-  caret-color: #bfa15f !important; /* Thick gold color blinking line */
+  width: 100% !important;
+  padding: 14px 16px !important; /* Premium spacious padding - no squishing or flatness */
+  border: 1px solid #dcdcdc !important;
+  border-radius: 12px !important; /* Beautiful rounded corners */
+  font-size: 16px !important;
+  font-weight: 500 !important;
+  background-color: #ffffff !important;
+  color: #222222 !important;
+  outline: none !important;
+  box-sizing: border-box !important;
+  display: block !important;
+  /* Premium instant focus and smooth exit transition */
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out, background-color 0.15s ease-in-out !important;
 }
 
-/* ACTIVE FOCUS ANIMATION FEEL LIKE TOP PREMIUM APPS */
-.money-input:focus, #txnNote:focus, #customerName:focus, #customerPhone:focus {
-  border-color: #bfa15f !important; /* Changes border to gold */
+/* LIVE GOLD BLINKING NATIVE CARET */
+.money-input, #txnNote {
+  caret-color: #bfa15f !important;
+}
+
+/* PREMIUM SOFT OUTER GLOW RING ANIMATION ON TAP */
+.money-input:focus, #txnNote:focus {
+  border-color: #bfa15f !important;
   background-color: #ffffff !important;
-  box-shadow: 0 0 0 3px rgba(191, 161, 95, 0.15) !important; /* Premium outer glow ring on active tap */
-  transform: translateY(-1px); /* Micro lift animation */
+  box-shadow: 0 0 0 3px rgba(191, 161, 95, 0.18) !important;
 }
