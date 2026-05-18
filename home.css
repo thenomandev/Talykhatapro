@@ -98,8 +98,8 @@
 
 .gold-app-panel{
   background:#f9f5ea;
-  border-radius:28px 28px 0 0;
-  padding:81px 12px 61px;
+  border-radius:28px 28px 28px 28px;
+  padding:81px 12px 20px;
   position:relative;
   z-index:200;
 }
@@ -185,7 +185,7 @@
   z-index:300;
   flex:1;
   min-height:0;
-  margin-top:-8px;
+  margin-top:-28px;
   background:#fff;
   border-radius:26px 26px 0 0;
   overflow-y:auto;
