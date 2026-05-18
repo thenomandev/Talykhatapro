@@ -339,31 +339,34 @@
 </div>
 
 <div id="inlineCalculator" class="inline-calculator">
-  <button class="calc-key" data-key="AC">AC</button>
-  <button class="calc-key" data-key="%">%</button>
-  <button class="calc-key" data-key="÷">÷</button>
-  <button class="calc-key" data-key="×">×</button>
+  <!-- Row 1 -->
+  <button class="calc-key action-key" data-key="AC">AC</button>
+  <button class="calc-key action-key" data-key="%">%</button>
+  <button class="calc-key action-key" data-key="÷">÷</button>
+  <button class="calc-key operator-key" data-key="×">×</button>
 
+  <!-- Row 2 -->
   <button class="calc-key" data-key="7">7</button>
   <button class="calc-key" data-key="8">8</button>
   <button class="calc-key" data-key="9">9</button>
-  <button class="calc-key" data-key="-">−</button>
+  <button class="calc-key operator-key" data-key="-">−</button>
 
+  <!-- Row 3 -->
   <button class="calc-key" data-key="4">4</button>
   <button class="calc-key" data-key="5">5</button>
   <button class="calc-key" data-key="6">6</button>
+  <button class="calc-key operator-key" data-key="+">+</button>
 
-  <button class="calc-key calc-plus" data-key="+">+</button>
-
+  <!-- Row 4 -->
   <button class="calc-key" data-key="1">1</button>
   <button class="calc-key" data-key="2">2</button>
   <button class="calc-key" data-key="3">3</button>
+  <button class="calc-key operator-key equal-key" data-key="=">=</button>
 
-  <button class="calc-key calc-equals" data-key="=">=</button>
-
-  <button class="calc-key" data-key="BACK">⌫</button>
-  <button class="calc-key" data-key="0">0</button>
+  <!-- Row 5 -->
   <button class="calc-key" data-key=".">.</button>
+  <button class="calc-key" data-key="0">0</button>
+  <button class="calc-key backspace-key" data-key="BACK"><i class="fa-solid fa-backspace"></i></button>
 </div>
 
 <script src="db.js"></script>

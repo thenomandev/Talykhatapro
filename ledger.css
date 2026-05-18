@@ -203,68 +203,71 @@
   transition:.2s ease;
 }
 
-.inline-calculator{
-  position:fixed;
-  left:0;
-  right:0;
-  bottom:0;
-  background:#ffffff;
-  z-index:9999;
-  display:none;
-  grid-template-columns:repeat(4,1fr);
-  border-top:none;
-box-shadow:0 -1px 0 #d7d7d7;
-height:255px;
+/* PREMIUM INLINE CALCULATOR DESIGN */
+.inline-calculator {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: #f4f4f4;
+  z-index: 9999;
+  display: none;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(5, 54px);
+  gap: 1px;
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.1);
+  padding: 1px;
 }
 
-.inline-calculator.show{
-  display:grid;
+.inline-calculator.show {
+  display: grid;
 }
 
-.calc-key{
-  border:none;
-  border-right:1.5px solid #d2d2d2;
-border-bottom:1.5px solid #d2d2d2;
-height:50px;
-font-size:24px;
-  font-weight:500;
-  color:#222;
+.calc-key {
+  border: none;
+  background: #ffffff;
+  font-size: 20px;
+  font-weight: 500;
+  color: #222222;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.1s ease;
+  user-select: none;
+  height: 100%;
 }
 
-.calc-key:active{
-  background:#f4f4f4;
+.calc-key:active {
+  background: #e0e0e0;
 }
 
-.calc-plus{
-  grid-column:4;
-  grid-row:3 / 5;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  background:rgba(200,16,46,.14);
-  font-size:34px;
-  font-weight:400;
-  min-height:100px;
-  margin-top:-1.5px;
-  margin-left:-1.5px;
-  border-left:1.5px solid #bdbdbd;
-  border-top:1.5px solid #bdbdbd;
-  border-bottom:1.5px solid #bdbdbd;
+.action-key {
+  background: #f9f9f9;
+  color: #000000;
+  font-weight: 600;
 }
 
-.calc-equals{
-  grid-column:4;
-  grid-row:5;
-  background:rgba(200,16,46,.14);
-  font-size:28px;
-  margin-top:-1.5px;
-  margin-left:-1.5px;
-  border-left:1.5px solid #bdbdbd;
-  border-top:1.5px solid #bdbdbd;
-  border-bottom:1.5px solid #bdbdbd;
+.operator-key {
+  background: #f2e6cf;
+  color: #bfa15f;
+  font-size: 24px;
+  font-weight: 600;
 }
 
-.primary-btn.active{
-  background:#c8102e;
-  color:#fff;
+.operator-key:active {
+  background: #e5d4b3;
+}
+
+.equal-key {
+  background: #bfa15f;
+  color: #ffffff;
+}
+
+.equal-key:active {
+  background: #aa8e50;
+}
+
+.backspace-key {
+  font-size: 18px;
+  color: #555555;
 }
