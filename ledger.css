@@ -211,16 +211,6 @@
 #ledgerScreen.active ~ .inline-calculator{
   display:grid;
 }
-  position:fixed;
-  left:0;
-  right:0;
-  bottom:0;
-  background:#fff;
-  z-index:9999;
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  border-top:1px solid #ddd;
-}
 
 .calc-key{
   border:none;

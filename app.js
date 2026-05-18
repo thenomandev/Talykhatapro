@@ -46,6 +46,7 @@ const txnDate = document.getElementById("txnDate");
 const saveTxnBtn = document.getElementById("saveTxnBtn");
 
 const moneyInputs = document.querySelectorAll(".money-input");
+const calcKeys = document.querySelectorAll(".calc-key");
 
 let activeMoneyInput = null;
 let calcExpression = "0";
