@@ -22,7 +22,7 @@ body{
   display:flex;
   justify-content:center;
   align-items:stretch;
-  padding-top:0;
+  padding-top: env(safe-area-inset-top);
 }
 
 button,
