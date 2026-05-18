@@ -531,10 +531,13 @@ window.onpopstate = async function () {
 };
 
 moneyInputs.forEach(input=>{
-  input.addEventListener("click", ()=>{
+  const activateInput = ()=>{
     activeMoneyInput = input;
     calcExpression = input.value || "";
-  });
+  };
+
+  input.addEventListener("click", activateInput);
+  input.addEventListener("touchstart", activateInput);
 });
 
 calcKeys.forEach(key=>{

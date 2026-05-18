@@ -98,7 +98,7 @@
 }
 
 .transaction-form {
-  padding:25px 15px;
+  padding:25px 15px 340px;
   background:#fff;
 }
 
@@ -203,13 +203,9 @@
   bottom:0;
   background:#fff;
   z-index:9999;
-  display:none;
+  display:grid;
   grid-template-columns:repeat(4,1fr);
   border-top:1px solid #ddd;
-}
-
-#ledgerScreen.active ~ .inline-calculator{
-  display:grid;
 }
 
 .calc-key{
