@@ -38,9 +38,10 @@
 }
 
 .gold-business-pill{
-  height:34px;
-  padding:0 10px;
-  border-radius:18px;
+  height:30px;
+  padding:0 14px;
+  border-radius:999px;
+  min-width:240px;
   background:#f9f5ea;
   display:flex;
   align-items:center;
