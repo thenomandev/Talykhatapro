@@ -463,8 +463,7 @@ if (backToHome) {
   backToHome.onclick = async () => {
 
     if (inlineCalculator.classList.contains("show")) {
-      inlineCalculator.classList.remove("show");
-      activeMoneyInput = null;
+      closeAllTransientUI();
       return;
     }
 
@@ -520,15 +519,12 @@ if (txnDate) {
 
 window.onpopstate = async function () {
 
-  /* GLOBAL UI CLOSE RULE */
   if (inlineCalculator.classList.contains("show")) {
-    inlineCalculator.classList.remove("show");
-    activeMoneyInput = null;
+    closeAllTransientUI();
     history.pushState({ui:"closed"}, "");
     return;
   }
 
-  /* SCREEN NAVIGATION */
   if (customerFormScreen.classList.contains("active")) {
     if (currentCustomer) {
       switchScreen(ledgerScreen);
@@ -548,6 +544,17 @@ window.onpopstate = async function () {
 };
 
 const inlineCalculator = document.getElementById("inlineCalculator");
+
+function closeAllTransientUI(){
+  inlineCalculator.classList.remove("show");
+  activeMoneyInput = null;
+
+  if(document.activeElement){
+    document.activeElement.blur();
+  }
+
+  return true;
+}
 
 moneyInputs.forEach(input=>{
   const activateInput = ()=>{
@@ -594,8 +601,7 @@ else if(val === "="){
 });
 
 txnNote.addEventListener("focus", ()=>{
-  inlineCalculator.classList.remove("show");
-  activeMoneyInput = null;
+  closeAllTransientUI();
 });
 
 document.addEventListener("focusin",(e)=>{
@@ -606,9 +612,4 @@ document.addEventListener("focusin",(e)=>{
     inlineCalculator.classList.remove("show");
     activeMoneyInput = null;
   }
-});
-
-window.addEventListener("popstate", ()=>{
-  inlineCalculator.classList.remove("show");
-  activeMoneyInput = null;
 });
