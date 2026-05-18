@@ -561,19 +561,7 @@ else if(val === "="){
     calcExpression = String(
       eval(calcExpression.replace(/%/g,"/100"))
     );
-
     activeMoneyInput.value = calcExpression;
-
-    if(
-      activeMoneyInput.id === "txnGive" ||
-      activeMoneyInput.id === "txnReceive" ||
-      activeMoneyInput.id === "customerOpening"
-    ){
-      inlineCalculator.classList.remove("show");
-      activeMoneyInput.blur();
-      activeMoneyInput = null;
-    }
-
   }catch{
     calcExpression = "";
     activeMoneyInput.value = "";
@@ -586,4 +574,24 @@ else if(val === "="){
 
     activeMoneyInput.value = calcExpression;
   });
+});
+
+txnNote.addEventListener("focus", ()=>{
+  inlineCalculator.classList.remove("show");
+  activeMoneyInput = null;
+});
+
+document.addEventListener("focusin",(e)=>{
+  if(
+    e.target.tagName === "INPUT" &&
+    !e.target.classList.contains("money-input")
+  ){
+    inlineCalculator.classList.remove("show");
+    activeMoneyInput = null;
+  }
+});
+
+window.addEventListener("popstate", ()=>{
+  inlineCalculator.classList.remove("show");
+  activeMoneyInput = null;
 });
