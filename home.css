@@ -41,13 +41,13 @@
   height:42px;
   padding:0 14px;
   border-radius:999px;
-  background:#F9F5EA
+  background:#ffffff;
   display:flex;
   align-items:center;
   gap:10px;
   font-size:14px;
-  font-weight:700;
-  color:#4a3a12;
+  font-weight:500;
+  color:#212121;
   box-shadow:0 2px 8px rgba(0,0,0,.08);
 }
 
