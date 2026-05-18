@@ -204,20 +204,22 @@
 }
 
 /* PREMIUM INLINE CALCULATOR DESIGN - INSTANT TOUCH FEEDBACK */
+
+/* PREMIUM INLINE CALCULATOR DESIGN - SOLID GRID LINES */
+
+/* PREMIUM INLINE CALCULATOR DESIGN - SOLID UNBROKEN GRID LINES */
 .inline-calculator {
   position: fixed;
   left: 0;
   right: 0;
   bottom: 0;
-  background: #e5e5e5;
+  background: #ffffff; /* Solid clean layout background */
   z-index: 9999;
   display: none;
   grid-template-columns: repeat(4, 1fr);
   grid-template-rows: repeat(5, 54px);
-  gap: 1px;
   box-shadow: 0 -4px 25px rgba(0, 0, 0, 0.12);
-  padding: 1px;
-  /* Disable mobile delay behaviors */
+  border-top: 1px solid #e2e2e2;
   touch-action: manipulation;
 }
 
@@ -227,6 +229,9 @@
 
 .calc-key {
   border: none;
+  /* Thin unbroken solid borders */
+  border-right: 1px solid #e5e5e5;
+  border-bottom: 1px solid #e5e5e5;
   background: #ffffff;
   font-size: 20px;
   font-weight: 500;
@@ -237,32 +242,30 @@
   user-select: none;
   height: 100%;
   position: relative;
-  /* Webkit optimization for mobile touch instant response */
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
-  /* Transition handles the RELEASE/FADE BACK smoothly, but touch down will be instant */
-  transition: background 0.2s ease, transform 0.2s ease, border-radius 0.2s ease;
+  /* Snappy color response on tap release */
+  transition: background 0.12s ease;
 }
 
-/* INSTANT ACTIVE STATE ON TOUCH/PRESS (NO DELAY) */
+/* Remove right border on the 4th column keys to prevent double border or overflow issues */
+.calc-key:nth-child(4n) {
+  border-right: none;
+}
+
+/* INSTANT CLICK RESPONSE WITHOUT BREAKING OR WARPING THE STRAIGHT GRID LINES */
 .calc-key:active {
-  transform: scale(0.92) !important;
-  background: #f0f0f0 !important;
-  border-radius: 8px !important;
-  z-index: 2;
-  /* 0s transition means it scales down the microsecond your finger touches it */
-  transition: none !important;
+  background: #f2f2f2 !important;
 }
 
 .action-key {
-  background: #fcfcfc;
+  background: #f9f9f9;
   color: #000000;
   font-weight: 600;
 }
 
 .action-key:active {
   background: #e8e8e8 !important;
-  transition: none !important;
 }
 
 .operator-key {
@@ -274,7 +277,6 @@
 
 .operator-key:active {
   background: #f5e6cc !important;
-  transition: none !important;
 }
 
 .equal-key {
@@ -284,7 +286,6 @@
 
 .equal-key:active {
   background: #a3874b !important;
-  transition: none !important;
 }
 
 .backspace-key {
@@ -294,11 +295,11 @@
 
 /* LIVE BLINKING CURSOR & MONEY INPUT PREVENT VIRTUAL KEYBOARD OPTIMIZATION */
 .money-input {
-  caret-color: #bfa15f !important; /* আপনার থিমের সাথে ম্যাচিং গোল্ডেন কার্সার যা লাইভ লাফাবে */
+  caret-color: #bfa15f !important; /* Thick beautiful theme matching blinking cursor */
   font-weight: 600;
 }
 
 .money-input:focus {
-  background-color: #fffdf7 !important; /* একটিভ বক্সে হালকা গোল্ডেন গ্লো */
+  background-color: #fffdf7 !important; /* Active box highlight color glow */
   border-bottom: 2px solid #bfa15f !important;
 }
