@@ -563,14 +563,15 @@ async function handleUniversalBack(){
   }
 
   if(customerFormScreen.classList.contains("active")){
-    if(currentCustomer){
-      switchScreen(ledgerScreen);
-    }else{
-      await loadDashboard();
-      switchScreen(homeScreen);
-    }
-    return true;
+  if(customerFormTitle.textContent === "নতুন গ্রাহক যোগ করুন"){
+    currentCustomer = null;
+    await loadDashboard();
+    switchScreen(homeScreen);
+  }else{
+    switchScreen(ledgerScreen);
   }
+  return true;
+}
 
   if(ledgerScreen.classList.contains("active")){
     if(liveInterval) clearInterval(liveInterval);
