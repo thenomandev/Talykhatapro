@@ -89,6 +89,10 @@ function renderCustomerList(list) {
     return;
   }
 
+list.sort((a,b)=>
+  ((b.lastActivityAt || b.createdAt || 0) -
+   (a.lastActivityAt || a.createdAt || 0))
+);
   list.forEach(cust => {
     const div = document.createElement("div");
     div.className = "customer-item";
@@ -102,7 +106,7 @@ const amountClass =
 
     let timeText = "এইমাত্র";
 
-    const refTime = cust.createdAt || Date.now();
+    const refTime = cust.lastActivityAt || cust.createdAt || Date.now();
     const diffMs = Date.now() - refTime;
     const mins = Math.floor(diffMs / 60000);
     const hours = Math.floor(mins / 60);
@@ -383,6 +387,9 @@ if (saveTxnBtn) {
     };
 
     await addTransaction(newTxn);
+
+currentCustomer.lastActivityAt = Date.now();
+await updateCustomer(currentCustomer);
     
     txnGive.value = "";
     txnReceive.value = "";
@@ -423,7 +430,18 @@ if (saveCustomerBtn) {
     } else {
      
  const avatarColors = ["#c8e6c9", "#f3e5ab", "#d9e2f3", "#f6d6dc"];
-const randomColor = avatarColors[Math.floor(Math.random() * avatarColors.length)];
+ const lastColor = customers.length
+  ? customers[customers.length - 1].avatarColor
+  : null;
+
+const availableColors = avatarColors.filter(
+  color => color !== lastColor
+);
+
+const randomColor =
+  availableColors[
+    Math.floor(Math.random() * availableColors.length)
+  ];
 
 const newCust = {
   id: Date.now().toString(),

@@ -1,10 +1,10 @@
 {
-  "name": "তালিখাতা",
-  "short_name": "তালিখাতা",
+  "name": "tallybook",
+  "short_name": "tallybook",
   "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#ffffff",
-  "theme_color": "#c8102e",
+  "theme_color": "#c8ab62"
   "orientation": "portrait",
   "icons": []
 }
