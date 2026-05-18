@@ -291,3 +291,14 @@
   font-size: 18px;
   color: #555555;
 }
+
+/* LIVE BLINKING CURSOR & MONEY INPUT PREVENT VIRTUAL KEYBOARD OPTIMIZATION */
+.money-input {
+  caret-color: #bfa15f !important; /* আপনার থিমের সাথে ম্যাচিং গোল্ডেন কার্সার যা লাইভ লাফাবে */
+  font-weight: 600;
+}
+
+.money-input:focus {
+  background-color: #fffdf7 !important; /* একটিভ বক্সে হালকা গোল্ডেন গ্লো */
+  border-bottom: 2px solid #bfa15f !important;
+}
