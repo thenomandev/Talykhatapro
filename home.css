@@ -140,15 +140,15 @@
 
 .gold-summary-layer{
   position:relative;
-  z-index:1;
-  padding:12px 12px 8px;
+  z-index:250;
+  padding:12px 0 8px;
   background:#fff;
 }
 
 .gold-summary-card{
-  background:transparent;
+  background:#fff;
   border-radius:0;
-  padding:0;
+  padding:0 12px;
   display:flex;
   align-items:center;
   justify-content:space-between;
