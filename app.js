@@ -459,30 +459,16 @@ history.pushState({screen:"form"}, "");
 }
 
 /* NAVIGATION BACKS */
-if (backToHome) {
-  backToHome.onclick = async () => {
+document.addEventListener("click", async (e)=>{
+  const backBtn = e.target.closest(".back-btn");
 
-    if (inlineCalculator.classList.contains("show")) {
-      closeAllTransientUI();
-      return;
-    }
+  if(!backBtn) return;
 
-    if (liveInterval) clearInterval(liveInterval);
-    await loadDashboard();
-    switchScreen(homeScreen);
-  };
-}
+  e.preventDefault();
+  e.stopPropagation();
 
-if (backFromCustomerForm) {
-  backFromCustomerForm.onclick = async () => {
-    if (currentCustomer) {
-      switchScreen(ledgerScreen);
-    } else {
-      await loadDashboard();
-      switchScreen(homeScreen);
-    }
-  };
-}
+  await handleUniversalBack();
+});
 
 /* LIVE SEARCH */
 if (searchInput) {
@@ -518,53 +504,80 @@ if (txnDate) {
 }
 
 window.onpopstate = async function () {
-
-  if (inlineCalculator.classList.contains("show")) {
-    closeAllTransientUI();
-    history.pushState({ui:"closed"}, "");
-    return;
-  }
-
-  if (customerFormScreen.classList.contains("active")) {
-    if (currentCustomer) {
-      switchScreen(ledgerScreen);
-    } else {
-      await loadDashboard();
-      switchScreen(homeScreen);
-    }
-    return;
-  }
-
-  if (ledgerScreen.classList.contains("active")) {
-    if (liveInterval) clearInterval(liveInterval);
-    await loadDashboard();
-    switchScreen(homeScreen);
-    return;
-  }
+  await handleUniversalBack();
 };
 
 const inlineCalculator = document.getElementById("inlineCalculator");
 
-function closeAllTransientUI(){
+function isTextInput(el){
+  return !!(
+    el &&
+    (
+      el.tagName === "INPUT" ||
+      el.tagName === "TEXTAREA"
+    )
+  );
+}
+
+function hideCalculator(){
   inlineCalculator.classList.remove("show");
   activeMoneyInput = null;
+}
 
-  if(document.activeElement){
+function hideKeyboard(){
+  if(isTextInput(document.activeElement)){
     document.activeElement.blur();
   }
+}
 
-  return true;
+function closeTransientUI(){
+  hideCalculator();
+  hideKeyboard();
+}
+
+function hasTransientUIOpen(){
+  return (
+    inlineCalculator.classList.contains("show") ||
+    isTextInput(document.activeElement)
+  );
+}
+
+async function handleUniversalBack(){
+  if(hasTransientUIOpen()){
+    closeTransientUI();
+    return true;
+  }
+
+  if(customerFormScreen.classList.contains("active")){
+    if(currentCustomer){
+      switchScreen(ledgerScreen);
+    }else{
+      await loadDashboard();
+      switchScreen(homeScreen);
+    }
+    return true;
+  }
+
+  if(ledgerScreen.classList.contains("active")){
+    if(liveInterval) clearInterval(liveInterval);
+    await loadDashboard();
+    switchScreen(homeScreen);
+    return true;
+  }
+
+  return false;
 }
 
 moneyInputs.forEach(input=>{
   const activateInput = ()=>{
+    hideKeyboard();
+
     activeMoneyInput = input;
     calcExpression = input.value || "";
     inlineCalculator.classList.add("show");
   };
 
-  input.addEventListener("click", activateInput);
-  input.addEventListener("touchstart", activateInput);
+  input.addEventListener("pointerdown", activateInput);
 });
 
 calcKeys.forEach(key=>{
@@ -601,15 +614,14 @@ else if(val === "="){
 });
 
 txnNote.addEventListener("focus", ()=>{
-  closeAllTransientUI();
+  hideCalculator();
 });
 
 document.addEventListener("focusin",(e)=>{
   if(
-    e.target.tagName === "INPUT" &&
+    isTextInput(e.target) &&
     !e.target.classList.contains("money-input")
   ){
-    inlineCalculator.classList.remove("show");
-    activeMoneyInput = null;
+    hideCalculator();
   }
 });
