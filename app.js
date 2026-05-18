@@ -461,6 +461,13 @@ history.pushState({screen:"form"}, "");
 /* NAVIGATION BACKS */
 if (backToHome) {
   backToHome.onclick = async () => {
+
+    if (inlineCalculator.classList.contains("show")) {
+      inlineCalculator.classList.remove("show");
+      activeMoneyInput = null;
+      return;
+    }
+
     if (liveInterval) clearInterval(liveInterval);
     await loadDashboard();
     switchScreen(homeScreen);
@@ -523,11 +530,19 @@ window.onpopstate = async function () {
   }
 
   if (ledgerScreen.classList.contains("active")) {
-    if (liveInterval) clearInterval(liveInterval);
-    await loadDashboard();
-    switchScreen(homeScreen);
+
+  if (inlineCalculator.classList.contains("show")) {
+    inlineCalculator.classList.remove("show");
+    activeMoneyInput = null;
+    history.pushState({screen:"ledger"}, "");
     return;
   }
+
+  if (liveInterval) clearInterval(liveInterval);
+  await loadDashboard();
+  switchScreen(homeScreen);
+  return;
+}
 };
 
 const inlineCalculator = document.getElementById("inlineCalculator");
