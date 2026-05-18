@@ -63,6 +63,7 @@ window.addEventListener("DOMContentLoaded", async () => {
   await loadDashboard();
   updateTxnDateButton();
   history.replaceState({screen:"home"}, "");
+  history.pushState({screen:"ready"}, "");
 });
 
 async function loadDashboard() {
@@ -595,9 +596,20 @@ calcKeys.forEach(key=>{
     
 else if(val === "="){
   try{
+    const safeExpr = calcExpression
+      .replace(/×/g,"*")
+      .replace(/÷/g,"/");
+
+    if(!/^[0-9+\-*/%.() ]+$/.test(safeExpr)){
+      throw new Error("Invalid");
+    }
+
     calcExpression = String(
-      eval(calcExpression.replace(/%/g,"/100"))
+      Function(
+        "return (" + safeExpr.replace(/%/g,"/100") + ")"
+      )()
     );
+
     activeMoneyInput.value = calcExpression;
   }catch{
     calcExpression = "";
@@ -613,9 +625,11 @@ else if(val === "="){
   });
 });
 
-txnNote.addEventListener("focus", ()=>{
-  hideCalculator();
-});
+if(txnNote){
+  txnNote.addEventListener("focus", ()=>{
+    hideCalculator();
+  });
+}
 
 document.addEventListener("focusin",(e)=>{
   if(
