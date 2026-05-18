@@ -245,8 +245,11 @@ font-size:24px;
   font-size:34px;
   font-weight:400;
   min-height:100px;
-margin-top:-1.5px;
-margin-left:-1.5px;
+  margin-top:-1.5px;
+  margin-left:-1.5px;
+  border-left:1.5px solid #bdbdbd;
+  border-top:1.5px solid #bdbdbd;
+  border-bottom:1.5px solid #bdbdbd;
 }
 
 .calc-equals{
@@ -254,8 +257,11 @@ margin-left:-1.5px;
   grid-row:5;
   background:rgba(200,16,46,.14);
   font-size:28px;
-margin-top:-1.5px;
-margin-left:-1.5px;
+  margin-top:-1.5px;
+  margin-left:-1.5px;
+  border-left:1.5px solid #bdbdbd;
+  border-top:1.5px solid #bdbdbd;
+  border-bottom:1.5px solid #bdbdbd;
 }
 
 .primary-btn.active{
