@@ -205,15 +205,13 @@
 
 /* PREMIUM INLINE CALCULATOR DESIGN - INSTANT TOUCH FEEDBACK */
 
-/* PREMIUM INLINE CALCULATOR DESIGN - SOLID GRID LINES */
-
 /* PREMIUM INLINE CALCULATOR DESIGN - SOLID UNBROKEN GRID LINES */
 .inline-calculator {
   position: fixed;
   left: 0;
   right: 0;
   bottom: 0;
-  background: #ffffff; /* Solid clean layout background */
+  background: #ffffff;
   z-index: 9999;
   display: none;
   grid-template-columns: repeat(4, 1fr);
@@ -229,7 +227,6 @@
 
 .calc-key {
   border: none;
-  /* Thin unbroken solid borders */
   border-right: 1px solid #e5e5e5;
   border-bottom: 1px solid #e5e5e5;
   background: #ffffff;
@@ -244,16 +241,13 @@
   position: relative;
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
-  /* Snappy color response on tap release */
   transition: background 0.12s ease;
 }
 
-/* Remove right border on the 4th column keys to prevent double border or overflow issues */
 .calc-key:nth-child(4n) {
   border-right: none;
 }
 
-/* INSTANT CLICK RESPONSE WITHOUT BREAKING OR WARPING THE STRAIGHT GRID LINES */
 .calc-key:active {
   background: #f2f2f2 !important;
 }
@@ -291,15 +285,4 @@
 .backspace-key {
   font-size: 18px;
   color: #555555;
-}
-
-/* LIVE BLINKING CURSOR & MONEY INPUT PREVENT VIRTUAL KEYBOARD OPTIMIZATION */
-.money-input {
-  caret-color: #bfa15f !important; /* Thick beautiful theme matching blinking cursor */
-  font-weight: 600;
-}
-
-.money-input:focus {
-  background-color: #fffdf7 !important; /* Active box highlight color glow */
-  border-bottom: 2px solid #bfa15f !important;
 }

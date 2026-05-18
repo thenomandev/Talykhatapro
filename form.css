@@ -210,3 +210,34 @@ input:checked + .slider:before {
   font-weight:600;
   margin-top:10px;
 }
+
+/* PREMIUM ROUND BOX INPUT DESIGN FOR AMOUNT & BIBORON */
+.money-input, #txnNote, #customerName, #customerPhone, #searchInput {
+  width: 100%;
+  height: 48px;
+  border: 1px solid #dcdcdc !important;
+  border-radius: 12px !important; /* Beautiful round boxes */
+  padding: 0 16px !important;
+  font-size: 16px;
+  font-weight: 500;
+  background-color: #fdfdfd !important;
+  color: #222222;
+  outline: none !important;
+  box-sizing: border-box;
+  margin-bottom: 12px;
+  /* Smooth animation transition on active/focus click */
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+/* LIVE BLINKING CURSOR COLOR */
+.money-input, #txnNote {
+  caret-color: #bfa15f !important; /* Thick gold color blinking line */
+}
+
+/* ACTIVE FOCUS ANIMATION FEEL LIKE TOP PREMIUM APPS */
+.money-input:focus, #txnNote:focus, #customerName:focus, #customerPhone:focus {
+  border-color: #bfa15f !important; /* Changes border to gold */
+  background-color: #ffffff !important;
+  box-shadow: 0 0 0 3px rgba(191, 161, 95, 0.15) !important; /* Premium outer glow ring on active tap */
+  transform: translateY(-1px); /* Micro lift animation */
+}
