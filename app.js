@@ -393,6 +393,7 @@ if (saveTxnBtn) {
 /* SCREEN NAVIGATION LOGIC */
 if (openCustomerModal) {
   openCustomerModal.onclick = () => {
+alert("button clicked");
     if(customerFormTitle) customerFormTitle.textContent = "নতুন কাস্টমার/সাপ্লায়ার";
     if(customerName) customerName.value = "";
     if(customerPhone) customerPhone.value = "";
