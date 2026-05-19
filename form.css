@@ -449,3 +449,11 @@ input:checked + .slider:before {
   color: #ffffff;
   cursor: pointer;
 }
+
+.screen {
+  display: none !important;
+}
+
+.screen.active {
+  display: block !important;
+}
