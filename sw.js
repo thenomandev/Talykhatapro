@@ -1,4 +1,4 @@
-const CACHE_NAME = "tallybook-v1"; // ভার্সন পরিবর্তন করা হলো ফোর্সবল আপডেটের জন্য
+const CACHE_NAME = "tallybook-v2"; // ভার্সন পরিবর্তন করা হলো ফোর্সবল আপডেটের জন্য
 
 const FILES = [
   "./",
