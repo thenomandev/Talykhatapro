@@ -1,6 +1,5 @@
 /* =========================
    GOLD REAL CLONE ENGINE
-   PART 1
 ========================= */
 
 #homeScreen{
@@ -27,7 +26,7 @@
   position:relative;
   z-index:300;
   flex-shrink:0;
-  padding-top: env(safe-area-inset-top);
+  padding-top:env(safe-area-inset-top);
 }
 
 .gold-header-top{
@@ -275,6 +274,14 @@
   font-size:14px;
   font-weight:500;
   color:#222;
+  overflow:hidden;
+}
+
+.avatar img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  border-radius:50%;
 }
 
 .avatar.green{ background:#d9f5d7; }
@@ -330,17 +337,56 @@
   box-shadow:0 10px 24px rgba(0,0,0,.22);
 }
 
+/* AVATAR UPLOAD */
 
-.gold-home-engine {
-  pointer-events: none !important;
+.customer-avatar-upload{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  margin-bottom:20px;
 }
 
-.gold-home-engine * {
-  pointer-events: auto !important;
+.avatar-upload-preview{
+  width:88px;
+  height:88px;
+  border-radius:50%;
+  background:#d9e2f3;
+  position:relative;
+  overflow:hidden;
+  display:flex;
+  align-items:center;
+  justify-content:center;
 }
 
-.gold-fab {
-  position: fixed !important;
-  z-index: 999999 !important;
-  pointer-events: auto !important;
+.avatar-upload-preview img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  border-radius:50%;
 }
+
+.avatar-default-icon{
+  font-size:38px;
+  color:#ffffff;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.avatar-camera-btn{
+  position:absolute;
+  right:2px;
+  bottom:2px;
+  width:34px;
+  height:34px;
+  border-radius:50%;
+  background:#ffffff;
+  border:2px solid #f1f1f1;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:#222;
+  font-size:14px;
+  box-shadow:0 2px 8px rgba(0,0,0,.15);
+}
+
