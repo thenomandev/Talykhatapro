@@ -22,6 +22,14 @@ const customerFormTitle = document.getElementById("customerFormTitle");
 const customerName = document.getElementById("customerName");
 const customerPhone = document.getElementById("customerPhone");
 const customerOpening = document.getElementById("customerOpening");
+
+const customerAvatarInput = document.getElementById("customerAvatarInput");
+const avatarUploadBtn = document.getElementById("avatarUploadBtn");
+const avatarPreviewImg = document.getElementById("avatarPreviewImg");
+const avatarDefaultIcon = document.getElementById("avatarDefaultIcon");
+
+let selectedAvatarBase64 = "";
+
 const openingBalContainer = document.getElementById("openingBalContainer");
 
 const backToHome = document.getElementById("backToHome");
@@ -49,10 +57,10 @@ const moneyInputs = document.querySelectorAll(".money-input");
 const calcKeys = document.querySelectorAll(".calc-key");
 const inlineCalculator = document.getElementById("inlineCalculator");
 
-const btnImportContact = document.getElementById("btnImportContact"); // ফোনবুক বাটন
+const btnImportContact = document.getElementById("btnImportContact");
 
 let activeMoneyInput = null;
-let calcExpression = "0";
+let calcExpression = "";
 
 const liveTimeCounter = document.querySelector(".status-right");
 const reportViewContainer = document.getElementById("reportViewContainer");
@@ -66,21 +74,37 @@ window.addEventListener("DOMContentLoaded", async () => {
   await loadDashboard();
   updateTxnDateButton();
   initFormValidation();
-  initContactPicker(); // ফোনবুক ইন্টিগ্রেশন চালু করা হলো
-  history.replaceState({screen:"home"}, "");
-  history.pushState({screen:"ready"}, "");
+  initContactPicker();
+  
+  if (avatarUploadBtn && customerAvatarInput) {
+    avatarUploadBtn.addEventListener("click", () => {
+      customerAvatarInput.click();
+    });
+    customerAvatarInput.addEventListener("change", handleAvatarSelect);
+  }
+
+  history.replaceState({ screen: "home" }, "");
+  history.pushState({ screen: "ready" }, "");
+});
+
+window.addEventListener("popstate", (e) => {
+  if (e.state && e.state.screen === "home") {
+    if (inlineCalculator) inlineCalculator.classList.remove("show");
+    switchScreen(homeScreen);
+    history.pushState({ screen: "ready" }, "");
+  }
 });
 
 /* OPTIMIZED FAST DASHBOARD LOAD */
 async function loadDashboard() {
   customers = await getCustomers();
   
-  // লুপের গতি বাড়ানোর জন্য Promise.all ব্যবহার করা হয়েছে যেন খুব দ্রুত লোড হয়
+  // High-performance loading using Promise.all
   await Promise.all(customers.map(async (cust) => {
     const txns = await getTransactions(cust.id);
     cust.computedBalance = calcBalance(cust, txns);
   }));
-  
+
   renderCustomerList(customers);
   updateSummary();
 }
@@ -91,14 +115,15 @@ function renderCustomerList(list) {
   customerCount.textContent = `${formatBanglaNumber(list.length)} / সাপ্লায়ার ০`;
 
   if (list.length === 0) {
-    customerList.innerHTML =
-      `<div style="text-align:center;padding:40px;color:#777;">কোনো গ্রাহক পাওয়া যায়নি</div>`;
+    customerList.innerHTML = `
+      <div style="text-align:center; padding:40px; color:#777;">
+        কোনো গ্রাহক পাওয়া যায়নি
+      </div>`;
     return;
   }
 
-  list.sort((a,b)=>
-    ((b.lastActivityAt || b.createdAt || 0) -
-     (a.lastActivityAt || a.createdAt || 0))
+  list.sort((a, b) => 
+    ((b.lastActivityAt || b.createdAt || 0) - (a.lastActivityAt || a.createdAt || 0))
   );
 
   list.forEach(cust => {
@@ -107,10 +132,7 @@ function renderCustomerList(list) {
 
     const bal = cust.computedBalance || 0;
     const absBal = Math.abs(bal);
-    const amountClass =
-      bal < 0 ? "green-amount" :
-      bal > 0 ? "red-amount" :
-      "zero-amount";
+    const amountClass = bal < 0 ? "green-amount" : bal > 0 ? "red-amount" : "zero-amount";
 
     let timeText = "এইমাত্র";
     const refTime = cust.lastActivityAt || cust.createdAt || Date.now();
@@ -129,12 +151,19 @@ function renderCustomerList(list) {
       timeText = `${formatBanglaNumber(days)} দিন`;
     }
 
+    let avatarPart = "";
+    if (cust.avatarBase64) {
+      avatarPart = `<img src="${cust.avatarBase64}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;" />`;
+    } else {
+      avatarPart = cust.name.trim().length >= 2 
+        ? cust.name.trim().substring(0, 2).toUpperCase() 
+        : cust.name.trim().charAt(0).toUpperCase();
+    }
+
     div.innerHTML = `
       <div class="cust-left">
-        <div class="avatar" style="background:${cust.avatarColor || '#d9e2f3'};">
-          ${cust.name.trim().length >= 2
-            ? cust.name.trim().substring(0,2).toUpperCase()
-            : cust.name.trim().charAt(0).toUpperCase()}
+        <div class="avatar" style="background:${cust.avatarColor || '#d9e2f3'}; overflow:hidden;">
+          ${avatarPart}
         </div>
         <div>
           <div class="cust-name">${cust.name}</div>
@@ -142,8 +171,8 @@ function renderCustomerList(list) {
         </div>
       </div>
       <div class="cust-right">
-        <span class="cust-amount ${amountClass}">${money(absBal)}</span>
-        <i class="fa-solid fa-chevron-right"></i>
+        <span class="cust-amount ${amountClass}">৳ ${money(absBal)}</span>
+        <i class="fa-solid fa-chevron-right" style="color:#ccc; font-size:12px;"></i>
       </div>
     `;
 
@@ -152,7 +181,6 @@ function renderCustomerList(list) {
   });
 }
 
-/* DASHBOARD SUMMARY CALCULATOR */
 function updateSummary() {
   let rec = 0;
   let giv = 0;
@@ -165,16 +193,15 @@ function updateSummary() {
   totalGive.textContent = formatBanglaNumber(Math.round(giv));
 }
 
-/* LIVE TIME COUNTER LOOP */
 function startLiveTimer(cust, txns) {
   if (liveInterval) clearInterval(liveInterval);
-  
+
   function updateTime() {
     let referenceTime = cust.createdAt || Date.now();
     if (txns && txns.length > 0) {
-      referenceTime = txns[0].createdAt; 
+      referenceTime = txns[0].createdAt;
     }
-    
+
     const diffMs = Date.now() - referenceTime;
     const diffMins = Math.floor(diffMs / 60000);
     const diffHours = Math.floor(diffMins / 60);
@@ -192,35 +219,39 @@ function startLiveTimer(cust, txns) {
       liveTimeCounter.textContent = `(${formatBanglaNumber(diffDays)} দিন আগে)`;
     }
   }
-  
+
   updateTime();
-  liveInterval = setInterval(updateTime, 30000); 
+  liveInterval = setInterval(updateTime, 30000);
 }
 
-/* LEDGER DETAILS VIEW */
+/* LEDGER SCREEN WINDOW */
 async function openLedger(customer) {
   currentCustomer = customer;
   switchScreen(ledgerScreen);
-  history.pushState({screen:"ledger"}, "");
-  
-  ledgerName.textContent = customer.name;
-  ledgerAvatar.textContent =
-    customer.name.trim().length >= 2
-      ? customer.name.trim().substring(0,2).toUpperCase()
-      : customer.name.trim().charAt(0).toUpperCase();
+  history.pushState({ screen: "ledger" }, "");
 
-  ledgerAvatar.style.background = customer.avatarColor || "#0b61a4";
+  ledgerName.textContent = customer.name;
+
+  if (customer.avatarBase64) {
+    ledgerAvatar.innerHTML = `<img src="${customer.avatarBase64}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;" />`;
+    ledgerAvatar.style.background = "none";
+  } else {
+    ledgerAvatar.textContent = customer.name.trim().length >= 2 
+      ? customer.name.trim().substring(0, 2).toUpperCase() 
+      : customer.name.trim().charAt(0).toUpperCase();
+    ledgerAvatar.style.background = customer.avatarColor || "#0b61a4";
+  }
 
   if (threeDotMenu) threeDotMenu.classList.remove("active");
   if (reportViewContainer) reportViewContainer.style.display = "none";
-  
+
   txnGive.value = "";
   txnReceive.value = "";
   txnNote.value = "";
-  
+
   const txns = await getTransactions(customer.id);
   startLiveTimer(customer, txns);
-  
+
   const bal = calcBalance(customer, txns);
   currentCustomer.computedBalance = bal;
 
@@ -236,21 +267,45 @@ async function openLedger(customer) {
     ledgerBalance.style.color = "#118a4d";
   }
 
-  // Transaction History Rendering
   const transactionList = document.getElementById("transactionList");
   if (transactionList) {
     transactionList.innerHTML = "";
+
+    if (customer.openingBalance && customer.openingBalance !== 0) {
+      const opDiv = document.createElement("div");
+      opDiv.className = "transaction-item op-bal-item";
+      const opLabel = customer.openingBalance > 0 ? "পাবো হিসেবে শুরু" : "দেবো হিসেবে শুরু";
+      opDiv.innerHTML = `
+        <div class="txn-note">opening balance (${opLabel})</div>
+        <div class="txn-amount ${customer.openingBalance > 0 ? 'give' : 'receive'}">
+          ৳ ${money(Math.abs(customer.openingBalance))}
+        </div>
+      `;
+      transactionList.appendChild(opDiv);
+    }
+
     txns.forEach(txn => {
       const div = document.createElement("div");
       div.className = "transaction-item";
-      
-      const amount = txn.give > 0 ? txn.give : txn.receive;
-      const cls = txn.give > 0 ? "give" : "receive";
-      const label = txn.give > 0 ? "দিলাম" : "পেলাম";
+
+      const isGive = txn.give > 0;
+      const amount = isGive ? txn.give : txn.receive;
+      const cls = isGive ? "give" : "receive";
+      const label = isGive ? "দিলাম" : "পেলাম";
+
+      const tDate = new Date(txn.createdAt);
+      const timeStr = formatTimeBangla(tDate);
+      const dateStr = formatDateBangla(tDate);
 
       div.innerHTML = `
-        <div class="txn-note">${txn.note || "লেনদেন"}</div>
-        <div class="txn-amount ${cls}">${label}: ৳ ${money(amount)}</div>
+        <div class="txn-meta-left">
+          <div class="txn-datetime">${dateStr} • ${timeStr}</div>
+          <div class="txn-note">${txn.note || (isGive ? "টাকা দিলাম" : "টাকা পেলাম")}</div>
+        </div>
+        <div class="txn-amount ${cls}">
+          <div class="txn-label-sub">${label}</div>
+          ৳ ${money(amount)}
+        </div>
       `;
 
       div.oncontextmenu = async (e) => {
@@ -265,20 +320,21 @@ async function openLedger(customer) {
       transactionList.appendChild(div);
     });
   }
+  updateSaveBtnState();
 }
 
-/* FIXED LIVE VALIDATION & TOGGLE MECHANISM */
+/* LIVE UI VALIDATION FOR ADD CUSTOMER FORM (FIXED VARIABLE NAMES) */
 function initFormValidation() {
   const wrapperName = document.getElementById("nameWrapperCtx");
   const txtErrorName = document.getElementById("nameErrorTxtCtx");
-  
+
   const pillCustomer = document.getElementById("pillCustomer");
   const pillSupplier = document.getElementById("pillSupplier");
-  
+
   if (pillCustomer && pillSupplier) {
     const toggles = [pillCustomer, pillSupplier];
     toggles.forEach(pill => {
-      pill.addEventListener("click", function() {
+      pill.addEventListener("click", function () {
         toggles.forEach(p => p.classList.remove("active"));
         this.classList.add("active");
         const internalRadio = this.querySelector("input[type='radio']");
@@ -287,7 +343,6 @@ function initFormValidation() {
     });
   }
 
-  // এই ফাংশনটি এখন সঠিকভাবে আইডিগুলো রিড করতে পারবে এবং এরর চলে যাবে
   function runLiveUiValidation() {
     if (!customerName || !customerPhone) return;
 
@@ -305,10 +360,9 @@ function initFormValidation() {
       isNameValid = valName.length >= 3;
     }
 
-    // মোবাইল নম্বরের স্ট্যান্ডার্ড ভ্যালিডেশন চেক (কমপক্ষে ১১ ডিজিট)
     const isPhoneValid = valPhone.length >= 11;
 
-    // নাম ৩ অক্ষরের বেশি এবং ফোন নম্বর ঠিক থাকলে সেকশনগুলো দৃশ্যমান হবে ও বাটন কাজ করবে
+    // Fixed elements: Using correct variable name registered globally
     if (isNameValid && isPhoneValid) {
       if (openingBalContainer) openingBalContainer.classList.add("reveal-section");
       if (saveCustomerBtn) {
@@ -330,12 +384,11 @@ function initFormValidation() {
   }
 }
 
-/* PHONEBOOK IMPORT SYSTEM (WEB CONTACT PICKER) */
+/* PHONEBOOK / CONTACT PICKER ENGINE (FIXED & LOGGED) */
 function initContactPicker() {
   if (!btnImportContact) return;
 
   btnImportContact.addEventListener("click", async () => {
-    // চেক করা হচ্ছে ব্রাউজার বা ক্রোম কন্টাক্ট পিকিং সাপোর্ট করে কি না
     const props = ["name", "tel"];
     const opts = { multiple: false };
 
@@ -344,62 +397,111 @@ function initContactPicker() {
         const contacts = await navigator.contacts.select(props, opts);
         if (contacts && contacts.length > 0) {
           const contact = contacts[0];
-          
+
           if (contact.name && contact.name.length > 0) {
             customerName.value = contact.name[0];
           }
           if (contact.tel && contact.tel.length > 0) {
-            // স্পেস বা কান্ট্রি কোড ফরম্যাট ক্লিন করার জন্য রেগুলার এক্সপ্রেশন
             let cleanPhone = contact.tel[0].replace(/[^0-9+]/g, "");
             if (cleanPhone.startsWith("+88")) {
               cleanPhone = cleanPhone.replace("+88", "");
             }
             customerPhone.value = cleanPhone;
           }
-          
-          // ইনপুট ভ্যালু অ্যাসাইন করার পর ভ্যালিডেশন ফায়ার করার জন্য ট্রিগার
+
+          // Triggering input validation instantly
           customerName.dispatchEvent(new Event("input"));
+          customerPhone.dispatchEvent(new Event("input"));
         }
       } catch (err) {
-        console.log("কন্টাক্ট সিলেক্ট করা হয়নি বা ক্যানসেল করা হয়েছে।", err);
+        console.log("Contact Picker Canceled/Error: ", err);
       }
     } else {
-      alert("দুঃখিত! আপনার ব্রাউজারটি ফোনবুক থেকে কন্টাক্ট সরাসরি যুক্ত করা সাপোর্ট করে না। অনুগ্রহ করে টাইপ করে লিখুন।");
+      alert("আপনার ব্রাউজার বা ডিভাইসে সরাসরি ফোনবুক খোলার অনুমতি নেই। অনুগ্রহ করে টাইপ করুন।");
     }
   });
 }
 
-/* SAVE CUSTOMER LOGIC TO INDEXEDDB */
+/* AVATAR FILE HANDLER */
+function handleAvatarSelect(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = function (event) {
+    selectedAvatarBase64 = event.target.result;
+    if (avatarPreviewImg) {
+      avatarPreviewImg.src = selectedAvatarBase64;
+      avatarPreviewImg.style.display = "block";
+    }
+    if (avatarDefaultIcon) {
+      avatarDefaultIcon.style.display = "none";
+    }
+  };
+  reader.readAsDataURL(file);
+}
+
+function resetAvatarUi() {
+  selectedAvatarBase64 = "";
+  if (customerAvatarInput) customerAvatarInput.value = "";
+  if (avatarPreviewImg) {
+    avatarPreviewImg.src = "";
+    avatarPreviewImg.style.display = "none";
+  }
+  if (avatarDefaultIcon) {
+    avatarDefaultIcon.style.display = "block";
+  }
+}
+
+/* SAVE CUSTOMER SYSTEM */
 if (saveCustomerBtn) {
   saveCustomerBtn.onclick = async () => {
     const nameVal = customerName.value.trim();
     const phoneVal = customerPhone.value.trim();
-    const openingVal = parseFloat(customerOpening.value) || 0;
+
+    let openingVal = parseFloat(customerOpening.value) || 0;
+    const opTypeRadio = document.querySelector("input[name='openingType']:checked");
+    if (opTypeRadio && opTypeRadio.value === "give") {
+      openingVal = openingVal * 1; 
+    } else if (opTypeRadio && opTypeRadio.value === "receive") {
+      openingVal = openingVal * -1;
+    }
 
     if (nameVal.length < 3 || phoneVal.length < 11) return;
 
-    const colors = ["#d9e2f3", "#d9f5d7", "#f7efc2", "#dfe7f7", "#f7dce0"];
-    const randomColor = colors[Math.floor(Math.random() * colors.length)];
+    if (currentCustomer && currentCustomer.id) {
+      currentCustomer.name = nameVal;
+      currentCustomer.phone = phoneVal;
+      currentCustomer.openingBalance = openingVal;
+      if (selectedAvatarBase64) {
+        currentCustomer.avatarBase64 = selectedAvatarBase64;
+      }
+      currentCustomer.lastActivityAt = Date.now();
+      await updateCustomer(currentCustomer);
+    } else {
+      const colors = ["#d9e2f3", "#d9f5d7", "#f7efc2", "#dfe7f7", "#f7dce0"];
+      const randomColor = colors[Math.floor(Math.random() * colors.length)];
 
-    const newCust = {
-      id: "cust_" + Date.now(),
-      name: nameVal,
-      phone: phoneVal,
-      openingBalance: openingVal,
-      avatarColor: randomColor,
-      createdAt: Date.now(),
-      lastActivityAt: Date.now()
-    };
+      const newCust = {
+        id: "cust_" + Date.now(),
+        name: nameVal,
+        phone: phoneVal,
+        openingBalance: openingVal,
+        avatarColor: randomColor,
+        avatarBase64: selectedAvatarBase64,
+        createdAt: Date.now(),
+        lastActivityAt: Date.now()
+      };
+      await addCustomer(newCust);
+    }
 
-    await addCustomer(newCust);
     await loadDashboard();
-    
     if (inlineCalculator) inlineCalculator.classList.remove("show");
     switchScreen(homeScreen);
   };
 }
 
-/* SAVE TRANSACTION LOGIC */
+/* SAVE TRANSACTION SYSTEM */
 if (saveTxnBtn) {
   saveTxnBtn.onclick = async () => {
     if (!currentCustomer) return;
@@ -409,7 +511,7 @@ if (saveTxnBtn) {
     const noteVal = txnNote.value.trim();
 
     if (giveVal === 0 && receiveVal === 0) {
-      alert("অনুগ্রহ করে একটি অংক বসান!");
+      alert("অনুগ্রহ করে একটি সঠিক অংক বসান!");
       return;
     }
 
@@ -419,17 +521,16 @@ if (saveTxnBtn) {
       give: giveVal,
       receive: receiveVal,
       note: noteVal,
-      createdAt: Date.now()
+      createdAt: selectedTxnDate.getTime()
     };
 
     await addTransaction(newTxn);
-    
-    // Update Customer Activity
+
     currentCustomer.lastActivityAt = Date.now();
     await updateCustomer(currentCustomer);
 
     await loadDashboard();
-    
+
     const updated = customers.find(c => c.id === currentCustomer.id);
     if (updated) openLedger(updated);
 
@@ -437,26 +538,30 @@ if (saveTxnBtn) {
   };
 }
 
-/* SCREEN NAVIGATION LOGIC */
+/* NAVIGATION TRIGGERS */
 if (openCustomerModal) {
   openCustomerModal.onclick = () => {
-    if(customerFormTitle) customerFormTitle.textContent = "নতুন কাস্টমার/সাপ্লায়ার";
-    if(customerName) customerName.value = "";
-    if(customerPhone) customerPhone.value = "";
-    if(customerOpening) customerOpening.value = "";
-    
+    currentCustomer = null;
+    resetAvatarUi();
+
+    if (customerFormTitle) customerFormTitle.textContent = "নতুন কাস্টমার/সাপ্লায়ার";
+    if (customerName) customerName.value = "";
+    if (customerPhone) customerPhone.value = "";
+    if (customerOpening) customerOpening.value = "";
+
     const wrapperName = document.getElementById("nameWrapperCtx");
     const txtErrorName = document.getElementById("nameErrorTxtCtx");
     if (wrapperName) wrapperName.classList.remove("wrapper-error-state");
     if (txtErrorName) txtErrorName.style.display = "none";
     if (openingBalContainer) openingBalContainer.classList.remove("reveal-section");
+    
     if (saveCustomerBtn) {
       saveCustomerBtn.setAttribute("disabled", "true");
       saveCustomerBtn.classList.remove("active-state-btn");
     }
-    
+
     switchScreen(customerFormScreen);
-    history.pushState({screen:"form"}, "");
+    history.pushState({ screen: "form" }, "");
   };
 }
 
@@ -475,7 +580,6 @@ if (backToHome) {
   };
 }
 
-/* THREE DOT MENU CONTROL */
 if (deleteCustomerBtn) {
   deleteCustomerBtn.onclick = (e) => {
     e.stopPropagation();
@@ -498,37 +602,112 @@ if (optDelete) {
   };
 }
 
-/* SEARCH SYSTEM */
+if (optEdit) {
+  optEdit.onclick = () => {
+    if (!currentCustomer) return;
+    resetAvatarUi();
+
+    if (customerFormTitle) customerFormTitle.textContent = "কাস্টমার প্রোফাইল এডিট";
+    if (customerName) customerName.value = currentCustomer.name;
+    if (customerPhone) customerPhone.value = currentCustomer.phone;
+
+    if (currentCustomer.openingBalance) {
+      if (customerOpening) customerOpening.value = Math.abs(currentCustomer.openingBalance);
+      if (currentCustomer.openingBalance > 0) {
+        document.getElementById("radioGive").checked = true;
+        document.getElementById("pillCustomer").classList.add("active");
+        document.getElementById("pillSupplier").classList.remove("active");
+      } else {
+        document.getElementById("radioReceive").checked = true;
+        document.getElementById("pillSupplier").classList.add("active");
+        document.getElementById("pillCustomer").classList.remove("active");
+      }
+    } else {
+      if (customerOpening) customerOpening.value = "";
+      document.getElementById("radioGive").checked = true;
+      document.getElementById("pillCustomer").classList.add("active");
+      document.getElementById("pillSupplier").classList.remove("active");
+    }
+
+    if (currentCustomer.avatarBase64) {
+      selectedAvatarBase64 = currentCustomer.avatarBase64;
+      if (avatarPreviewImg) {
+        avatarPreviewImg.src = selectedAvatarBase64;
+        avatarPreviewImg.style.display = "block";
+      }
+      if (avatarDefaultIcon) avatarDefaultIcon.style.display = "none";
+    }
+
+    customerName.dispatchEvent(new Event("input"));
+    switchScreen(customerFormScreen);
+  };
+}
+
+/* SEARCH ENGINE */
 if (searchInput) {
   searchInput.addEventListener("input", (e) => {
     const term = e.target.value.toLowerCase();
-    const filtered = customers.filter(c => c.name.toLowerCase().includes(term) || c.phone.includes(term));
+    const filtered = customers.filter(c => 
+      c.name.toLowerCase().includes(term) || c.phone.includes(term)
+    );
     renderCustomerList(filtered);
   });
 }
 
 function updateTxnDateButton() {
-  if (txnDateBtn) txnDateBtn.textContent = "📅 আজ";
+  if (txnDateBtn) {
+    txnDateBtn.textContent = "📅 আজ";
+  }
 }
 
-/* INLINE KEYPAD CALCULATOR ENGINE FOR MONEY INPUTS */
+function updateSaveBtnState() {
+  if (!saveTxnBtn) return;
+  const g = parseFloat(txnGive.value) || 0;
+  const r = parseFloat(txnReceive.value) || 0;
+
+  if (g > 0 || r > 0) {
+    saveTxnBtn.removeAttribute("disabled");
+    saveTxnBtn.style.background = "#b51e23";
+    saveTxnBtn.style.color = "#ffffff";
+    saveTxnBtn.style.opacity = "1";
+    saveTxnBtn.style.cursor = "pointer";
+  } else {
+    saveTxnBtn.setAttribute("disabled", "true");
+    saveTxnBtn.style.background = "#f5f5f5";
+    saveTxnBtn.style.color = "#bbbbbb";
+    saveTxnBtn.style.opacity = "0.7";
+    saveTxnBtn.style.cursor = "not-allowed";
+  }
+}
+
+/* TRANSACTION INPUT & KEYPAD ENGINE */
 moneyInputs.forEach(input => {
   const activateInput = (e) => {
     e.preventDefault();
+
     activeMoneyInput = input;
     calcExpression = input.value || "";
-    
+
     moneyInputs.forEach(i => i.classList.remove("active-focus"));
     input.classList.add("active-focus");
+
+    if (inlineCalculator) {
+      inlineCalculator.classList.add("show");
+    }
     
-    if (inlineCalculator) inlineCalculator.classList.add("show");
+    // Smooth scroll integration safely
+    setTimeout(() => {
+      input.scrollIntoView({ behavior: "smooth", block: "center" });
+    }, 120);
   };
+
   input.addEventListener("pointerdown", activateInput);
 });
 
 calcKeys.forEach(key => {
   key.addEventListener("click", () => {
     if (!activeMoneyInput) return;
+
     const val = key.dataset.key;
 
     if (val === "AC") {
@@ -538,16 +717,30 @@ calcKeys.forEach(key => {
     } else if (val === "=") {
       try {
         const safeExpr = calcExpression.replace(/×/g, "*").replace(/÷/g, "/");
-        if (!/^[0-9+\\-*/%.() ]+$/.test(safeExpr)) throw new Error("Invalid");
-        calcExpression = String(Function("return (" + safeExpr.replace(/%/g, "/100") + ")")());
+
+        if (!/^[0-9+\\-*/%.() ]+$/.test(safeExpr)) {
+          throw new Error("Invalid");
+        }
+
+        calcExpression = String(
+          Function("return (" + safeExpr.replace(/%/g, "/100") + ")")()
+        );
+
+        activeMoneyInput.value = calcExpression;
+        activeMoneyInput.focus();
+        activeMoneyInput.setSelectionRange(activeMoneyInput.value.length, activeMoneyInput.value.length);
+        updateSaveBtnState();
       } catch {
         calcExpression = "";
+        activeMoneyInput.value = "";
       }
     } else {
-      if(calcExpression === "0" && val !== ".") calcExpression = "";
       calcExpression += val;
     }
 
     activeMoneyInput.value = calcExpression;
+    activeMoneyInput.focus();
+    activeMoneyInput.setSelectionRange(activeMoneyInput.value.length, activeMoneyInput.value.length);
+    updateSaveBtnState();
   });
 });
