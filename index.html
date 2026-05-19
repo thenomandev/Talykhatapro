@@ -28,7 +28,6 @@
 
 <div class="gold-home-engine">
 
-  <!-- LAYER 1 FIXED -->
   <div class="gold-fixed-top">
 
     <div class="gold-header-top">
@@ -87,7 +86,7 @@
           <span>গ্রুপ তাগাদা</span>
         </button>
 
-<button>
+        <button>
           <i class="fa-solid fa-qrcode"></i>
           <span>QR কোড</span>
         </button>
@@ -113,30 +112,29 @@
 
   </div>
 
-  <!-- MAIN WHITE SCROLL CONTAINER -->
-<div class="gold-main-scroll">
+  <div class="gold-main-scroll">
 
-  <div class="gold-summary-layer">
+    <div class="gold-summary-layer">
 
-    <div class="gold-summary-card">
+      <div class="gold-summary-card">
 
-      <div class="gold-sum-box">
-        <div id="totalReceive" class="receive">০</div>
-        <small>মোট পাবো</small>
-      </div>
+        <div class="gold-sum-box">
+          <div id="totalReceive" class="receive">০</div>
+          <small>মোট পাবো</small>
+        </div>
 
-      <div class="gold-sum-divider"></div>
+        <div class="gold-sum-divider"></div>
 
-      <div class="gold-sum-box">
-        <div id="totalGive" class="give">০</div>
-        <small>মোট দেবো</small>
+        <div class="gold-sum-box">
+          <div id="totalGive" class="give">০</div>
+          <small>মোট দেবো</small>
+        </div>
+
       </div>
 
     </div>
 
-  </div>
-
-  <div class="gold-search-block">
+    <div class="gold-search-block">
 
       <div class="gold-search-box">
         <i class="fa-solid fa-magnifying-glass"></i>
@@ -158,7 +156,7 @@
 
     </div>
 
-<div class="gold-customer-header">
+    <div class="gold-customer-header">
       কাস্টমার <span id="customerCount">০</span>
     </div>
 
@@ -174,43 +172,64 @@
 
 </section>
 
-<!-- CUSTOMER FORM -->
 <section id="customerFormScreen" class="screen">
 
-  <header class="simple-header">
-    <button id="backFromCustomerForm" class="back-btn">
-      <i class="fa-solid fa-arrow-left"></i>
-    </button>
+  <div class="new-ui-container">
+    <header class="new-ui-header">
+      <button id="backFromCustomerForm" class="new-back-btn">
+        <i class="fa-solid fa-arrow-left"></i>
+      </button>
+      <h2 id="customerFormTitle">নতুন কাস্টমার/সাপ্লায়ার</h2>
+    </header>
 
-    <h2 id="customerFormTitle">নতুন গ্রাহক যোগ করুন</h2>
-  </header>
+    <div class="new-form-body">
+      <div class="type-selector-row">
+        <label class="type-pill-label active" id="pillCustomer">
+          <input type="radio" name="customer-type-toggle" value="customer" checked />
+          <span class="custom-radio-dot"></span> কাস্টমার
+        </label>
+        <label class="type-pill-label" id="pillSupplier">
+          <input type="radio" name="customer-type-toggle" value="supplier" />
+          <span class="custom-radio-dot"></span> সাপ্লায়ার
+        </label>
+      </div>
 
-  <div class="form-body">
+      <button type="button" class="phonebook-import-btn">
+        <i class="fa-solid fa-address-book"></i> ফোনবুক থেকে যোগ করি
+      </button>
 
-    <div class="input-item floating-field">
-  <label class="floating-label">নাম</label>
-  <input id="customerName" type="text" />
-</div>
+      <div class="modern-input-wrapper" id="nameWrapperCtx">
+        <i class="fa-solid fa-user modern-field-icon"></i>
+        <input id="customerName" type="text" placeholder="নাম" autocomplete="off" />
+        <i class="fa-solid fa-circle-exclamation modern-error-icon"></i>
+      </div>
+      <div id="nameErrorTxtCtx" class="modern-error-message">নাম ৩ থেকে ৩৫ অক্ষরের মধ্যে হতে হবে।</div>
 
-    <div class="input-item floating-field">
-  <label class="floating-label">মোবাইল নম্বর</label>
-  <input id="customerPhone" type="tel" />
-</div>
+      <div class="modern-input-wrapper" id="phoneWrapperCtx">
+        <i class="fa-solid fa-phone modern-field-icon"></i>
+        <input id="customerPhone" type="tel" placeholder="মোবাইল নম্বর" autocomplete="off" />
+      </div>
 
-    <div class="input-item floating-field" id="openingBalContainer">
-  <label class="floating-label">পূর্বের বাকি (জের)</label>
-  <input id="customerOpening" type="text" inputmode="none" readonly class="money-input" />
-</div>
+      <div id="openingBalContainer" class="animated-hidden-section">
+        <div class="modern-input-wrapper">
+          <span class="modern-taka-symbol">৳</span>
+          <input id="customerOpening" type="text" inputmode="none" readonly placeholder="পূর্বের বাকি (জের)" class="money-input" />
+        </div>
 
-    <button id="saveCustomerBtn" class="submit-btn">
-      সংরক্ষণ করুন
-    </button>
+        <div class="sub-action-buttons-row">
+          <button type="button" class="sub-pill-btn"><i class="fa-solid fa-calendar-days"></i> ১৮ মে</button>
+          <button type="button" class="sub-pill-btn"><i class="fa-solid fa-camera"></i> ছবি</button>
+        </div>
+      </div>
 
+      <button id="saveCustomerBtn" class="modern-submit-btn" disabled>
+        নিশ্চিত
+      </button>
+    </div>
   </div>
 
 </section>
 
-<!-- LEDGER -->
 <section id="ledgerScreen" class="screen">
 
   <header class="simple-header">
@@ -262,25 +281,22 @@
 
     <div class="txn-row">
 
-      <div class="txn-box floating-field">
-  <label class="floating-label">দিলাম/বেচা</label>
-  <span class="taka-icon">৳</span>
-  <input id="txnGive" type="text" inputmode="none" readonly class="money-input" />
-</div>
+      <div class="txn-box">
+        <span class="taka-icon">৳</span>
+        <input id="txnGive" type="text" inputmode="none" readonly placeholder="দিলাম/বেচা" class="money-input" />
+      </div>
 
-      <div class="txn-box floating-field">
-  <label class="floating-label">পেলাম</label>
-  <span class="taka-icon">৳</span>
-  <input id="txnReceive" type="text" inputmode="none" readonly class="money-input" />
-</div>
+      <div class="txn-box">
+        <span class="taka-icon">৳</span>
+        <input id="txnReceive" type="text" inputmode="none" readonly placeholder="পেলাম" class="money-input" />
+      </div>
 
     </div>
 
-    <div class="txn-note-box floating-field">
-  <label class="floating-label">বিবরণ</label>
-  <i class="fa-regular fa-file-lines desc-icon"></i>
-  <input id="txnNote" type="text" />
-</div>
+    <div class="txn-note-box">
+      <i class="fa-regular fa-file-lines desc-icon"></i>
+      <input id="txnNote" type="text" placeholder="বিবরণ" />
+    </div>
 
     <div class="txn-action-row">
       <button type="button" class="date-pill" id="txnDateBtn">📅 আজ</button>
@@ -342,31 +358,26 @@
 </div>
 
 <div id="inlineCalculator" class="inline-calculator">
-  <!-- Row 1 -->
   <button class="calc-key action-key" data-key="AC">AC</button>
   <button class="calc-key action-key backspace-key" data-key="BACK"><i class="fa-solid fa-backspace"></i></button>
   <button class="calc-key action-key" data-key="%">%</button>
   <button class="calc-key operator-key" data-key="÷">÷</button>
 
-  <!-- Row 2 -->
   <button class="calc-key" data-key="7">7</button>
   <button class="calc-key" data-key="8">8</button>
   <button class="calc-key" data-key="9">9</button>
   <button class="calc-key operator-key" data-key="×">×</button>
 
-  <!-- Row 3 -->
   <button class="calc-key" data-key="4">4</button>
   <button class="calc-key" data-key="5">5</button>
   <button class="calc-key" data-key="6">6</button>
   <button class="calc-key operator-key" data-key="-">−</button>
 
-  <!-- Row 4 -->
   <button class="calc-key" data-key="1">1</button>
   <button class="calc-key" data-key="2">2</button>
   <button class="calc-key" data-key="3">3</button>
   <button class="calc-key operator-key" data-key="+">+</button>
 
-  <!-- Row 5 -->
   <button class="calc-key" data-key="00">00</button>
   <button class="calc-key" data-key="0">0</button>
   <button class="calc-key" data-key=".">.</button>

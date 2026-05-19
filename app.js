@@ -59,7 +59,6 @@ function updateSaveBtnState(){
 }
 
 const moneyInputs = document.querySelectorAll(".money-input");
-const floatingInputs = document.querySelectorAll(".floating-field input");
 const calcKeys = document.querySelectorAll(".calc-key");
 
 let activeMoneyInput = null;
@@ -76,16 +75,6 @@ const reportTotalGot = document.getElementById("reportTotalGot");
 window.addEventListener("DOMContentLoaded", async () => {
   await loadDashboard();
   updateTxnDateButton();
-
-  floatingInputs.forEach(input=>{
-    input.addEventListener("input", ()=>{
-      input.closest(".floating-field")?.classList.toggle(
-        "has-value",
-        input.value.trim() !== ""
-      );
-    });
-  });
-
   history.replaceState({screen:"home"}, "");
   history.pushState({screen:"ready"}, "");
 });
@@ -708,3 +697,77 @@ document.addEventListener("focusin",(e)=>{
     hideCalculator();
   }
 });
+
+// ====================================================
+// NEW LIVE VALIDATION & DYNAMIC UI FOR CUSTOMER FORM
+// ====================================================
+document.addEventListener("DOMContentLoaded", () => {
+  const inputCustName = document.getElementById("customerName");
+  const inputCustPhone = document.getElementById("customerPhone");
+  const wrapperName = document.getElementById("nameWrapperCtx");
+  const txtErrorName = document.getElementById("nameErrorTxtCtx");
+  const dynamicOpeningContainer = document.getElementById("openingBalContainer");
+  const btnSaveCust = document.getElementById("saveCustomerBtn");
+  
+  // কাস্টমার ও সাপ্লায়ার রেডিও টগল ইভেন্ট হ্যান্ডলার
+  const pillCustomer = document.getElementById("pillCustomer");
+  const pillSupplier = document.getElementById("pillSupplier");
+  
+  if (pillCustomer && pillSupplier) {
+    const toggles = [pillCustomer, pillSupplier];
+    toggles.forEach(pill => {
+      pill.addEventListener("click", function() {
+        toggles.forEach(p => p.classList.remove("active"));
+        this.classList.add("active");
+        const internalRadio = this.querySelector("input[type='radio']");
+        if (internalRadio) internalRadio.checked = true;
+      });
+    });
+  }
+
+  // স্ক্রিনশট অনুযায়ী লাইভ শর্ত ভ্যালিডেশন মেকানিজম
+  function runLiveUiValidation() {
+    if (!inputCustName || !inputCustPhone) return;
+
+    const valName = inputCustName.value.trim();
+    const valPhone = inputCustPhone.value.trim();
+    
+    let isNameValid = false;
+
+    // নাম ইনপুট ১ থেকে ২ অক্ষরের মধ্যে থাকলে এরর বর্ডার ও মেসেজ দেখাবে
+    if (valName.length > 0 && valName.length < 3) {
+      if (wrapperName) wrapperName.classList.add("wrapper-error-state");
+      if (txtErrorName) txtErrorName.style.display = "block";
+      isNameValid = false;
+    } else {
+      if (wrapperName) wrapperName.classList.remove("wrapper-error-state");
+      if (txtErrorName) txtErrorName.style.display = "none";
+      isNameValid = valName.length >= 3;
+    }
+
+    // মোবাইল নম্বরের স্ট্যান্ডার্ড ভ্যালিডেশন চেক (ন্যূনতম ১১ ডিজিট)
+    const isPhoneValid = valPhone.length >= 11;
+
+    // নাম এবং মোবাইল নম্বর দুটোই সঠিক হলে অতিরিক্ত অপশনগুলো ওপেন হবে এবং সাবমিট বাটন সলিড রেড হবে
+    if (isNameValid && isPhoneValid) {
+      if (dynamicOpeningContainer) dynamicOpeningContainer.classList.add("reveal-section");
+      if (btnSaveCust) {
+        btnSaveCust.removeAttribute("disabled");
+        btnSaveCust.classList.add("active-state-btn");
+      }
+    } else {
+      if (dynamicOpeningContainer) dynamicOpeningContainer.classList.remove("reveal-section");
+      if (btnSaveCust) {
+        btnSaveCust.setAttribute("disabled", "true");
+        btnSaveCust.classList.remove("active-state-btn");
+      }
+    }
+  }
+
+  // ইনপুটে টাইপ করার প্রতিটি মুহূর্তে রিয়েল-টাইম চেক রান হবে
+  if (inputCustName && inputCustPhone) {
+    inputCustName.addEventListener("input", runLiveUiValidation);
+    inputCustPhone.addEventListener("input", runLiveUiValidation);
+  }
+});
+
