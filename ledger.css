@@ -296,41 +296,4 @@
   color: #555555;
 }
 
-.floating-field{
-  position:relative;
-  overflow:visible !important;
-}
 
-.floating-label{
-  position:absolute;
-  top:50%;
-  transform:translateY(-50%);
-  background:#fff;
-  padding:0 6px;
-  color:#a8b0b8;
-  font-size:16px;
-  transition:.22s ease;
-  pointer-events:none;
-  z-index:10;
-}
-
-.txn-box .floating-label{
-  left:30px;
-}
-
-.txn-note-box .floating-label{
-  left:38px;
-}
-
-.floating-field:focus-within{
-  border-color:#b51e23 !important;
-  box-shadow:0 0 0 1px #b51e23 !important;
-}
-
-.floating-field:focus-within .floating-label,
-.floating-field.has-value .floating-label{
-  top:0;
-  transform:translateY(-50%);
-  color:#b51e23;
-  font-size:12px;
-}

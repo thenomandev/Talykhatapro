@@ -76,3 +76,47 @@ textarea{
 .transaction-list{
   display:none;
 }
+
+.floating-field{
+  position:relative;
+}
+
+.floating-field input:not(#searchInput),
+.floating-field textarea{
+  box-sizing:border-box;
+}
+
+.floating-label{
+  position:absolute;
+  left:14px;
+  top:50%;
+  transform:translateY(-50%);
+  background:#fff;
+  padding:0 6px;
+  color:#a8b0b8;
+  font-size:16px;
+  transition:.22s ease;
+  pointer-events:none;
+  z-index:20;
+}
+
+.floating-field:focus-within .floating-label,
+.floating-field.has-value .floating-label{
+  top:0;
+  transform:translateY(-50%);
+  color:#b51e23;
+  font-size:12px;
+}
+
+.floating-field:focus-within:not(.gold-search-box){
+  border-color:#b51e23 !important;
+  box-shadow:0 0 0 1px #b51e23 !important;
+}
+
+.txn-box .floating-label{
+  left:30px;
+}
+
+.txn-note-box .floating-label{
+  left:38px;
+}
