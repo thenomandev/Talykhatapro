@@ -677,4 +677,35 @@ calcKeys.forEach(key=>{
         updateSaveBtnState();
       }catch{
         calcExpression = "";
-    
+        activeMoneyInput.value = "";
+      }
+    }
+
+    else{
+      calcExpression += val;
+    }
+
+    activeMoneyInput.value = calcExpression;
+    activeMoneyInput.focus();
+    activeMoneyInput.setSelectionRange(
+      activeMoneyInput.value.length,
+      activeMoneyInput.value.length
+    );
+    updateSaveBtnState();
+  });
+});
+
+if(txnNote){
+  txnNote.addEventListener("focus", ()=>{
+    hideCalculator();
+  });
+}
+
+document.addEventListener("focusin",(e)=>{
+  if(
+    isTextInput(e.target) &&
+    !e.target.classList.contains("money-input")
+  ){
+    hideCalculator();
+  }
+});
