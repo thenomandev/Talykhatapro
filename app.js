@@ -44,27 +44,15 @@ const txnNote = document.getElementById("txnNote");
 const txnDateBtn = document.getElementById("txnDateBtn");
 const txnDate = document.getElementById("txnDate");
 const saveTxnBtn = document.getElementById("saveTxnBtn");
-function updateSaveBtnState(){
-  if(!saveTxnBtn) return;
-
-  const hasAmount =
-    (parseFloat(txnGive.value) || 0) > 0 ||
-    (parseFloat(txnReceive.value) || 0) > 0;
-
-  if(hasAmount){
-    saveTxnBtn.classList.add("active");
-  }else{
-    saveTxnBtn.classList.remove("active");
-  }
-}
 
 const moneyInputs = document.querySelectorAll(".money-input");
 const calcKeys = document.querySelectorAll(".calc-key");
+const inlineCalculator = document.getElementById("inlineCalculator");
 
 let activeMoneyInput = null;
 let calcExpression = "0";
 
-const liveTimeCounter = document.querySelector(".status-right"); // index.html line match
+const liveTimeCounter = document.querySelector(".status-right");
 const reportViewContainer = document.getElementById("reportViewContainer");
 const closeReportBtn = document.getElementById("closeReportBtn");
 const reportTxnList = document.getElementById("reportTxnList");
@@ -75,6 +63,7 @@ const reportTotalGot = document.getElementById("reportTotalGot");
 window.addEventListener("DOMContentLoaded", async () => {
   await loadDashboard();
   updateTxnDateButton();
+  initFormValidation();
   history.replaceState({screen:"home"}, "");
   history.pushState({screen:"ready"}, "");
 });
@@ -102,23 +91,23 @@ function renderCustomerList(list) {
     return;
   }
 
-list.sort((a,b)=>
-  ((b.lastActivityAt || b.createdAt || 0) -
-   (a.lastActivityAt || a.createdAt || 0))
-);
+  list.sort((a,b)=>
+    ((b.lastActivityAt || b.createdAt || 0) -
+     (a.lastActivityAt || a.createdAt || 0))
+  );
+
   list.forEach(cust => {
     const div = document.createElement("div");
     div.className = "customer-item";
 
     const bal = cust.computedBalance || 0;
     const absBal = Math.abs(bal);
-const amountClass =
-  bal < 0 ? "green-amount" :
-  bal > 0 ? "red-amount" :
-  "zero-amount";
+    const amountClass =
+      bal < 0 ? "green-amount" :
+      bal > 0 ? "red-amount" :
+      "zero-amount";
 
     let timeText = "এইমাত্র";
-
     const refTime = cust.lastActivityAt || cust.createdAt || Date.now();
     const diffMs = Date.now() - refTime;
     const mins = Math.floor(diffMs / 60000);
@@ -139,20 +128,18 @@ const amountClass =
       <div class="cust-left">
         <div class="avatar" style="background:${cust.avatarColor || '#d9e2f3'};">
           ${cust.name.trim().length >= 2
-  ? cust.name.trim().substring(0,2).toUpperCase()
-  : cust.name.trim().charAt(0).toUpperCase()}
+            ? cust.name.trim().substring(0,2).toUpperCase()
+            : cust.name.trim().charAt(0).toUpperCase()}
         </div>
-
         <div>
           <div class="cust-name">${cust.name}</div>
           <div class="cust-time">${timeText}</div>
         </div>
       </div>
-
-<div class="cust-right">
-  <span class="cust-amount ${amountClass}">${money(absBal)}</span>
-  <i class="fa-solid fa-chevron-right"></i>
-</div>
+      <div class="cust-right">
+        <span class="cust-amount ${amountClass}">${money(absBal)}</span>
+        <i class="fa-solid fa-chevron-right"></i>
+      </div>
     `;
 
     div.onclick = () => openLedger(cust);
@@ -170,7 +157,7 @@ function updateSummary() {
     if (b < 0) giv += Math.abs(b);
   });
   totalReceive.textContent = formatBanglaNumber(Math.round(rec));
-totalGive.textContent = formatBanglaNumber(Math.round(giv));
+  totalGive.textContent = formatBanglaNumber(Math.round(giv));
 }
 
 /* LIVE TIME COUNTER LOOP */
@@ -209,19 +196,22 @@ function startLiveTimer(cust, txns) {
 async function openLedger(customer) {
   currentCustomer = customer;
   switchScreen(ledgerScreen);
-history.pushState({screen:"ledger"}, "");
+  history.pushState({screen:"ledger"}, "");
   
   ledgerName.textContent = customer.name;
+  ledgerAvatar.textContent =
+    customer.name.trim().length >= 2
+      ? customer.name.trim().substring(0,2).toUpperCase()
+      : customer.name.trim().charAt(0).toUpperCase();
 
-ledgerAvatar.textContent =
-  customer.name.trim().length >= 2
-    ? customer.name.trim().substring(0,2).toUpperCase()
-    : customer.name.trim().charAt(0).toUpperCase();
-
-ledgerAvatar.style.background = customer.avatarColor || "#0b61a4";
+  ledgerAvatar.style.background = customer.avatarColor || "#0b61a4";
 
   if (threeDotMenu) threeDotMenu.classList.remove("active");
   if (reportViewContainer) reportViewContainer.style.display = "none";
+  
+  txnGive.value = "";
+  txnReceive.value = "";
+  txnNote.value = "";
   
   const txns = await getTransactions(customer.id);
   startLiveTimer(customer, txns);
@@ -230,18 +220,18 @@ ledgerAvatar.style.background = customer.avatarColor || "#0b61a4";
   currentCustomer.computedBalance = bal;
 
   if (bal >= 0) {
-  if (ledgerBalanceLabel) ledgerBalanceLabel.textContent = "পাবো";
-  ledgerBalance.innerHTML = `৳ ${money(bal)}`;
-  ledgerTopBalance.innerHTML = `৳ ${money(bal)}`;
-  ledgerBalance.style.color = "#b51e23";
-} else {
-  if (ledgerBalanceLabel) ledgerBalanceLabel.textContent = "দেবো";
-  ledgerBalance.innerHTML = `৳ ${money(Math.abs(bal))}`;
-  ledgerTopBalance.innerHTML = `৳ ${money(Math.abs(bal))}`;
-  ledgerBalance.style.color = "#118a4d";
-}
+    if (ledgerBalanceLabel) ledgerBalanceLabel.textContent = "পাবো";
+    ledgerBalance.innerHTML = `৳ ${money(bal)}`;
+    ledgerTopBalance.innerHTML = `৳ ${money(bal)}`;
+    ledgerBalance.style.color = "#b51e23";
+  } else {
+    if (ledgerBalanceLabel) ledgerBalanceLabel.textContent = "দেবো";
+    ledgerBalance.innerHTML = `৳ ${money(Math.abs(bal))}`;
+    ledgerTopBalance.innerHTML = `৳ ${money(Math.abs(bal))}`;
+    ledgerBalance.style.color = "#118a4d";
+  }
 
-  // Transaction History List Render
+  // Transaction History Rendering
   const transactionList = document.getElementById("transactionList");
   if (transactionList) {
     transactionList.innerHTML = "";
@@ -258,7 +248,6 @@ ledgerAvatar.style.background = customer.avatarColor || "#0b61a4";
         <div class="txn-amount ${cls}">${label}: ৳ ${money(amount)}</div>
       `;
 
-      // Long press or right click to delete transaction
       div.oncontextmenu = async (e) => {
         e.preventDefault();
         if (confirm("এই লেনদেনটি ডিলিট করতে চান?")) {
@@ -271,445 +260,13 @@ ledgerAvatar.style.background = customer.avatarColor || "#0b61a4";
       transactionList.appendChild(div);
     });
   }
-
-  // Report Sheet Build
-  if (reportTxnList) {
-    reportTxnList.innerHTML = "";
-    let totalGaveSum = 0;
-    let totalGotSum = 0;
-
-    if (customer.openingBalance && customer.openingBalance !== 0) {
-      const row = document.createElement("div");
-      row.className = "report-row";
-      const opDate = new Date(customer.createdAt || Date.now());
-      
-      let gaveVal = customer.openingBalance > 0 ? customer.openingBalance : 0;
-      let gotVal = customer.openingBalance < 0 ? Math.abs(customer.openingBalance) : 0;
-      totalGaveSum += gaveVal;
-      totalGotSum += gotVal;
-
-      row.innerHTML = `
-        <div class="rep-details">
-          <div class="rep-date">${formatDateBangla(opDate)}</div>
-          <div class="rep-time">${formatTimeBangla(opDate)}</div>
-          <div class="rep-note">শুরুর ব্যালেন্স</div>
-        </div>
-        <div class="rep-gave">${gaveVal > 0 ? money(gaveVal) : ""}</div>
-        <div class="rep-got">${gotVal > 0 ? money(gotVal) : ""}</div>
-      `;
-      reportTxnList.appendChild(row);
-    }
-
-    const reversedTxns = [...txns].reverse();
-    reversedTxns.forEach(txn => {
-      const row = document.createElement("div");
-      row.className = "report-row";
-      const tDate = new Date(txn.createdAt);
-
-      if (txn.give > 0) totalGaveSum += txn.give;
-      if (txn.receive > 0) totalGotSum += txn.receive;
-
-      row.innerHTML = `
-        <div class="rep-details">
-          <div class="rep-date">${formatDateBangla(tDate)}</div>
-          <div class="rep-time">${formatTimeBangla(tDate)}</div>
-          <div class="rep-note">${txn.note || "লেনদেন"}</div>
-        </div>
-        <div class="rep-gave">${txn.give > 0 ? money(txn.give) : ""}</div>
-        <div class="rep-got">${txn.receive > 0 ? money(txn.receive) : ""}</div>
-      `;
-      reportTxnList.appendChild(row);
-    });
-
-    if (reportTotalGave) reportTotalGave.textContent = money(totalGaveSum);
-    if (reportTotalGot) reportTotalGot.textContent = money(totalGotSum);
-  }
 }
 
-/* 3-DOT CONTEXT MENU ACTIONS */
-if (deleteCustomerBtn) {
-  deleteCustomerBtn.onclick = (e) => {
-    e.stopPropagation();
-    if (threeDotMenu) threeDotMenu.classList.toggle("active");
-  };
-}
-
-document.addEventListener("click", () => {
-  if (threeDotMenu) threeDotMenu.classList.remove("active");
-});
-
-if (optTagada) {
-  optTagada.onclick = () => {
-    alert(`"${currentCustomer.name}" এর মোবাইলে তাগাদা মেসেজ পাঠানো হয়েছে!`);
-  };
-}
-
-if (optReport) {
-  optReport.onclick = () => {
-    if (reportViewContainer) reportViewContainer.style.display = "flex";
-  };
-}
-if (closeReportBtn) {
-  closeReportBtn.onclick = () => {
-    if (reportViewContainer) reportViewContainer.style.display = "none";
-  };
-}
-
-if (optEdit) {
-  optEdit.onclick = () => {
-    customerFormTitle.textContent = "গ্রাহক তথ্য এডিট করুন";
-    customerName.value = currentCustomer.name;
-    customerPhone.value = currentCustomer.phone || "";
-    if (openingBalContainer) openingBalContainer.style.display = "none"; 
-    switchScreen(customerFormScreen);
-history.pushState({screen:"form"}, "");
-  };
-}
-
-if (optDelete) {
-  optDelete.onclick = async () => {
-    if (confirm(`আপনি কি নিশ্চিতভাবে "${currentCustomer.name}" কে সম্পূর্ণ ডিলিট করতে চান?`)) {
-      if (liveInterval) clearInterval(liveInterval);
-      await deleteCustomer(currentCustomer.id);
-      currentCustomer = null;
-      await loadDashboard();
-      switchScreen(homeScreen);
-    }
-  };
-}
-
-/* SAVE NEW TRANSACTION */
-if (saveTxnBtn) {
-  saveTxnBtn.onclick = async () => {
-    const giveVal = parseFloat(txnGive.value) || 0;
-    const recVal = parseFloat(txnReceive.value) || 0;
-    const noteVal = txnNote.value.trim();
-
-    if (giveVal === 0 && recVal === 0) {
-      alert("অনুগ্রহ করে সঠিক অংক লিখুন!");
-      return;
-    }
-
-    const newTxn = {
-      id: Date.now().toString(),
-      customerId: currentCustomer.id,
-      give: giveVal,
-      receive: recVal,
-      note: noteVal,
-      createdAt: selectedTxnDate.getTime()
-    };
-
-    await addTransaction(newTxn);
-
-currentCustomer.lastActivityAt = Date.now();
-await updateCustomer(currentCustomer);
-    
-    txnGive.value = "";
-    txnReceive.value = "";
-    txnNote.value = "";
-updateSaveBtnState();
-    selectedTxnDate = new Date();
-    updateTxnDateButton();
-
-    await loadDashboard();
-    const updatedCust = customers.find(c => c.id === currentCustomer.id);
-    if (updatedCust) {
-      await openLedger(updatedCust);
-    }
-  };
-}
-
-/* CUSTOMER ADD & UPDATE HANDLER */
-if (saveCustomerBtn) {
-  saveCustomerBtn.onclick = async (e) => {
-    if (e) e.preventDefault();
-    
-    const name = customerName.value.trim();
-    const phone = customerPhone.value.trim();
-    const opening = parseFloat(customerOpening.value) || 0;
-
-    if (!name) {
-      alert("অনুগ্রহ করে গ্রাহকের নাম লিখুন!");
-      return;
-    }
-
-    if (customerFormTitle.textContent === "গ্রাহক তথ্য এডিট করুন") {
-      currentCustomer.name = name;
-      currentCustomer.phone = phone;
-      await updateCustomer(currentCustomer);
-      
-      await loadDashboard();
-      const updated = customers.find(c => c.id === currentCustomer.id);
-      await openLedger(updated || currentCustomer);
-    } else {
-     
- const avatarColors = ["#c8e6c9", "#f3e5ab", "#d9e2f3", "#f6d6dc"];
- const lastColor = customers.length
-  ? customers[customers.length - 1].avatarColor
-  : null;
-
-const availableColors = avatarColors.filter(
-  color => color !== lastColor
-);
-
-const randomColor =
-  availableColors[
-    Math.floor(Math.random() * availableColors.length)
-  ];
-
-const newCust = {
-  id: Date.now().toString(),
-  name: name,
-  phone: phone,
-  openingBalance: opening,
-  createdAt: Date.now(),
-  avatarColor: randomColor
-};
-      
-      await addCustomer(newCust);
-      await loadDashboard();
-      
-      customerName.value = "";
-      customerPhone.value = "";
-      customerOpening.value = "";
-      
-      const saved = customers.find(c => c.id === newCust.id);
-      await openLedger(saved || newCust);
-    }
-  };
-}
-
-if (openCustomerModal) {
-  openCustomerModal.onclick = () => {
-    customerFormTitle.textContent = "নতুন গ্রাহক যোগ করুন";
-    customerName.value = "";
-    customerPhone.value = "";
-    customerOpening.value = "";
-    if (openingBalContainer) openingBalContainer.style.display = "block";
-    switchScreen(customerFormScreen);
-history.pushState({screen:"form"}, "");
-  };
-}
-
-/* NAVIGATION BACKS */
-document.addEventListener("click", async (e)=>{
-  const backBtn = e.target.closest(".back-btn");
-
-  if(!backBtn) return;
-
-  e.preventDefault();
-  e.stopPropagation();
-
-  await handleUniversalBack();
-});
-
-/* LIVE SEARCH */
-if (searchInput) {
-  searchInput.oninput = () => {
-    const q = searchInput.value.toLowerCase();
-    const filtered = customers.filter(c => c.name.toLowerCase().includes(q));
-    renderCustomerList(filtered);
-  };
-}
-
-/* UTILS & MATH COMPUTATION */
-
-function updateTxnDateButton() {
-  if (txnDateBtn) {
-    txnDateBtn.textContent = "📅 " + selectedTxnDate.toLocaleDateString("bn-BD", { day: "numeric", month: "short" });
-  }
-}
-
-if (txnDateBtn) {
-  txnDateBtn.onclick = () => {
-    txnDate.value = selectedTxnDate.toISOString().split("T")[0];
-    if (txnDate.showPicker) txnDate.showPicker();
-  };
-}
-
-if (txnDate) {
-  txnDate.onchange = () => {
-    if (txnDate.value) {
-      selectedTxnDate = new Date(txnDate.value);
-      updateTxnDateButton();
-    }
-  };
-}
-
-window.onpopstate = async function () {
-  const handled = await handleUniversalBack();
-
-  if(handled){
-    history.pushState({screen:"ui"}, "");
-  }
-};
-
-const inlineCalculator = document.getElementById("inlineCalculator");
-
-function isTextInput(el){
-  return !!(
-    el &&
-    (
-      el.tagName === "INPUT" ||
-      el.tagName === "TEXTAREA"
-    )
-  );
-}
-
-function hideCalculator(){
-  inlineCalculator.classList.remove("show");
-  activeMoneyInput = null;
-}
-
-function hideKeyboard(){
-  return;
-}
-
-function closeTransientUI(){
-  hideCalculator();
-  hideKeyboard();
-}
-
-function hasTransientUIOpen(){
-  return (
-    inlineCalculator.classList.contains("show") ||
-    isTextInput(document.activeElement)
-  );
-}
-
-async function handleUniversalBack(){
-  if(hasTransientUIOpen()){
-    closeTransientUI();
-
-    if(ledgerScreen.classList.contains("active")){
-      history.replaceState({screen:"ledger"}, "");
-    }else if(customerFormScreen.classList.contains("active")){
-      history.replaceState({screen:"form"}, "");
-    }else{
-      history.replaceState({screen:"home"}, "");
-    }
-
-    return true;
-  }
-
-  if(customerFormScreen.classList.contains("active")){
-  if(customerFormTitle.textContent === "নতুন গ্রাহক যোগ করুন"){
-    currentCustomer = null;
-    await loadDashboard();
-    switchScreen(homeScreen);
-  }else{
-    switchScreen(ledgerScreen);
-  }
-  return true;
-}
-
-  if(ledgerScreen.classList.contains("active")){
-    if(liveInterval) clearInterval(liveInterval);
-    await loadDashboard();
-    switchScreen(homeScreen);
-    return true;
-  }
-
-  return false;
-}
-
-moneyInputs.forEach(input=>{
-  const activateInput = ()=>{
-  activeMoneyInput = input;
-  calcExpression = input.value || "";
-
-  input.focus();
-  input.setSelectionRange(input.value.length, input.value.length);
-
-  inlineCalculator.classList.add("show");
-};
-
-  input.addEventListener("pointerdown", activateInput);
-});
-
-calcKeys.forEach(key=>{
-  key.addEventListener("click", ()=>{
-    if(!activeMoneyInput) return;
-
-    const val = key.dataset.key;
-
-    if(val === "AC"){
-      calcExpression = "";
-    }
-    else if(val === "BACK"){
-      calcExpression = calcExpression.slice(0,-1);
-    }
-    
-else if(val === "="){
-  try{
-    const safeExpr = calcExpression
-      .replace(/×/g,"*")
-      .replace(/÷/g,"/");
-
-    if(!/^[0-9+\-*/%.() ]+$/.test(safeExpr)){
-      throw new Error("Invalid");
-    }
-
-    calcExpression = String(
-      Function(
-        "return (" + safeExpr.replace(/%/g,"/100") + ")"
-      )()
-    );
-
-    activeMoneyInput.value = calcExpression;
-activeMoneyInput.focus();
-activeMoneyInput.setSelectionRange(
-  activeMoneyInput.value.length,
-  activeMoneyInput.value.length
-);
-updateSaveBtnState();
-  }catch{
-    calcExpression = "";
-    activeMoneyInput.value = "";
-  }
-}
-
-    else{
-      calcExpression += val;
-    }
-
-    activeMoneyInput.value = calcExpression;
-activeMoneyInput.focus();
-activeMoneyInput.setSelectionRange(
-  activeMoneyInput.value.length,
-  activeMoneyInput.value.length
-);
-updateSaveBtnState();
-  });
-});
-
-if(txnNote){
-  txnNote.addEventListener("focus", ()=>{
-    hideCalculator();
-  });
-}
-
-document.addEventListener("focusin",(e)=>{
-  if(
-    isTextInput(e.target) &&
-    !e.target.classList.contains("money-input")
-  ){
-    hideCalculator();
-  }
-});
-
-// ====================================================
-// NEW LIVE VALIDATION & DYNAMIC UI FOR CUSTOMER FORM
-// ====================================================
-document.addEventListener("DOMContentLoaded", () => {
-  const inputCustName = document.getElementById("customerName");
-  const inputCustPhone = document.getElementById("customerPhone");
+/* NEW LIVE VALIDATION & TOGGLE MECHANISM */
+function initFormValidation() {
   const wrapperName = document.getElementById("nameWrapperCtx");
   const txtErrorName = document.getElementById("nameErrorTxtCtx");
-  const dynamicOpeningContainer = document.getElementById("openingBalContainer");
-  const btnSaveCust = document.getElementById("saveCustomerBtn");
   
-  // কাস্টমার ও সাপ্লায়ার রেডিও টগল ইভেন্ট হ্যান্ডলার
   const pillCustomer = document.getElementById("pillCustomer");
   const pillSupplier = document.getElementById("pillSupplier");
   
@@ -725,16 +282,13 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // স্ক্রিনশট অনুযায়ী লাইভ শর্ত ভ্যালিডেশন মেকানিজম
   function runLiveUiValidation() {
-    if (!inputCustName || !inputCustPhone) return;
+    if (!customerName || !customerPhone) return;
 
-    const valName = inputCustName.value.trim();
-    const valPhone = inputCustPhone.value.trim();
-    
+    const valName = customerName.value.trim();
+    const valPhone = customerPhone.value.trim();
     let isNameValid = false;
 
-    // নাম ইনপুট ১ থেকে ২ অক্ষরের মধ্যে থাকলে এরর বর্ডার ও মেসেজ দেখাবে
     if (valName.length > 0 && valName.length < 3) {
       if (wrapperName) wrapperName.classList.add("wrapper-error-state");
       if (txtErrorName) txtErrorName.style.display = "block";
@@ -745,29 +299,208 @@ document.addEventListener("DOMContentLoaded", () => {
       isNameValid = valName.length >= 3;
     }
 
-    // মোবাইল নম্বরের স্ট্যান্ডার্ড ভ্যালিডেশন চেক (ন্যূনতম ১১ ডিজিট)
     const isPhoneValid = valPhone.length >= 11;
 
-    // নাম এবং মোবাইল নম্বর দুটোই সঠিক হলে অতিরিক্ত অপশনগুলো ওপেন হবে এবং সাবমিট বাটন সলিড রেড হবে
     if (isNameValid && isPhoneValid) {
-      if (dynamicOpeningContainer) dynamicOpeningContainer.classList.add("reveal-section");
-      if (btnSaveCust) {
-        btnSaveCust.removeAttribute("disabled");
-        btnSaveCust.classList.add("active-state-btn");
+      if (openingBalContainer) openingBalContainer.classList.add("reveal-section");
+      if (saveCustomerBtn) {
+        saveCustomerBtn.removeAttribute("disabled");
+        saveCustomerBtn.classList.add("active-state-btn");
       }
     } else {
-      if (dynamicOpeningContainer) dynamicOpeningContainer.classList.remove("reveal-section");
-      if (btnSaveCust) {
-        btnSaveCust.setAttribute("disabled", "true");
-        btnSaveCust.classList.remove("active-state-btn");
+      if (openingBalContainer) openingBalContainer.classList.remove("reveal-section");
+      if (saveCustomerBtn) {
+        saveCustomerBtn.setAttribute("disabled", "true");
+        saveCustomerBtn.classList.remove("active-state-btn");
       }
     }
   }
 
-  // ইনপুটে টাইপ করার প্রতিটি মুহূর্তে রিয়েল-টাইম চেক রান হবে
-  if (inputCustName && inputCustPhone) {
-    inputCustName.addEventListener("input", runLiveUiValidation);
-    inputCustPhone.addEventListener("input", runLiveUiValidation);
+  if (customerName && customerPhone) {
+    customerName.addEventListener("input", runLiveUiValidation);
+    customerPhone.addEventListener("input", runLiveUiValidation);
   }
+}
+
+/* SAVE CUSTOMER LOGIC TO INDEXEDDB */
+if (saveCustomerBtn) {
+  saveCustomerBtn.onclick = async () => {
+    const nameVal = customerName.value.trim();
+    const phoneVal = customerPhone.value.trim();
+    const openingVal = parseFloat(customerOpening.value) || 0;
+
+    if (nameVal.length < 3 || phoneVal.length < 11) return;
+
+    const colors = ["#d9e2f3", "#d9f5d7", "#f7efc2", "#dfe7f7", "#f7dce0"];
+    const randomColor = colors[Math.floor(Math.random() * colors.length)];
+
+    const newCust = {
+      id: "cust_" + Date.now(),
+      name: nameVal,
+      phone: phoneVal,
+      openingBalance: openingVal,
+      avatarColor: randomColor,
+      createdAt: Date.now(),
+      lastActivityAt: Date.now()
+    };
+
+    await addCustomer(newCust);
+    await loadDashboard();
+    
+    if (inlineCalculator) inlineCalculator.classList.remove("show");
+    switchScreen(homeScreen);
+  };
+}
+
+/* SAVE TRANSACTION LOGIC */
+if (saveTxnBtn) {
+  saveTxnBtn.onclick = async () => {
+    if (!currentCustomer) return;
+
+    const giveVal = parseFloat(txnGive.value) || 0;
+    const receiveVal = parseFloat(txnReceive.value) || 0;
+    const noteVal = txnNote.value.trim();
+
+    if (giveVal === 0 && receiveVal === 0) {
+      alert("অনুগ্রহ করে একটি অংক বসান!");
+      return;
+    }
+
+    const newTxn = {
+      id: "txn_" + Date.now(),
+      customerId: currentCustomer.id,
+      give: giveVal,
+      receive: receiveVal,
+      note: noteVal,
+      createdAt: Date.now()
+    };
+
+    await addTransaction(newTxn);
+    
+    // Update Customer Activity
+    currentCustomer.lastActivityAt = Date.now();
+    await updateCustomer(currentCustomer);
+
+    await loadDashboard();
+    
+    const updated = customers.find(c => c.id === currentCustomer.id);
+    if (updated) openLedger(updated);
+
+    if (inlineCalculator) inlineCalculator.classList.remove("show");
+  };
+}
+
+/* SCREEN NAVIGATION LOGIC */
+if (openCustomerModal) {
+  openCustomerModal.onclick = () => {
+    if(customerFormTitle) customerFormTitle.textContent = "নতুন কাস্টমার/সাপ্লায়ার";
+    if(customerName) customerName.value = "";
+    if(customerPhone) customerPhone.value = "";
+    if(customerOpening) customerOpening.value = "";
+    
+    const wrapperName = document.getElementById("nameWrapperCtx");
+    const txtErrorName = document.getElementById("nameErrorTxtCtx");
+    if (wrapperName) wrapperName.classList.remove("wrapper-error-state");
+    if (txtErrorName) txtErrorName.style.display = "none";
+    if (openingBalContainer) openingBalContainer.classList.remove("reveal-section");
+    if (saveCustomerBtn) {
+      saveCustomerBtn.setAttribute("disabled", "true");
+      saveCustomerBtn.classList.remove("active-state-btn");
+    }
+    
+    switchScreen(customerFormScreen);
+    history.pushState({screen:"form"}, "");
+  };
+}
+
+if (backFromCustomerForm) {
+  backFromCustomerForm.onclick = () => {
+    if (inlineCalculator) inlineCalculator.classList.remove("show");
+    switchScreen(homeScreen);
+  };
+}
+
+if (backToHome) {
+  backToHome.onclick = () => {
+    if (inlineCalculator) inlineCalculator.classList.remove("show");
+    if (liveInterval) clearInterval(liveInterval);
+    switchScreen(homeScreen);
+  };
+}
+
+/* THREE DOT MENU CONTROL */
+if (deleteCustomerBtn) {
+  deleteCustomerBtn.onclick = (e) => {
+    e.stopPropagation();
+    if (threeDotMenu) threeDotMenu.classList.toggle("active");
+  };
+}
+
+document.addEventListener("click", () => {
+  if (threeDotMenu) threeDotMenu.classList.remove("active");
 });
 
+if (optDelete) {
+  optDelete.onclick = async () => {
+    if (!currentCustomer) return;
+    if (confirm(`আপনি কি নিশ্চিতভাবে "${currentCustomer.name}" কে ডিলিট করতে চান?`)) {
+      await deleteCustomer(currentCustomer.id);
+      await loadDashboard();
+      switchScreen(homeScreen);
+    }
+  };
+}
+
+/* SEARCH SYSTEM */
+if (searchInput) {
+  searchInput.addEventListener("input", (e) => {
+    const term = e.target.value.toLowerCase();
+    const filtered = customers.filter(c => c.name.toLowerCase().includes(term) || c.phone.includes(term));
+    renderCustomerList(filtered);
+  });
+}
+
+function updateTxnDateButton() {
+  if (txnDateBtn) txnDateBtn.textContent = "📅 আজ";
+}
+
+/* INLINE KEYPAD CALCULATOR ENGINE FOR MONEY INPUTS */
+moneyInputs.forEach(input => {
+  const activateInput = (e) => {
+    e.preventDefault();
+    activeMoneyInput = input;
+    calcExpression = input.value || "";
+    
+    moneyInputs.forEach(i => i.classList.remove("active-focus"));
+    input.classList.add("active-focus");
+    
+    if (inlineCalculator) inlineCalculator.classList.add("show");
+  };
+  input.addEventListener("pointerdown", activateInput);
+});
+
+calcKeys.forEach(key => {
+  key.addEventListener("click", () => {
+    if (!activeMoneyInput) return;
+    const val = key.dataset.key;
+
+    if (val === "AC") {
+      calcExpression = "";
+    } else if (val === "BACK") {
+      calcExpression = calcExpression.slice(0, -1);
+    } else if (val === "=") {
+      try {
+        const safeExpr = calcExpression.replace(/×/g, "*").replace(/÷/g, "/");
+        if (!/^[0-9+\\-*/%.() ]+$/.test(safeExpr)) throw new Error("Invalid");
+        calcExpression = String(Function("return (" + safeExpr.replace(/%/g, "/100") + ")")());
+      } catch {
+        calcExpression = "";
+      }
+    } else {
+      if(calcExpression === "0" && val !== ".") calcExpression = "";
+      calcExpression += val;
+    }
+
+    activeMoneyInput.value = calcExpression;
+  });
+});
