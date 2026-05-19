@@ -555,6 +555,7 @@ function isTextInput(el){
 }
 
 function hideCalculator(){
+  if(!inlineCalculator) return;
   inlineCalculator.classList.remove("show");
   activeMoneyInput = null;
 }
@@ -570,7 +571,7 @@ function closeTransientUI(){
 
 function hasTransientUIOpen(){
   return (
-    inlineCalculator.classList.contains("show") ||
+    (inlineCalculator && inlineCalculator.classList.contains("show")) ||
     isTextInput(document.activeElement)
   );
 }
