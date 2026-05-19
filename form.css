@@ -183,6 +183,7 @@ input:checked + .slider:before {
 
 .input-item {
   margin-bottom:16px;
+  position: relative !important;
 }
 
 .input-item label {
@@ -191,13 +192,29 @@ input:checked + .slider:before {
   color:#555;
   margin-bottom:6px;
   font-weight:600;
+  transition: all 0.15s ease-in-out !important;
 }
 
 .input-item input {
-  border:1px solid #ccc;
-  padding:12px;
-  border-radius:8px;
+  border:1px solid #ced4da;
+  padding:14px;
+  border-radius:12px;
   font-size:16px;
+  width: 100%;
+  outline: none;
+  background-color: #ffffff;
+  box-sizing: border-box;
+  transition: all 0.15s ease-in-out !important;
+}
+
+.input-item:focus-within input {
+  border-color: #A61C1C !important;
+  border-width: 2px !important;
+  box-shadow: none !important;
+}
+
+.input-item:focus-within label {
+  color: #A61C1C !important;
 }
 
 .submit-btn {
@@ -211,12 +228,11 @@ input:checked + .slider:before {
   margin-top:10px;
 }
 
-/* PREMIUM MODAL ROUND BOXES WITH SMOOTH ANIMATION */
 .money-input, #txnNote {
   width: 100% !important;
-  padding: 14px 16px !important; /* Premium spacious padding - no squishing or flatness */
-  border: 1px solid #dcdcdc !important;
-  border-radius: 12px !important; /* Beautiful rounded corners */
+  padding: 14px 16px !important;
+  border: 1px solid #ced4da !important;
+  border-radius: 12px !important;
   font-size: 16px !important;
   font-weight: 500 !important;
   background-color: #ffffff !important;
@@ -224,18 +240,13 @@ input:checked + .slider:before {
   outline: none !important;
   box-sizing: border-box !important;
   display: block !important;
-  /* Premium instant focus and smooth exit transition */
   transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out, background-color 0.15s ease-in-out !important;
+  caret-color: #c8ab62 !important;
 }
 
-/* LIVE GOLD BLINKING NATIVE CARET */
-.money-input, #txnNote {
-  caret-color: #bfa15f !important;
-}
-
-/* PREMIUM SOFT OUTER GLOW RING ANIMATION ON TAP */
 .money-input:focus, #txnNote:focus {
-  border-color: #bfa15f !important;
+  border-color: #A61C1C !important;
+  border-width: 2px !important;
   background-color: #ffffff !important;
-  box-shadow: 0 0 0 3px rgba(191, 161, 95, 0.18) !important;
+  box-shadow: none !important;
 }

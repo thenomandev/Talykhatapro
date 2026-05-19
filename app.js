@@ -44,6 +44,7 @@ const txnNote = document.getElementById("txnNote");
 const txnDateBtn = document.getElementById("txnDateBtn");
 const txnDate = document.getElementById("txnDate");
 const saveTxnBtn = document.getElementById("saveTxnBtn");
+
 function updateSaveBtnState(){
   if(!saveTxnBtn) return;
 
@@ -64,7 +65,7 @@ const calcKeys = document.querySelectorAll(".calc-key");
 let activeMoneyInput = null;
 let calcExpression = "0";
 
-const liveTimeCounter = document.querySelector(".status-right"); // index.html line match
+const liveTimeCounter = document.querySelector(".status-right"); 
 const reportViewContainer = document.getElementById("reportViewContainer");
 const closeReportBtn = document.getElementById("closeReportBtn");
 const reportTxnList = document.getElementById("reportTxnList");
@@ -102,20 +103,20 @@ function renderCustomerList(list) {
     return;
   }
 
-list.sort((a,b)=>
-  ((b.lastActivityAt || b.createdAt || 0) -
-   (a.lastActivityAt || a.createdAt || 0))
-);
+  list.sort((a,b)=>
+    ((b.lastActivityAt || b.createdAt || 0) -
+     (a.lastActivityAt || a.createdAt || 0))
+  );
   list.forEach(cust => {
     const div = document.createElement("div");
     div.className = "customer-item";
 
     const bal = cust.computedBalance || 0;
     const absBal = Math.abs(bal);
-const amountClass =
-  bal < 0 ? "green-amount" :
-  bal > 0 ? "red-amount" :
-  "zero-amount";
+    const amountClass =
+      bal < 0 ? "green-amount" :
+      bal > 0 ? "red-amount" :
+      "zero-amount";
 
     let timeText = "এইমাত্র";
 
@@ -149,10 +150,10 @@ const amountClass =
         </div>
       </div>
 
-<div class="cust-right">
-  <span class="cust-amount ${amountClass}">${money(absBal)}</span>
-  <i class="fa-solid fa-chevron-right"></i>
-</div>
+      <div class="cust-right">
+        <span class="cust-amount ${amountClass}">${money(absBal)}</span>
+        <i class="fa-solid fa-chevron-right"></i>
+      </div>
     `;
 
     div.onclick = () => openLedger(cust);
@@ -170,7 +171,7 @@ function updateSummary() {
     if (b < 0) giv += Math.abs(b);
   });
   totalReceive.textContent = formatBanglaNumber(Math.round(rec));
-totalGive.textContent = formatBanglaNumber(Math.round(giv));
+  totalGive.textContent = formatBanglaNumber(Math.round(giv));
 }
 
 /* LIVE TIME COUNTER LOOP */
@@ -209,16 +210,16 @@ function startLiveTimer(cust, txns) {
 async function openLedger(customer) {
   currentCustomer = customer;
   switchScreen(ledgerScreen);
-history.pushState({screen:"ledger"}, "");
+  history.pushState({screen:"ledger"}, "");
   
   ledgerName.textContent = customer.name;
 
-ledgerAvatar.textContent =
-  customer.name.trim().length >= 2
-    ? customer.name.trim().substring(0,2).toUpperCase()
-    : customer.name.trim().charAt(0).toUpperCase();
+  ledgerAvatar.textContent =
+    customer.name.trim().length >= 2
+      ? customer.name.trim().substring(0,2).toUpperCase()
+      : customer.name.trim().charAt(0).toUpperCase();
 
-ledgerAvatar.style.background = customer.avatarColor || "#0b61a4";
+  ledgerAvatar.style.background = customer.avatarColor || "#0b61a4";
 
   if (threeDotMenu) threeDotMenu.classList.remove("active");
   if (reportViewContainer) reportViewContainer.style.display = "none";
@@ -230,18 +231,17 @@ ledgerAvatar.style.background = customer.avatarColor || "#0b61a4";
   currentCustomer.computedBalance = bal;
 
   if (bal >= 0) {
-  if (ledgerBalanceLabel) ledgerBalanceLabel.textContent = "পাবো";
-  ledgerBalance.innerHTML = `৳ ${money(bal)}`;
-  ledgerTopBalance.innerHTML = `৳ ${money(bal)}`;
-  ledgerBalance.style.color = "#b51e23";
-} else {
-  if (ledgerBalanceLabel) ledgerBalanceLabel.textContent = "দেবো";
-  ledgerBalance.innerHTML = `৳ ${money(Math.abs(bal))}`;
-  ledgerTopBalance.innerHTML = `৳ ${money(Math.abs(bal))}`;
-  ledgerBalance.style.color = "#118a4d";
-}
+    if (ledgerBalanceLabel) ledgerBalanceLabel.textContent = "পাবো";
+    ledgerBalance.innerHTML = `৳ ${money(bal)}`;
+    ledgerTopBalance.innerHTML = `৳ ${money(bal)}`;
+    ledgerBalance.style.color = "#b51e23";
+  } else {
+    if (ledgerBalanceLabel) ledgerBalanceLabel.textContent = "দেবো";
+    ledgerBalance.innerHTML = `৳ ${money(Math.abs(bal))}`;
+    ledgerTopBalance.innerHTML = `৳ ${money(Math.abs(bal))}`;
+    ledgerBalance.style.color = "#118a4d";
+  }
 
-  // Transaction History List Render
   const transactionList = document.getElementById("transactionList");
   if (transactionList) {
     transactionList.innerHTML = "";
@@ -258,7 +258,6 @@ ledgerAvatar.style.background = customer.avatarColor || "#0b61a4";
         <div class="txn-amount ${cls}">${label}: ৳ ${money(amount)}</div>
       `;
 
-      // Long press or right click to delete transaction
       div.oncontextmenu = async (e) => {
         e.preventDefault();
         if (confirm("এই লেনদেনটি ডিলিট করতে চান?")) {
@@ -272,7 +271,6 @@ ledgerAvatar.style.background = customer.avatarColor || "#0b61a4";
     });
   }
 
-  // Report Sheet Build
   if (reportTxnList) {
     reportTxnList.innerHTML = "";
     let totalGaveSum = 0;
@@ -362,7 +360,7 @@ if (optEdit) {
     customerPhone.value = currentCustomer.phone || "";
     if (openingBalContainer) openingBalContainer.style.display = "none"; 
     switchScreen(customerFormScreen);
-history.pushState({screen:"form"}, "");
+    history.pushState({screen:"form"}, "");
   };
 }
 
@@ -401,13 +399,13 @@ if (saveTxnBtn) {
 
     await addTransaction(newTxn);
 
-currentCustomer.lastActivityAt = Date.now();
-await updateCustomer(currentCustomer);
+    currentCustomer.lastActivityAt = Date.now();
+    await updateCustomer(currentCustomer);
     
     txnGive.value = "";
     txnReceive.value = "";
     txnNote.value = "";
-updateSaveBtnState();
+    updateSaveBtnState();
     selectedTxnDate = new Date();
     updateTxnDateButton();
 
@@ -443,28 +441,28 @@ if (saveCustomerBtn) {
       await openLedger(updated || currentCustomer);
     } else {
      
- const avatarColors = ["#c8e6c9", "#f3e5ab", "#d9e2f3", "#f6d6dc"];
- const lastColor = customers.length
-  ? customers[customers.length - 1].avatarColor
-  : null;
+      const avatarColors = ["#c8e6c9", "#f3e5ab", "#d9e2f3", "#f6d6dc"];
+      const lastColor = customers.length
+        ? customers[customers.length - 1].avatarColor
+        : null;
 
-const availableColors = avatarColors.filter(
-  color => color !== lastColor
-);
+      const availableColors = avatarColors.filter(
+        color => color !== lastColor
+      );
 
-const randomColor =
-  availableColors[
-    Math.floor(Math.random() * availableColors.length)
-  ];
+      const randomColor =
+        availableColors[
+          Math.floor(Math.random() * availableColors.length)
+        ];
 
-const newCust = {
-  id: Date.now().toString(),
-  name: name,
-  phone: phone,
-  openingBalance: opening,
-  createdAt: Date.now(),
-  avatarColor: randomColor
-};
+      const newCust = {
+        id: Date.now().toString(),
+        name: name,
+        phone: phone,
+        openingBalance: opening,
+        createdAt: Date.now(),
+        avatarColor: randomColor
+      };
       
       await addCustomer(newCust);
       await loadDashboard();
@@ -487,7 +485,7 @@ if (openCustomerModal) {
     customerOpening.value = "";
     if (openingBalContainer) openingBalContainer.style.display = "block";
     switchScreen(customerFormScreen);
-history.pushState({screen:"form"}, "");
+    history.pushState({screen:"form"}, "");
   };
 }
 
@@ -593,15 +591,15 @@ async function handleUniversalBack(){
   }
 
   if(customerFormScreen.classList.contains("active")){
-  if(customerFormTitle.textContent === "নতুন গ্রাহক যোগ করুন"){
-    currentCustomer = null;
-    await loadDashboard();
-    switchScreen(homeScreen);
-  }else{
-    switchScreen(ledgerScreen);
+    if(customerFormTitle.textContent === "নতুন গ্রাহক যোগ করুন"){
+      currentCustomer = null;
+      await loadDashboard();
+      switchScreen(homeScreen);
+    }else{
+      switchScreen(ledgerScreen);
+    }
+    return true;
   }
-  return true;
-}
 
   if(ledgerScreen.classList.contains("active")){
     if(liveInterval) clearInterval(liveInterval);
@@ -615,19 +613,33 @@ async function handleUniversalBack(){
 
 moneyInputs.forEach(input=>{
   const activateInput = ()=>{
-  activeMoneyInput = input;
-  calcExpression = input.value || "";
+    activeMoneyInput = input;
+    calcExpression = input.value || "";
 
-  input.focus();
-  input.setSelectionRange(input.value.length, input.value.length);
+    input.focus();
+    input.setSelectionRange(input.value.length, input.value.length);
 
-  inlineCalculator.classList.add("show");
-};
+    inlineCalculator.classList.add("show");
+  };
 
   input.addEventListener("pointerdown", activateInput);
 });
 
+/* CALCULATOR KEYPAD ENGINE WITH INSTANT LIVE POINTERDOWN ANIMATION */
 calcKeys.forEach(key=>{
+  key.addEventListener("pointerdown", (e) => {
+    e.preventDefault();
+    key.classList.add("live-active");
+  });
+
+  const clearLiveState = () => {
+    key.classList.remove("live-active");
+  };
+
+  key.addEventListener("pointerup", clearLiveState);
+  key.addEventListener("pointerleave", clearLiveState);
+  key.addEventListener("pointercancel", clearLiveState);
+
   key.addEventListener("click", ()=>{
     if(!activeMoneyInput) return;
 
@@ -640,60 +652,29 @@ calcKeys.forEach(key=>{
       calcExpression = calcExpression.slice(0,-1);
     }
     
-else if(val === "="){
-  try{
-    const safeExpr = calcExpression
-      .replace(/×/g,"*")
-      .replace(/÷/g,"/");
+    else if(val === "="){
+      try{
+        const safeExpr = calcExpression
+          .replace(/×/g,"*")
+          .replace(/÷/g,"/");
 
-    if(!/^[0-9+\-*/%.() ]+$/.test(safeExpr)){
-      throw new Error("Invalid");
-    }
+        if(!/^[0-9+\\-*/%.() ]+$/.test(safeExpr)){
+          throw new Error("Invalid");
+        }
 
-    calcExpression = String(
-      Function(
-        "return (" + safeExpr.replace(/%/g,"/100") + ")"
-      )()
-    );
+        calcExpression = String(
+          Function(
+            "return (" + safeExpr.replace(/%/g,\"/100\") + ")"
+          )()
+        );
 
-    activeMoneyInput.value = calcExpression;
-activeMoneyInput.focus();
-activeMoneyInput.setSelectionRange(
-  activeMoneyInput.value.length,
-  activeMoneyInput.value.length
-);
-updateSaveBtnState();
-  }catch{
-    calcExpression = "";
-    activeMoneyInput.value = "";
-  }
-}
-
-    else{
-      calcExpression += val;
-    }
-
-    activeMoneyInput.value = calcExpression;
-activeMoneyInput.focus();
-activeMoneyInput.setSelectionRange(
-  activeMoneyInput.value.length,
-  activeMoneyInput.value.length
-);
-updateSaveBtnState();
-  });
-});
-
-if(txnNote){
-  txnNote.addEventListener("focus", ()=>{
-    hideCalculator();
-  });
-}
-
-document.addEventListener("focusin",(e)=>{
-  if(
-    isTextInput(e.target) &&
-    !e.target.classList.contains("money-input")
-  ){
-    hideCalculator();
-  }
-});
+        activeMoneyInput.value = calcExpression;
+        activeMoneyInput.focus();
+        activeMoneyInput.setSelectionRange(
+          activeMoneyInput.value.length,
+          activeMoneyInput.value.length
+        );
+        updateSaveBtnState();
+      }catch{
+        calcExpression = "";
+    
