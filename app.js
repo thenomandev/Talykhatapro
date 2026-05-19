@@ -15,7 +15,6 @@ const totalGive = document.getElementById("totalGive");
 const searchInput = document.getElementById("searchInput");
 
 const openCustomerModal = document.getElementById("openCustomerModal");
-const backFromCustomerForm = document.getElementById("backFromCustomerForm");
 const saveCustomerBtn = document.getElementById("saveCustomerBtn");
 
 const customerFormTitle = document.getElementById("customerFormTitle");
@@ -30,8 +29,8 @@ const ledgerName = document.getElementById("ledgerName");
 const ledgerBalance = document.getElementById("ledgerBalance");
 const ledgerBalanceLabel = document.getElementById("ledgerBalanceLabel");
 const ledgerTopBalance = document.getElementById("ledgerTopBalance");
-const deleteCustomerBtn = document.getElementById("deleteCustomerBtn");
 
+const deleteCustomerBtn = document.getElementById("deleteCustomerBtn");
 const threeDotMenu = document.getElementById("threeDotMenu");
 const optTagada = document.getElementById("optTagada");
 const optReport = document.getElementById("optReport");
@@ -45,113 +44,77 @@ const txnDateBtn = document.getElementById("txnDateBtn");
 const txnDate = document.getElementById("txnDate");
 const saveTxnBtn = document.getElementById("saveTxnBtn");
 
-function updateSaveBtnState(){
-  if(!saveTxnBtn) return;
-
-  const hasAmount =
-    (parseFloat(txnGive.value) || 0) > 0 ||
-    (parseFloat(txnReceive.value) || 0) > 0;
-
-  if(hasAmount){
-    saveTxnBtn.classList.add("active");
-  }else{
-    saveTxnBtn.classList.remove("active");
-  }
-}
-
-const moneyInputs = document.querySelectorAll(".money-input");
-const calcKeys = document.querySelectorAll(".calc-key");
-
-let activeMoneyInput = null;
-let calcExpression = "0";
-
-const liveTimeCounter = document.querySelector(".status-right"); 
+const liveTimeCounter = document.getElementById("liveTimeCounter");
 const reportViewContainer = document.getElementById("reportViewContainer");
 const closeReportBtn = document.getElementById("closeReportBtn");
 const reportTxnList = document.getElementById("reportTxnList");
 const reportTotalGave = document.getElementById("reportTotalGave");
 const reportTotalGot = document.getElementById("reportTotalGot");
 
-/* INITIALIZE APP */
+const inlineCalculator = document.getElementById("inlineCalculator");
+const moneyInputs = document.querySelectorAll(".money-input");
+const calcKeys = document.querySelectorAll(".calc-key");
+
+let activeMoneyInput = null;
+let calcExpression = "";
+
+/* INIT */
 window.addEventListener("DOMContentLoaded", async () => {
-  await loadDashboard();
-  updateTxnDateButton();
-  history.replaceState({screen:"home"}, "");
-  history.pushState({screen:"ready"}, "");
+  try {
+    await loadDashboard();
+    updateTxnDateButton();
+  } catch (err) {
+    console.error(err);
+  }
 });
 
 async function loadDashboard() {
   customers = await getCustomers();
-  
-  for (let i = 0; i < customers.length; i++) {
-    const txns = await getTransactions(customers[i].id);
-    customers[i].computedBalance = calcBalance(customers[i], txns);
+
+  for (const cust of customers) {
+    const txns = await getTransactions(cust.id);
+    cust.computedBalance = calcBalance(cust, txns);
   }
-  
+
   renderCustomerList(customers);
   updateSummary();
 }
 
-/* RENDER HOME CUSTOMER LIST */
 function renderCustomerList(list) {
   customerList.innerHTML = "";
   customerCount.textContent = `${formatBanglaNumber(list.length)} / সাপ্লায়ার ০`;
 
-  if (list.length === 0) {
+  if (!list.length) {
     customerList.innerHTML =
       `<div style="text-align:center;padding:40px;color:#777;">কোনো গ্রাহক পাওয়া যায়নি</div>`;
     return;
   }
 
-  list.sort((a,b)=>
-    ((b.lastActivityAt || b.createdAt || 0) -
-     (a.lastActivityAt || a.createdAt || 0))
-  );
+  list.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+
   list.forEach(cust => {
+    const bal = cust.computedBalance || 0;
+    const cls =
+      bal > 0 ? "red-amount" :
+      bal < 0 ? "green-amount" :
+      "zero-amount";
+
     const div = document.createElement("div");
     div.className = "customer-item";
 
-    const bal = cust.computedBalance || 0;
-    const absBal = Math.abs(bal);
-    const amountClass =
-      bal < 0 ? "green-amount" :
-      bal > 0 ? "red-amount" :
-      "zero-amount";
-
-    let timeText = "এইমাত্র";
-
-    const refTime = cust.lastActivityAt || cust.createdAt || Date.now();
-    const diffMs = Date.now() - refTime;
-    const mins = Math.floor(diffMs / 60000);
-    const hours = Math.floor(mins / 60);
-    const days = Math.floor(hours / 24);
-
-    if (mins < 1) {
-      timeText = "এইমাত্র";
-    } else if (mins < 60) {
-      timeText = `${formatBanglaNumber(mins)} মিনিট`;
-    } else if (hours < 24) {
-      timeText = `${formatBanglaNumber(hours)} ঘণ্টা`;
-    } else {
-      timeText = `${formatBanglaNumber(days)} দিন`;
-    }
-
     div.innerHTML = `
       <div class="cust-left">
-        <div class="avatar" style="background:${cust.avatarColor || '#d9e2f3'};">
-          ${cust.name.trim().length >= 2
-  ? cust.name.trim().substring(0,2).toUpperCase()
-  : cust.name.trim().charAt(0).toUpperCase()}
+        <div class="avatar" style="background:${cust.avatarColor || "#d9e2f3"};">
+          ${cust.name.substring(0,2).toUpperCase()}
         </div>
-
         <div>
           <div class="cust-name">${cust.name}</div>
-          <div class="cust-time">${timeText}</div>
+          <div class="cust-time">এইমাত্র</div>
         </div>
       </div>
 
       <div class="cust-right">
-        <span class="cust-amount ${amountClass}">${money(absBal)}</span>
+        <span class="cust-amount ${cls}">${money(Math.abs(bal))}</span>
         <i class="fa-solid fa-chevron-right"></i>
       </div>
     `;
@@ -161,213 +124,139 @@ function renderCustomerList(list) {
   });
 }
 
-/* DASHBOARD SUMMARY CALCULATOR */
 function updateSummary() {
   let rec = 0;
   let giv = 0;
+
   customers.forEach(c => {
     const b = c.computedBalance || 0;
     if (b > 0) rec += b;
     if (b < 0) giv += Math.abs(b);
   });
+
   totalReceive.textContent = formatBanglaNumber(Math.round(rec));
   totalGive.textContent = formatBanglaNumber(Math.round(giv));
 }
 
-/* LIVE TIME COUNTER LOOP */
-function startLiveTimer(cust, txns) {
-  if (liveInterval) clearInterval(liveInterval);
-  
-  function updateTime() {
-    let referenceTime = cust.createdAt || Date.now();
-    if (txns && txns.length > 0) {
-      referenceTime = txns[0].createdAt; 
-    }
-    
-    const diffMs = Date.now() - referenceTime;
-    const diffMins = Math.floor(diffMs / 60000);
-    const diffHours = Math.floor(diffMins / 60);
-    const diffDays = Math.floor(diffHours / 24);
-
-    if (!liveTimeCounter) return;
-
-    if (diffMins < 1) {
-      liveTimeCounter.textContent = "(এইমাত্র)";
-    } else if (diffMins < 60) {
-      liveTimeCounter.textContent = `(${formatBanglaNumber(diffMins)} মিনিট আগে)`;
-    } else if (diffHours < 24) {
-      liveTimeCounter.textContent = `(${formatBanglaNumber(diffHours)} ঘণ্টা আগে)`;
-    } else {
-      liveTimeCounter.textContent = `(${formatBanglaNumber(diffDays)} দিন আগে)`;
-    }
-  }
-  
-  updateTime();
-  liveInterval = setInterval(updateTime, 30000); 
-}
-
-/* LEDGER DETAILS VIEW */
 async function openLedger(customer) {
   currentCustomer = customer;
+
   switchScreen(ledgerScreen);
-  history.pushState({screen:"ledger"}, "");
-  
+
   ledgerName.textContent = customer.name;
-
-  ledgerAvatar.textContent =
-    customer.name.trim().length >= 2
-      ? customer.name.trim().substring(0,2).toUpperCase()
-      : customer.name.trim().charAt(0).toUpperCase();
-
+  ledgerAvatar.textContent = customer.name.substring(0, 2).toUpperCase();
   ledgerAvatar.style.background = customer.avatarColor || "#0b61a4";
 
-  if (threeDotMenu) threeDotMenu.classList.remove("active");
-  if (reportViewContainer) reportViewContainer.style.display = "none";
-  
   const txns = await getTransactions(customer.id);
-  startLiveTimer(customer, txns);
-  
   const bal = calcBalance(customer, txns);
+
   currentCustomer.computedBalance = bal;
 
   if (bal >= 0) {
-    if (ledgerBalanceLabel) ledgerBalanceLabel.textContent = "পাবো";
-    ledgerBalance.innerHTML = `৳ ${money(bal)}`;
-    ledgerTopBalance.innerHTML = `৳ ${money(bal)}`;
+    ledgerBalanceLabel.textContent = "পাবো";
+    ledgerBalance.textContent = `৳ ${money(bal)}`;
     ledgerBalance.style.color = "#b51e23";
   } else {
-    if (ledgerBalanceLabel) ledgerBalanceLabel.textContent = "দেবো";
-    ledgerBalance.innerHTML = `৳ ${money(Math.abs(bal))}`;
-    ledgerTopBalance.innerHTML = `৳ ${money(Math.abs(bal))}`;
+    ledgerBalanceLabel.textContent = "দেবো";
+    ledgerBalance.textContent = `৳ ${money(Math.abs(bal))}`;
     ledgerBalance.style.color = "#118a4d";
   }
 
   const transactionList = document.getElementById("transactionList");
-  if (transactionList) {
-    transactionList.innerHTML = "";
-    txns.forEach(txn => {
-      const div = document.createElement("div");
-      div.className = "transaction-item";
-      
-      const amount = txn.give > 0 ? txn.give : txn.receive;
-      const cls = txn.give > 0 ? "give" : "receive";
-      const label = txn.give > 0 ? "দিলাম" : "পেলাম";
+  transactionList.innerHTML = "";
 
-      div.innerHTML = `
-        <div class="txn-note">${txn.note || "লেনদেন"}</div>
-        <div class="txn-amount ${cls}">${label}: ৳ ${money(amount)}</div>
-      `;
+  txns.forEach(txn => {
+    const div = document.createElement("div");
 
-      div.oncontextmenu = async (e) => {
-        e.preventDefault();
-        if (confirm("এই লেনদেনটি ডিলিট করতে চান?")) {
-          await deleteTransaction(txn.id);
-          await loadDashboard();
-          const updated = customers.find(c => c.id === currentCustomer.id);
-          if (updated) openLedger(updated);
-        }
-      };
-      transactionList.appendChild(div);
-    });
-  }
+    const amount = txn.give > 0 ? txn.give : txn.receive;
+    const label = txn.give > 0 ? "দিলাম" : "পেলাম";
+    const cls = txn.give > 0 ? "give" : "receive";
 
-  if (reportTxnList) {
-    reportTxnList.innerHTML = "";
-    let totalGaveSum = 0;
-    let totalGotSum = 0;
+    div.className = "transaction-item";
 
-    if (customer.openingBalance && customer.openingBalance !== 0) {
-      const row = document.createElement("div");
-      row.className = "report-row";
-      const opDate = new Date(customer.createdAt || Date.now());
-      
-      let gaveVal = customer.openingBalance > 0 ? customer.openingBalance : 0;
-      let gotVal = customer.openingBalance < 0 ? Math.abs(customer.openingBalance) : 0;
-      totalGaveSum += gaveVal;
-      totalGotSum += gotVal;
+    div.innerHTML = `
+      <div class="txn-note">${txn.note || "লেনদেন"}</div>
+      <div class="txn-amount ${cls}">
+        ${label}: ৳ ${money(amount)}
+      </div>
+    `;
 
-      row.innerHTML = `
-        <div class="rep-details">
-          <div class="rep-date">${formatDateBangla(opDate)}</div>
-          <div class="rep-time">${formatTimeBangla(opDate)}</div>
-          <div class="rep-note">শুরুর ব্যালেন্স</div>
-        </div>
-        <div class="rep-gave">${gaveVal > 0 ? money(gaveVal) : ""}</div>
-        <div class="rep-got">${gotVal > 0 ? money(gotVal) : ""}</div>
-      `;
-      reportTxnList.appendChild(row);
-    }
+    transactionList.appendChild(div);
+  });
 
-    const reversedTxns = [...txns].reverse();
-    reversedTxns.forEach(txn => {
-      const row = document.createElement("div");
-      row.className = "report-row";
-      const tDate = new Date(txn.createdAt);
-
-      if (txn.give > 0) totalGaveSum += txn.give;
-      if (txn.receive > 0) totalGotSum += txn.receive;
-
-      row.innerHTML = `
-        <div class="rep-details">
-          <div class="rep-date">${formatDateBangla(tDate)}</div>
-          <div class="rep-time">${formatTimeBangla(tDate)}</div>
-          <div class="rep-note">${txn.note || "লেনদেন"}</div>
-        </div>
-        <div class="rep-gave">${txn.give > 0 ? money(txn.give) : ""}</div>
-        <div class="rep-got">${txn.receive > 0 ? money(txn.receive) : ""}</div>
-      `;
-      reportTxnList.appendChild(row);
-    });
-
-    if (reportTotalGave) reportTotalGave.textContent = money(totalGaveSum);
-    if (reportTotalGot) reportTotalGot.textContent = money(totalGotSum);
-  }
+  renderReport(txns, customer);
 }
 
-/* 3-DOT CONTEXT MENU ACTIONS */
+function renderReport(txns, customer) {
+  if (!reportTxnList) return;
+
+  reportTxnList.innerHTML = "";
+
+  let totalGave = 0;
+  let totalGot = 0;
+
+  txns.forEach(txn => {
+    const row = document.createElement("div");
+    row.className = "report-row";
+
+    if (txn.give > 0) totalGave += txn.give;
+    if (txn.receive > 0) totalGot += txn.receive;
+
+    const d = new Date(txn.createdAt);
+
+    row.innerHTML = `
+      <div class="rep-details">
+        <div class="rep-date">${formatDateBangla(d)}</div>
+        <div class="rep-time">${formatTimeBangla(d)}</div>
+        <div class="rep-note">${txn.note || "লেনদেন"}</div>
+      </div>
+
+      <div class="rep-gave">
+        ${txn.give > 0 ? money(txn.give) : ""}
+      </div>
+
+      <div class="rep-got">
+        ${txn.receive > 0 ? money(txn.receive) : ""}
+      </div>
+    `;
+
+    reportTxnList.appendChild(row);
+  });
+
+  reportTotalGave.textContent = money(totalGave);
+  reportTotalGot.textContent = money(totalGot);
+}
+
 if (deleteCustomerBtn) {
   deleteCustomerBtn.onclick = (e) => {
     e.stopPropagation();
-    if (threeDotMenu) threeDotMenu.classList.toggle("active");
+    threeDotMenu.classList.toggle("active");
   };
 }
 
 document.addEventListener("click", () => {
-  if (threeDotMenu) threeDotMenu.classList.remove("active");
+  if (threeDotMenu) {
+    threeDotMenu.classList.remove("active");
+  }
 });
-
-if (optTagada) {
-  optTagada.onclick = () => {
-    alert(`"${currentCustomer.name}" এর মোবাইলে তাগাদা মেসেজ পাঠানো হয়েছে!`);
-  };
-}
 
 if (optReport) {
   optReport.onclick = () => {
-    if (reportViewContainer) reportViewContainer.style.display = "flex";
-  };
-}
-if (closeReportBtn) {
-  closeReportBtn.onclick = () => {
-    if (reportViewContainer) reportViewContainer.style.display = "none";
+    reportViewContainer.style.display = "flex";
   };
 }
 
-if (optEdit) {
-  optEdit.onclick = () => {
-    customerFormTitle.textContent = "গ্রাহক তথ্য এডিট করুন";
-    customerName.value = currentCustomer.name;
-    customerPhone.value = currentCustomer.phone || "";
-    if (openingBalContainer) openingBalContainer.style.display = "none"; 
-    switchScreen(customerFormScreen);
-    history.pushState({screen:"form"}, "");
+if (closeReportBtn) {
+  closeReportBtn.onclick = () => {
+    reportViewContainer.style.display = "none";
   };
 }
 
 if (optDelete) {
   optDelete.onclick = async () => {
-    if (confirm(`আপনি কি নিশ্চিতভাবে "${currentCustomer.name}" কে সম্পূর্ণ ডিলিট করতে চান?`)) {
-      if (liveInterval) clearInterval(liveInterval);
+    if (!currentCustomer) return;
+
+    if (confirm("ডিলিট করতে চান?")) {
       await deleteCustomer(currentCustomer.id);
       currentCustomer = null;
       await loadDashboard();
@@ -376,337 +265,238 @@ if (optDelete) {
   };
 }
 
-/* SAVE NEW TRANSACTION */
-if (saveTxnBtn) {
-  saveTxnBtn.onclick = async () => {
-    const giveVal = parseFloat(txnGive.value) || 0;
-    const recVal = parseFloat(txnReceive.value) || 0;
-    const noteVal = txnNote.value.trim();
-
-    if (giveVal === 0 && recVal === 0) {
-      alert("অনুগ্রহ করে সঠিক অংক লিখুন!");
-      return;
-    }
-
-    const newTxn = {
-      id: Date.now().toString(),
-      customerId: currentCustomer.id,
-      give: giveVal,
-      receive: recVal,
-      note: noteVal,
-      createdAt: selectedTxnDate.getTime()
-    };
-
-    await addTransaction(newTxn);
-
-    currentCustomer.lastActivityAt = Date.now();
-    await updateCustomer(currentCustomer);
-    
-    txnGive.value = "";
-    txnReceive.value = "";
-    txnNote.value = "";
-    updateSaveBtnState();
-    selectedTxnDate = new Date();
-    updateTxnDateButton();
-
-    await loadDashboard();
-    const updatedCust = customers.find(c => c.id === currentCustomer.id);
-    if (updatedCust) {
-      await openLedger(updatedCust);
-    }
-  };
-}
-
-/* CUSTOMER ADD & UPDATE HANDLER */
+/* SAVE CUSTOMER */
 if (saveCustomerBtn) {
-  saveCustomerBtn.onclick = async (e) => {
-    if (e) e.preventDefault();
-    
-    const name = customerName.value.trim();
-    const phone = customerPhone.value.trim();
-    const opening = parseFloat(customerOpening.value) || 0;
+  saveCustomerBtn.onclick = async function (e) {
+    e.preventDefault();
 
-    if (!name) {
-      alert("অনুগ্রহ করে গ্রাহকের নাম লিখুন!");
-      return;
-    }
+    try {
+      const name = customerName.value.trim();
+      const phone = customerPhone.value.trim();
+      const opening = parseFloat(customerOpening.value) || 0;
 
-    if (customerFormTitle.textContent === "গ্রাহক তথ্য এডিট করুন") {
-      currentCustomer.name = name;
-      currentCustomer.phone = phone;
-      await updateCustomer(currentCustomer);
-      
-      await loadDashboard();
-      const updated = customers.find(c => c.id === currentCustomer.id);
-      await openLedger(updated || currentCustomer);
-    } else {
-     
-      const avatarColors = ["#c8e6c9", "#f3e5ab", "#d9e2f3", "#f6d6dc"];
-      const lastColor = customers.length
-        ? customers[customers.length - 1].avatarColor
-        : null;
+      if (!name) {
+        alert("গ্রাহকের নাম লিখুন");
+        return;
+      }
 
-      const availableColors = avatarColors.filter(
-        color => color !== lastColor
-      );
+      /* EDIT MODE */
+      if (
+        currentCustomer &&
+        customerFormTitle.textContent === "গ্রাহক তথ্য এডিট করুন"
+      ) {
+        currentCustomer.name = name;
+        currentCustomer.phone = phone;
 
-      const randomColor =
-        availableColors[
-          Math.floor(Math.random() * availableColors.length)
-        ];
+        await updateCustomer(currentCustomer);
+        await loadDashboard();
+        await openLedger(currentCustomer);
+        return;
+      }
+
+      /* NEW CUSTOMER */
+      const colors = [
+        "#c8e6c9",
+        "#f3e5ab",
+        "#d9e2f3",
+        "#f6d6dc"
+      ];
 
       const newCust = {
-        id: Date.now().toString(),
+        id: "cust_" + Date.now(),
         name: name,
         phone: phone,
         openingBalance: opening,
         createdAt: Date.now(),
-        avatarColor: randomColor
+        avatarColor: colors[Math.floor(Math.random() * colors.length)]
       };
-      
+
       await addCustomer(newCust);
-      await loadDashboard();
-      
+
       customerName.value = "";
       customerPhone.value = "";
       customerOpening.value = "";
-      
-      const saved = customers.find(c => c.id === newCust.id);
-      await openLedger(saved || newCust);
+
+      await loadDashboard();
+      await openLedger(newCust);
+
+    } catch (err) {
+      console.error(err);
+      alert("Customer save error");
     }
   };
 }
 
+/* OPEN FORM */
 if (openCustomerModal) {
-  openCustomerModal.onclick = () => {
+  openCustomerModal.onclick = function () {
+    currentCustomer = null;
+
     customerFormTitle.textContent = "নতুন গ্রাহক যোগ করুন";
+
     customerName.value = "";
     customerPhone.value = "";
     customerOpening.value = "";
-    if (openingBalContainer) openingBalContainer.style.display = "block";
+
+    if (openingBalContainer) {
+      openingBalContainer.style.display = "block";
+    }
+
     switchScreen(customerFormScreen);
-    history.pushState({screen:"form"}, "");
   };
 }
 
-/* NAVIGATION BACKS */
-document.addEventListener("click", async (e)=>{
-  const backBtn = e.target.closest(".back-btn");
+/* EDIT */
+if (optEdit) {
+  optEdit.onclick = function () {
+    if (!currentCustomer) return;
 
-  if(!backBtn) return;
+    customerFormTitle.textContent = "গ্রাহক তথ্য এডিট করুন";
 
-  e.preventDefault();
-  e.stopPropagation();
+    customerName.value = currentCustomer.name || "";
+    customerPhone.value = currentCustomer.phone || "";
 
-  await handleUniversalBack();
-});
+    if (openingBalContainer) {
+      openingBalContainer.style.display = "none";
+    }
 
-/* LIVE SEARCH */
+    switchScreen(customerFormScreen);
+  };
+}
+
+/* SEARCH */
 if (searchInput) {
-  searchInput.oninput = () => {
+  searchInput.oninput = function () {
     const q = searchInput.value.toLowerCase();
-    const filtered = customers.filter(c => c.name.toLowerCase().includes(q));
+
+    const filtered = customers.filter(c =>
+      c.name.toLowerCase().includes(q)
+    );
+
     renderCustomerList(filtered);
   };
 }
 
-/* UTILS & MATH COMPUTATION */
+/* SAVE TRANSACTION */
+if (saveTxnBtn) {
+  saveTxnBtn.onclick = async function () {
+    if (!currentCustomer) return;
 
-function updateTxnDateButton() {
-  if (txnDateBtn) {
-    txnDateBtn.textContent = "📅 " + selectedTxnDate.toLocaleDateString("bn-BD", { day: "numeric", month: "short" });
-  }
-}
+    try {
+      const giveVal = parseFloat(txnGive.value) || 0;
+      const receiveVal = parseFloat(txnReceive.value) || 0;
+      const noteVal = txnNote.value.trim();
 
-if (txnDateBtn) {
-  txnDateBtn.onclick = () => {
-    txnDate.value = selectedTxnDate.toISOString().split("T")[0];
-    if (txnDate.showPicker) txnDate.showPicker();
-  };
-}
-
-if (txnDate) {
-  txnDate.onchange = () => {
-    if (txnDate.value) {
-      selectedTxnDate = new Date(txnDate.value);
-      updateTxnDateButton();
-    }
-  };
-}
-
-window.onpopstate = async function () {
-  const handled = await handleUniversalBack();
-
-  if(handled){
-    history.pushState({screen:"ui"}, "");
-  }
-};
-
-const inlineCalculator = document.getElementById("inlineCalculator");
-
-function isTextInput(el){
-  return !!(
-    el &&
-    (
-      el.tagName === "INPUT" ||
-      el.tagName === "TEXTAREA"
-    )
-  );
-}
-
-function hideCalculator(){
-  if(!inlineCalculator) return;
-  inlineCalculator.classList.remove("show");
-  activeMoneyInput = null;
-}
-
-function hideKeyboard(){
-  return;
-}
-
-function closeTransientUI(){
-  hideCalculator();
-  hideKeyboard();
-}
-
-function hasTransientUIOpen(){
-  return (
-    (inlineCalculator && inlineCalculator.classList.contains("show")) ||
-    isTextInput(document.activeElement)
-  );
-}
-
-async function handleUniversalBack(){
-  if(hasTransientUIOpen()){
-    closeTransientUI();
-
-    if(ledgerScreen.classList.contains("active")){
-      history.replaceState({screen:"ledger"}, "");
-    }else if(customerFormScreen.classList.contains("active")){
-      history.replaceState({screen:"form"}, "");
-    }else{
-      history.replaceState({screen:"home"}, "");
-    }
-
-    return true;
-  }
-
-  if(customerFormScreen.classList.contains("active")){
-    if(customerFormTitle.textContent === "নতুন গ্রাহক যোগ করুন"){
-      currentCustomer = null;
-      await loadDashboard();
-      switchScreen(homeScreen);
-    }else{
-      switchScreen(ledgerScreen);
-    }
-    return true;
-  }
-
-  if(ledgerScreen.classList.contains("active")){
-    if(liveInterval) clearInterval(liveInterval);
-    await loadDashboard();
-    switchScreen(homeScreen);
-    return true;
-  }
-
-  return false;
-}
-
-moneyInputs.forEach(input=>{
-  const activateInput = ()=>{
-    activeMoneyInput = input;
-    calcExpression = input.value || "";
-
-    input.focus();
-    input.setSelectionRange(input.value.length, input.value.length);
-
-    inlineCalculator.classList.add("show");
-  };
-
-  input.addEventListener("pointerdown", activateInput);
-});
-
-/* CALCULATOR KEYPAD ENGINE WITH INSTANT LIVE POINTERDOWN ANIMATION */
-calcKeys.forEach(key=>{
-  key.addEventListener("pointerdown", (e) => {
-    e.preventDefault();
-    key.classList.add("live-active");
-  });
-
-  const clearLiveState = () => {
-    key.classList.remove("live-active");
-  };
-
-  key.addEventListener("pointerup", clearLiveState);
-  key.addEventListener("pointerleave", clearLiveState);
-  key.addEventListener("pointercancel", clearLiveState);
-
-  key.addEventListener("click", ()=>{
-    if(!activeMoneyInput) return;
-
-    const val = key.dataset.key;
-
-    if(val === "AC"){
-      calcExpression = "";
-    }
-    else if(val === "BACK"){
-      calcExpression = calcExpression.slice(0,-1);
-    }
-    
-    else if(val === "="){
-      try{
-        const safeExpr = calcExpression
-          .replace(/×/g,"*")
-          .replace(/÷/g,"/");
-
-        if(!/^[0-9+\\-*/%.() ]+$/.test(safeExpr)){
-          throw new Error("Invalid");
-        }
-
-        calcExpression = String(
-          Function(
-            "return (" + safeExpr.replace(/%/g,"/100") + ")"
-          )()
-        );
-
-        activeMoneyInput.value = calcExpression;
-        activeMoneyInput.focus();
-        activeMoneyInput.setSelectionRange(
-          activeMoneyInput.value.length,
-          activeMoneyInput.value.length
-        );
-        updateSaveBtnState();
-      }catch{
-        calcExpression = "";
-        activeMoneyInput.value = "";
+      if (giveVal <= 0 && receiveVal <= 0) {
+        alert("টাকার পরিমাণ লিখুন");
+        return;
       }
-    }
 
-    else{
-      calcExpression += val;
-    }
+      const txn = {
+        id: "txn_" + Date.now(),
+        customerId: currentCustomer.id,
+        give: giveVal,
+        receive: receiveVal,
+        note: noteVal,
+        createdAt: Date.now()
+      };
 
-    activeMoneyInput.value = calcExpression;
-    activeMoneyInput.focus();
-    activeMoneyInput.setSelectionRange(
-      activeMoneyInput.value.length,
-      activeMoneyInput.value.length
-    );
-    updateSaveBtnState();
-  });
+      await addTransaction(txn);
+
+      txnGive.value = "";
+      txnReceive.value = "";
+      txnNote.value = "";
+
+      await loadDashboard();
+
+      const updated = customers.find(c => c.id === currentCustomer.id);
+      if (updated) {
+        await openLedger(updated);
+      }
+
+    } catch (err) {
+      console.error(err);
+      alert("Transaction save error");
+    }
+  };
+}
+
+/* BACK */
+document.addEventListener("click", function (e) {
+  const btn = e.target.closest(".back-btn");
+  if (!btn) return;
+
+  if (customerFormScreen.classList.contains("active")) {
+    switchScreen(homeScreen);
+    return;
+  }
+
+  if (ledgerScreen.classList.contains("active")) {
+    switchScreen(homeScreen);
+    return;
+  }
 });
 
-if(txnNote){
-  txnNote.addEventListener("focus", ()=>{
-    hideCalculator();
+/* CALCULATOR */
+function updateSaveBtnState() {
+  if (!saveTxnBtn) return;
+
+  const hasValue =
+    (parseFloat(txnGive.value) || 0) > 0 ||
+    (parseFloat(txnReceive.value) || 0) > 0;
+
+  if (hasValue) {
+    saveTxnBtn.classList.add("active");
+  } else {
+    saveTxnBtn.classList.remove("active");
+  }
+}
+
+if (inlineCalculator && moneyInputs.length) {
+  moneyInputs.forEach(input => {
+    input.onclick = function () {
+      activeMoneyInput = input;
+      calcExpression = input.value || "";
+      inlineCalculator.classList.add("show");
+    };
+  });
+
+  calcKeys.forEach(key => {
+    key.onclick = function () {
+      if (!activeMoneyInput) return;
+
+      const val = key.dataset.key;
+
+      if (val === "AC") {
+        calcExpression = "";
+      } else if (val === "BACK") {
+        calcExpression = calcExpression.slice(0, -1);
+      } else if (val === "=") {
+        try {
+          const safe = calcExpression
+            .replace(/×/g, "*")
+            .replace(/÷/g, "/");
+
+          calcExpression = String(eval(safe));
+        } catch {
+          calcExpression = "";
+        }
+      } else {
+        calcExpression += val;
+      }
+
+      activeMoneyInput.value = calcExpression;
+      updateSaveBtnState();
+    };
   });
 }
 
-document.addEventListener("focusin",(e)=>{
-  if(
-    isTextInput(e.target) &&
-    !e.target.classList.contains("money-input")
-  ){
-    hideCalculator();
-  }
-});
+if (txnNote) {
+  txnNote.onfocus = function () {
+    if (inlineCalculator) {
+      inlineCalculator.classList.remove("show");
+    }
+  };
+}
+
+
