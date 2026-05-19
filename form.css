@@ -186,6 +186,8 @@ input:checked + .slider:before {
 }
 
 .input-item label {
+  font-weight:600;
+}
   display:block;
   font-size:14px;
   color:#555;

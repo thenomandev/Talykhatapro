@@ -483,6 +483,10 @@ const newCust = {
       customerName.value = "";
       customerPhone.value = "";
       customerOpening.value = "";
+
+document.querySelectorAll(".floating-field").forEach(f=>{
+  f.classList.remove("has-value");
+});
       
       const saved = customers.find(c => c.id === newCust.id);
       await openLedger(saved || newCust);
@@ -668,6 +672,10 @@ else if(val === "="){
     );
 
     activeMoneyInput.value = calcExpression;
+activeMoneyInput.closest(".floating-field")?.classList.toggle(
+  "has-value",
+  activeMoneyInput.value.trim() !== ""
+);
 activeMoneyInput.focus();
 activeMoneyInput.setSelectionRange(
   activeMoneyInput.value.length,
@@ -685,6 +693,10 @@ updateSaveBtnState();
     }
 
     activeMoneyInput.value = calcExpression;
+activeMoneyInput.closest(".floating-field")?.classList.toggle(
+  "has-value",
+  activeMoneyInput.value.trim() !== ""
+);
 activeMoneyInput.focus();
 activeMoneyInput.setSelectionRange(
   activeMoneyInput.value.length,
