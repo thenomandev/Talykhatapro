@@ -664,7 +664,7 @@ calcKeys.forEach(key=>{
 
         calcExpression = String(
           Function(
-            "return (" + safeExpr.replace(/%/g,\"/100\") + ")"
+            "return (" + safeExpr.replace(/%/g,"/100") + ")"
           )()
         );
 
