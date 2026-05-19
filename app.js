@@ -59,14 +59,6 @@ const reportTxnList = document.getElementById("reportTxnList");
 const reportTotalGave = document.getElementById("reportTotalGave");
 const reportTotalGot = document.getElementById("reportTotalGot");
 
-function switchScreen(targetScreen) {
-  document.querySelectorAll(".screen").forEach(screen => {
-    screen.classList.remove("active");
-  });
-
-  targetScreen.classList.add("active");
-}
-
 /* INITIALIZE APP */
 window.addEventListener("DOMContentLoaded", async () => {
   await loadDashboard();
