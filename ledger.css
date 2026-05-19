@@ -203,13 +203,13 @@
   transition:.2s ease;
 }
 
-/* PREMIUM INLINE CALCULATOR DESIGN - INSTANT TOUCH FEEDBACK */
+/* PREMIUM INLINE CALCULATOR DESIGN WITH PRESS ANIMATION */
 .inline-calculator {
   position: fixed;
   left: 0;
   right: 0;
   bottom: 0;
-  background: #e5e5e5;
+  background: #e5e5e5; /* Background behind gap lines */
   z-index: 9999;
   display: none;
   grid-template-columns: repeat(4, 1fr);
@@ -217,8 +217,6 @@
   gap: 1px;
   box-shadow: 0 -4px 25px rgba(0, 0, 0, 0.12);
   padding: 1px;
-  /* Disable mobile delay behaviors */
-  touch-action: manipulation;
 }
 
 .inline-calculator.show {
@@ -237,21 +235,16 @@
   user-select: none;
   height: 100%;
   position: relative;
-  /* Webkit optimization for mobile touch instant response */
-  -webkit-tap-highlight-color: transparent;
-  touch-action: manipulation;
-  /* Transition handles the RELEASE/FADE BACK smoothly, but touch down will be instant */
-  transition: background 0.2s ease, transform 0.2s ease, border-radius 0.2s ease;
+  /* Smooth animation speed setup */
+  transition: background 0.1s ease, transform 0.08s ease-out;
 }
 
-/* INSTANT ACTIVE STATE ON TOUCH/PRESS (NO DELAY) */
+/* Button Tiply dynamic animation (Scale down slightly and pop back) */
 .calc-key:active {
-  transform: scale(0.92) !important;
-  background: #f0f0f0 !important;
-  border-radius: 8px !important;
+  transform: scale(0.93);
+  background: #f0f0f0;
+  border-radius: 8px; /* Temporary curve on press for modern touch */
   z-index: 2;
-  /* 0s transition means it scales down the microsecond your finger touches it */
-  transition: none !important;
 }
 
 .action-key {
@@ -261,8 +254,7 @@
 }
 
 .action-key:active {
-  background: #e8e8e8 !important;
-  transition: none !important;
+  background: #e8e8e8;
 }
 
 .operator-key {
@@ -273,8 +265,7 @@
 }
 
 .operator-key:active {
-  background: #f5e6cc !important;
-  transition: none !important;
+  background: #f5e6cc;
 }
 
 .equal-key {
@@ -283,8 +274,7 @@
 }
 
 .equal-key:active {
-  background: #a3874b !important;
-  transition: none !important;
+  background: #a3874b;
 }
 
 .backspace-key {
