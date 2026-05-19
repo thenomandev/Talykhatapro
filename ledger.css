@@ -286,3 +286,128 @@
   font-size: 18px;
   color: #555555;
 }
+
+
+/* PREMIUM FLOATING FOCUS INPUT SYSTEM - SCREENSHOT PERFECT MATCH */
+.txn-box, .txn-note-box {
+  border: 1px solid #9e9e9e !important; /* Elegant subtle default grey line instead of stark dark black */
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  background: #ffffff !important;
+}
+
+/* WHEN THE BOX IS FOCUSED, HIDE DEFAULT BORDER AND SHOW PREMIUM GOLD BOLD ROUND RING */
+.txn-box:has(input:focus), .txn-note-box:has(input:focus) {
+  border-color: #bfa15f !important;
+  border-width: 2px !important; /* Thick bold round box */
+  box-shadow: 0 0 0 4px rgba(191, 161, 95, 0.15) !important; /* Soft premium outer glow ring */
+  transform: translateY(-1px);
+}
+
+/* PREVENT ICON COLLISION - CLEAN TEXT OFFSET PACKING */
+.txn-box {
+  padding-left: 12px !important;
+}
+.txn-box input {
+  padding: 14px 12px 14px 28px !important; /* Perfectly positions text to the right of '৳' icon */
+  font-weight: 600 !important;
+  caret-color: #bfa15f !important; /* Bold custom premium caret cursor */
+}
+
+.txn-note-box {
+  padding-left: 12px !important;
+}
+.txn-note-box input {
+  padding: 14px 12px 14px 32px !important; /* Perfectly positions text to the right of Description File Icon */
+  font-weight: 500 !important;
+  caret-color: #bfa15f !important;
+}
+
+/* HIDE PLACEHOLDER ON FOCUS INSTANTLY TO LOOK ABSOLUTELY PREMIUM */
+.txn-box input:focus::placeholder,
+.txn-note-box input:focus::placeholder {
+  color: transparent !important;
+}
+
+/* ADJUST ABSOLUTE ICONS POSITION SO THEY ALIGN PRECISELY WITH TEXT LEFT GAP */
+.taka-icon {
+  left: 14px !important;
+  font-weight: 700 !important;
+  color: #757575 !important;
+}
+.desc-icon {
+  left: 14px !important;
+  color: #757575 !important;
+}
+
+
+/* PREMIUM MODAL FLOATING BOX LAYOUT - MATCHING FIRST 3 SCREENSHOTS EXACTLY */
+.txn-box, .txn-note-box {
+  position: relative !important;
+  border: 1px solid #ced4da !important; /* Premium subtle gray border */
+  border-radius: 12px !important; /* Beautiful round corner box */
+  background-color: #ffffff !important;
+  box-sizing: border-box !important;
+  transition: all 0.15s ease-in-out !important;
+}
+
+/* WHEN FOCUSED: HIDE THE SUBTLE GRAY BORDER AND SHOW BOLD 2PX PREMIUM GOLD RING WITH OUTER GLOW */
+.txn-box:has(input:focus), .txn-note-box:has(input:focus) {
+  border-color: #bfa15f !important;
+  border-width: 2px !important; /* Extra bold premium look */
+  box-shadow: 0 0 0 4px rgba(191, 161, 95, 0.18) !important; /* Soft gold outer glow ring */
+  background-color: #ffffff !important;
+}
+
+/* FIXED ICON COLLISION - ASSURING GENERATIVE GAP */
+.txn-box .taka-icon {
+  position: absolute !important;
+  left: 14px !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  font-size: 18px !important;
+  font-weight: 700 !important;
+  color: #757575 !important;
+  z-index: 5 !important;
+}
+
+.txn-note-box .desc-icon {
+  position: absolute !important;
+  left: 14px !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  font-size: 16px !important;
+  color: #757575 !important;
+  z-index: 5 !important;
+}
+
+/* INPUT TEXT PADDING OFFSET - PREVENTS OVERLAPPING ICONS */
+.txn-box input.money-input {
+  width: 100% !important;
+  padding: 14px 16px 14px 36px !important; /* Pushes text safely past the '৳' icon */
+  font-size: 16px !important;
+  font-weight: 600 !important;
+  background: transparent !important;
+  border: none !important;
+  outline: none !important;
+  box-sizing: border-box !important;
+  caret-color: #bfa15f !important; /* Bold gold blinking native cursor */
+}
+
+.txn-note-box input#txnNote {
+  width: 100% !important;
+  padding: 14px 16px 14px 38px !important; /* Pushes text safely past the description file icon */
+  font-size: 16px !important;
+  font-weight: 500 !important;
+  background: transparent !important;
+  border: none !important;
+  outline: none !important;
+  box-sizing: border-box !important;
+  caret-color: #bfa15f !important;
+}
+
+/* HIDE PLACEHOLDER TEXT COMPLETELY WHEN INPUT IS ACTIVE/FOCUSED */
+.txn-box input:focus::placeholder,
+.txn-note-box input:focus::placeholder {
+  color: transparent !important;
+  opacity: 0 !important;
+}
