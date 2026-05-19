@@ -117,7 +117,7 @@
   display:flex;
   align-items:center;
   background:#fff;
-  overflow:visible;
+  overflow:hidden;
   transition:.25s ease;
 }
 
@@ -144,7 +144,7 @@
   display:flex;
   align-items:center;
   background:#fff;
-  overflow:visible;
+  overflow:hidden;
   transition:.25s ease;
 }
 
@@ -298,7 +298,8 @@
 
 .txn-box:focus-within,
 .txn-note-box:focus-within{
-  border:2px solid #b51e23;
+  border-color:#b51e23;
+  box-shadow:0 0 0 1px #b51e23;
 }
 
 .txn-box input::placeholder,
