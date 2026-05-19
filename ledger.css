@@ -204,20 +204,20 @@
 }
 
 /* PREMIUM INLINE CALCULATOR DESIGN - INSTANT TOUCH FEEDBACK */
+
+/* PREMIUM INLINE CALCULATOR DESIGN - SOLID UNBROKEN GRID LINES */
 .inline-calculator {
   position: fixed;
   left: 0;
   right: 0;
   bottom: 0;
-  background: #e5e5e5;
+  background: #ffffff;
   z-index: 9999;
   display: none;
   grid-template-columns: repeat(4, 1fr);
   grid-template-rows: repeat(5, 54px);
-  gap: 1px;
   box-shadow: 0 -4px 25px rgba(0, 0, 0, 0.12);
-  padding: 1px;
-  /* Disable mobile delay behaviors */
+  border-top: 1px solid #e2e2e2;
   touch-action: manipulation;
 }
 
@@ -227,6 +227,8 @@
 
 .calc-key {
   border: none;
+  border-right: 1px solid #e5e5e5;
+  border-bottom: 1px solid #e5e5e5;
   background: #ffffff;
   font-size: 20px;
   font-weight: 500;
@@ -237,32 +239,27 @@
   user-select: none;
   height: 100%;
   position: relative;
-  /* Webkit optimization for mobile touch instant response */
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
-  /* Transition handles the RELEASE/FADE BACK smoothly, but touch down will be instant */
-  transition: background 0.2s ease, transform 0.2s ease, border-radius 0.2s ease;
+  transition: background 0.12s ease;
 }
 
-/* INSTANT ACTIVE STATE ON TOUCH/PRESS (NO DELAY) */
+.calc-key:nth-child(4n) {
+  border-right: none;
+}
+
 .calc-key:active {
-  transform: scale(0.92) !important;
-  background: #f0f0f0 !important;
-  border-radius: 8px !important;
-  z-index: 2;
-  /* 0s transition means it scales down the microsecond your finger touches it */
-  transition: none !important;
+  background: #f2f2f2 !important;
 }
 
 .action-key {
-  background: #fcfcfc;
+  background: #f9f9f9;
   color: #000000;
   font-weight: 600;
 }
 
 .action-key:active {
   background: #e8e8e8 !important;
-  transition: none !important;
 }
 
 .operator-key {
@@ -274,7 +271,6 @@
 
 .operator-key:active {
   background: #f5e6cc !important;
-  transition: none !important;
 }
 
 .equal-key {
@@ -284,10 +280,134 @@
 
 .equal-key:active {
   background: #a3874b !important;
-  transition: none !important;
 }
 
 .backspace-key {
   font-size: 18px;
   color: #555555;
+}
+
+
+/* PREMIUM FLOATING FOCUS INPUT SYSTEM - SCREENSHOT PERFECT MATCH */
+.txn-box, .txn-note-box {
+  border: 1px solid #9e9e9e !important; /* Elegant subtle default grey line instead of stark dark black */
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  background: #ffffff !important;
+}
+
+/* WHEN THE BOX IS FOCUSED, HIDE DEFAULT BORDER AND SHOW PREMIUM GOLD BOLD ROUND RING */
+.txn-box:has(input:focus), .txn-note-box:has(input:focus) {
+  border-color: #bfa15f !important;
+  border-width: 2px !important; /* Thick bold round box */
+  box-shadow: 0 0 0 4px rgba(191, 161, 95, 0.15) !important; /* Soft premium outer glow ring */
+  transform: translateY(-1px);
+}
+
+/* PREVENT ICON COLLISION - CLEAN TEXT OFFSET PACKING */
+.txn-box {
+  padding-left: 12px !important;
+}
+.txn-box input {
+  padding: 14px 12px 14px 28px !important; /* Perfectly positions text to the right of '৳' icon */
+  font-weight: 600 !important;
+  caret-color: #bfa15f !important; /* Bold custom premium caret cursor */
+}
+
+.txn-note-box {
+  padding-left: 12px !important;
+}
+.txn-note-box input {
+  padding: 14px 12px 14px 32px !important; /* Perfectly positions text to the right of Description File Icon */
+  font-weight: 500 !important;
+  caret-color: #bfa15f !important;
+}
+
+/* HIDE PLACEHOLDER ON FOCUS INSTANTLY TO LOOK ABSOLUTELY PREMIUM */
+.txn-box input:focus::placeholder,
+.txn-note-box input:focus::placeholder {
+  color: transparent !important;
+}
+
+/* ADJUST ABSOLUTE ICONS POSITION SO THEY ALIGN PRECISELY WITH TEXT LEFT GAP */
+.taka-icon {
+  left: 14px !important;
+  font-weight: 700 !important;
+  color: #757575 !important;
+}
+.desc-icon {
+  left: 14px !important;
+  color: #757575 !important;
+}
+
+
+/* PREMIUM MODAL FLOATING BOX LAYOUT - MATCHING FIRST 3 SCREENSHOTS EXACTLY */
+.txn-box, .txn-note-box {
+  position: relative !important;
+  border: 1px solid #ced4da !important; /* Premium subtle gray border */
+  border-radius: 12px !important; /* Beautiful round corner box */
+  background-color: #ffffff !important;
+  box-sizing: border-box !important;
+  transition: all 0.15s ease-in-out !important;
+}
+
+/* WHEN FOCUSED: HIDE THE SUBTLE GRAY BORDER AND SHOW BOLD 2PX PREMIUM GOLD RING WITH OUTER GLOW */
+.txn-box:has(input:focus), .txn-note-box:has(input:focus) {
+  border-color: #bfa15f !important;
+  border-width: 2px !important; /* Extra bold premium look */
+  box-shadow: 0 0 0 4px rgba(191, 161, 95, 0.18) !important; /* Soft gold outer glow ring */
+  background-color: #ffffff !important;
+}
+
+/* FIXED ICON COLLISION - ASSURING GENERATIVE GAP */
+.txn-box .taka-icon {
+  position: absolute !important;
+  left: 14px !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  font-size: 18px !important;
+  font-weight: 700 !important;
+  color: #757575 !important;
+  z-index: 5 !important;
+}
+
+.txn-note-box .desc-icon {
+  position: absolute !important;
+  left: 14px !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  font-size: 16px !important;
+  color: #757575 !important;
+  z-index: 5 !important;
+}
+
+/* INPUT TEXT PADDING OFFSET - PREVENTS OVERLAPPING ICONS */
+.txn-box input.money-input {
+  width: 100% !important;
+  padding: 14px 16px 14px 36px !important; /* Pushes text safely past the '৳' icon */
+  font-size: 16px !important;
+  font-weight: 600 !important;
+  background: transparent !important;
+  border: none !important;
+  outline: none !important;
+  box-sizing: border-box !important;
+  caret-color: #bfa15f !important; /* Bold gold blinking native cursor */
+}
+
+.txn-note-box input#txnNote {
+  width: 100% !important;
+  padding: 14px 16px 14px 38px !important; /* Pushes text safely past the description file icon */
+  font-size: 16px !important;
+  font-weight: 500 !important;
+  background: transparent !important;
+  border: none !important;
+  outline: none !important;
+  box-sizing: border-box !important;
+  caret-color: #bfa15f !important;
+}
+
+/* HIDE PLACEHOLDER TEXT COMPLETELY WHEN INPUT IS ACTIVE/FOCUSED */
+.txn-box input:focus::placeholder,
+.txn-note-box input:focus::placeholder {
+  color: transparent !important;
+  opacity: 0 !important;
 }
