@@ -59,6 +59,7 @@ function updateSaveBtnState(){
 }
 
 const moneyInputs = document.querySelectorAll(".money-input");
+const floatingInputs = document.querySelectorAll(".floating-field input");
 const calcKeys = document.querySelectorAll(".calc-key");
 
 let activeMoneyInput = null;
@@ -75,6 +76,16 @@ const reportTotalGot = document.getElementById("reportTotalGot");
 window.addEventListener("DOMContentLoaded", async () => {
   await loadDashboard();
   updateTxnDateButton();
+
+  floatingInputs.forEach(input=>{
+    input.addEventListener("input", ()=>{
+      input.closest(".floating-field")?.classList.toggle(
+        "has-value",
+        input.value.trim() !== ""
+      );
+    });
+  });
+
   history.replaceState({screen:"home"}, "");
   history.pushState({screen:"ready"}, "");
 });

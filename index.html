@@ -187,20 +187,20 @@
 
   <div class="form-body">
 
-    <div class="input-item">
-      <label>গ্রাহকের নাম</label>
-      <input id="customerName" type="text" placeholder="নাম লিখুন" />
-    </div>
+    <div class="input-item floating-field">
+  <label class="floating-label">গ্রাহকের নাম</label>
+  <input id="customerName" type="text" />
+</div>
 
-    <div class="input-item">
-      <label>মোবাইল নম্বর</label>
-      <input id="customerPhone" type="tel" placeholder="মোবাইল নম্বর লিখুন" />
-    </div>
+    <div class="input-item floating-field">
+  <label class="floating-label">মোবাইল নম্বর</label>
+  <input id="customerPhone" type="tel" />
+</div>
 
-    <div class="input-item" id="openingBalContainer">
-      <label>শুরুর ব্যালেন্স (ঐচ্ছিক)</label>
-      <input id="customerOpening" type="text" inputmode="none" readonly placeholder="০.০০" class="money-input" />
-    </div>
+    <div class="input-item floating-field" id="openingBalContainer">
+  <label class="floating-label">শুরুর ব্যালেন্স (ঐচ্ছিক)</label>
+  <input id="customerOpening" type="text" inputmode="none" readonly class="money-input" />
+</div>
 
     <button id="saveCustomerBtn" class="submit-btn">
       সংরক্ষণ করুন
@@ -262,22 +262,25 @@
 
     <div class="txn-row">
 
-      <div class="txn-box">
-        <span class="taka-icon">৳</span>
-        <input id="txnGive" type="text" inputmode="none" readonly placeholder="দিলাম/বেচা" class="money-input" />
-      </div>
+      <div class="txn-box floating-field">
+  <label class="floating-label">দিলাম/বেচা</label>
+  <span class="taka-icon">৳</span>
+  <input id="txnGive" type="text" inputmode="none" readonly class="money-input" />
+</div>
 
-      <div class="txn-box">
-        <span class="taka-icon">৳</span>
-        <input id="txnReceive" type="text" inputmode="none" readonly placeholder="পেলাম" class="money-input" />
-      </div>
+      <div class="txn-box floating-field">
+  <label class="floating-label">পেলাম</label>
+  <span class="taka-icon">৳</span>
+  <input id="txnReceive" type="text" inputmode="none" readonly class="money-input" />
+</div>
 
     </div>
 
-    <div class="txn-note-box">
-      <i class="fa-regular fa-file-lines desc-icon"></i>
-      <input id="txnNote" type="text" placeholder="বিবরণ" />
-    </div>
+    <div class="txn-note-box floating-field">
+  <label class="floating-label">বিবরণ</label>
+  <i class="fa-regular fa-file-lines desc-icon"></i>
+  <input id="txnNote" type="text" />
+</div>
 
     <div class="txn-action-row">
       <button type="button" class="date-pill" id="txnDateBtn">📅 আজ</button>
