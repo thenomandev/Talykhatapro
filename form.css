@@ -186,13 +186,18 @@ input:checked + .slider:before {
 }
 
 .input-item label {
-  font-weight:600;
-}
   display:block;
   font-size:14px;
   color:#555;
   margin-bottom:6px;
   font-weight:600;
+}
+
+.input-item input {
+  border:1px solid #ccc;
+  padding:12px;
+  border-radius:8px;
+  font-size:16px;
 }
 
 .submit-btn {
