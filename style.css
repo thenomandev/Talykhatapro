@@ -88,16 +88,18 @@ textarea{
 
 .floating-label{
   position:absolute;
-  left:14px;
+  left:18px;
   top:50%;
   transform:translateY(-50%);
   background:#fff;
-  padding:0 6px;
+  padding:0 8px;
   color:#a8b0b8;
   font-size:16px;
+  font-weight:500;
   transition:.22s ease;
   pointer-events:none;
-  z-index:20;
+  z-index:50;
+  white-space:nowrap;
 }
 
 .floating-field:focus-within .floating-label,
@@ -114,9 +116,9 @@ textarea{
 }
 
 .txn-box .floating-label{
-  left:30px;
+  left:48px;
 }
 
 .txn-note-box .floating-label{
-  left:38px;
+  left:50px;
 }

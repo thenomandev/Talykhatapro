@@ -117,7 +117,7 @@
   display:flex;
   align-items:center;
   background:#fff;
-  overflow:hidden;
+  overflow:visible;
   transition:.25s ease;
 }
 
@@ -144,7 +144,7 @@
   display:flex;
   align-items:center;
   background:#fff;
-  overflow:hidden;
+  overflow:visible;
   transition:.25s ease;
 }
 
