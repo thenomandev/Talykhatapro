@@ -96,7 +96,16 @@ async function loadDashboard() {
 /* RENDER HOME CUSTOMER LIST */
 function renderCustomerList(list) {
   customerList.innerHTML = "";
-  customerCount.textContent = `${formatBanglaNumber(list.length)} / সাপ্লায়ার ০`;
+  const customerOnlyCount = customers.filter(
+  c => (c.userType || "customer") === "customer"
+).length;
+
+const supplierOnlyCount = customers.filter(
+  c => (c.userType || "customer") === "supplier"
+).length;
+
+customerCount.textContent =
+  `${formatBanglaNumber(customerOnlyCount)} / সাপ্লায়ার ${formatBanglaNumber(supplierOnlyCount)}`;
 
   if (list.length === 0) {
     customerList.innerHTML =

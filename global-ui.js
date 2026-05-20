@@ -43,31 +43,63 @@ function initPremiumCustomerUI(){
     });
 
     input.addEventListener("blur", ()=>{
-      box.classList.remove("active");
-
-      if(input.value.trim()){
-        box.classList.add("has-value");
-      }else{
-        box.classList.remove("has-value");
-      }
-    });
+  if(input.value.trim()){
+    box.classList.remove("active");
+    box.classList.add("has-value");
+  }else{
+    box.classList.remove("active");
+    box.classList.remove("has-value");
+  }
+});
 
     input.addEventListener("input", ()=>{
-      updateSaveButton();
-    });
+  if(input.value.trim()){
+    box.classList.add("has-value");
+  }else{
+    box.classList.remove("has-value");
+  }
+
+  updateSaveButton();
+});
   }
 
   setupFloating(nameInput, nameBox);
   setupFloating(phoneInput, phoneBox);
-  setupFloating(openingInput, openingBox);
+setupFloating(openingInput, openingBox);
+
+openingBox.classList.remove("active","has-value");
+phoneBox.classList.remove("active","has-value");
+openingBox.style.display = "none";
+  
 
   function updateSaveButton(){
-    if(nameInput.value.trim().length >= 2){
-      saveBtn.classList.add("active");
+  const name = nameInput.value.trim();
+
+  const warning = document.getElementById("customerNameWarning");
+  const error = document.getElementById("customerNameError");
+  const openingBox = document.getElementById("openingBalContainer");
+
+  if(name.length >= 3 && name.length <= 35){
+    saveBtn.classList.add("active");
+
+    if(warning) warning.style.display = "none";
+    if(error) error.style.display = "none";
+
+    if(openingBox) openingBox.style.display = "flex";
+  }else{
+    saveBtn.classList.remove("active");
+
+    if(name.length > 0){
+      if(warning) warning.style.display = "block";
+      if(error) error.style.display = "block";
     }else{
-      saveBtn.classList.remove("active");
+      if(warning) warning.style.display = "none";
+      if(error) error.style.display = "none";
     }
+
+    if(openingBox) openingBox.style.display = "none";
   }
+}
 
   customerBtn.onclick = ()=>{
     customerPremiumState.userType = "customer";
@@ -123,8 +155,9 @@ function initPremiumCustomerUI(){
   galleryInput.onchange = e => loadAvatar(e.target.files[0]);
 
   document.getElementById("customerAttachPhotoBtn").onclick = ()=>{
-    attachPhotoInput.click();
-  };
+  attachPhotoInput.setAttribute("capture","environment");
+  attachPhotoInput.click();
+};
 
   attachPhotoInput.onchange = e=>{
     const file = e.target.files[0];

@@ -229,9 +229,18 @@
       <i class="fa-regular fa-user premium-input-icon" id="customerNameIcon"></i>
       <label id="customerNameLabel" class="floating-label">নাম</label>
       <input id="customerName" type="text" autocomplete="off">
+<div id="customerNameWarning" style="display:none;margin-right:16px;color:#b91c1c;font-size:28px;">
+⚠
+</div>
     </div>
 
-    <div class="premium-input-box" id="customerPhoneBox">
+<div id="customerNameError" style="display:none;color:#b91c1c;font-size:13px;margin:-10px 0 14px 4px;">
+নাম ৩ থেকে ৩৫ অক্ষরের মধ্যে হতে হবে।
+</div>
+
+<div class="premium-input-box" id="customerPhoneBox">
+
+    
       <i class="fa-solid fa-phone premium-input-icon" id="customerPhoneIcon"></i>
       <label id="customerPhoneLabel" class="floating-label">মোবাইল নম্বর</label>
       <input id="customerPhone" type="tel" autocomplete="off">

@@ -166,6 +166,10 @@
   color:#111827;
 }
 
+#openingBalContainer input{
+  padding-left:0;
+}
+
 .floating-label{
   position:absolute;
   left:48px;
@@ -189,13 +193,16 @@
 
 .premium-taka{
   margin-left:16px;
-  font-size:20px;
+  margin-right:8px;
+  font-size:28px;
   font-weight:700;
   color:#374151;
+  flex-shrink:0;
+  line-height:1;
 }
 
 #openingBalContainer .floating-label{
-  left:44px;
+  left:52px;
 }
 
 .customer-extra-actions{
