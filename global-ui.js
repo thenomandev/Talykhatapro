@@ -34,6 +34,7 @@ function initPremiumCustomerUI(){
   const customerDateBtn = document.getElementById("customerDateBtn");
   const customerDatePicker = document.getElementById("customerDatePicker");
   const customerDateText = document.getElementById("customerDateText");
+const customerAttachBtn = document.getElementById("customerAttachPhotoBtn");
 customerDateText.textContent = new Date().toLocaleDateString("bn-BD", {
   day:"numeric",
   month:"short"
@@ -80,6 +81,8 @@ phoneInput.value = "";
 nameInput.value = "";
 
 openingBox.style.display = "none";
+if(customerDateBtn) customerDateBtn.style.display = "none";
+if(customerAttachBtn) customerAttachBtn.style.display = "none";
   
 
   function updateSaveButton(){
@@ -90,25 +93,30 @@ openingBox.style.display = "none";
   const openingBox = document.getElementById("openingBalContainer");
 
   if(name.length >= 3 && name.length <= 35){
-    saveBtn.classList.add("active");
+  saveBtn.classList.add("active");
 
+  if(warning) warning.style.display = "none";
+  if(error) error.style.display = "none";
+
+  if(openingBox) openingBox.style.display = "flex";
+  if(customerDateBtn) customerDateBtn.style.display = "flex";
+  if(customerAttachBtn) customerAttachBtn.style.display = "flex";
+
+}else{
+  saveBtn.classList.remove("active");
+
+  if(name.length > 0){
+    if(warning) warning.style.display = "block";
+    if(error) error.style.display = "block";
+  }else{
     if(warning) warning.style.display = "none";
     if(error) error.style.display = "none";
-
-    if(openingBox) openingBox.style.display = "flex";
-  }else{
-    saveBtn.classList.remove("active");
-
-    if(name.length > 0){
-      if(warning) warning.style.display = "block";
-      if(error) error.style.display = "block";
-    }else{
-      if(warning) warning.style.display = "none";
-      if(error) error.style.display = "none";
-    }
-
-    if(openingBox) openingBox.style.display = "none";
   }
+
+  if(openingBox) openingBox.style.display = "none";
+  if(customerDateBtn) customerDateBtn.style.display = "none";
+  if(customerAttachBtn) customerAttachBtn.style.display = "none";
+}
 }
 
 window.resetCustomerFormUI = function(){

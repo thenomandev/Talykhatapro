@@ -234,7 +234,8 @@
   max-width:430px;
   padding:14px 16px calc(14px + env(safe-area-inset-bottom));
   background:#fff;
-  border-top:1px solid #f3f4f6;
+  border-top:none;
+  box-shadow:none;
   z-index:9998;
 }
 
