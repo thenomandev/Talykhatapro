@@ -557,14 +557,15 @@ setTimeout(async ()=>{
 
 if (openCustomerModal) {
   openCustomerModal.onclick = () => {
-    customerFormTitle.textContent = "নতুন গ্রাহক যোগ করুন";
-    customerName.value = "";
-    customerPhone.value = "";
-    customerOpening.value = "";
-    if (openingBalContainer) openingBalContainer.style.display = "block";
-    switchScreen(customerFormScreen);
-history.pushState({screen:"form"}, "");
-  };
+  customerFormTitle.textContent = "নতুন গ্রাহক যোগ করুন";
+
+  if(window.resetCustomerFormUI){
+    resetCustomerFormUI();
+  }
+
+  switchScreen(customerFormScreen);
+  history.pushState({screen:"form"}, "");
+};
 }
 
 /* NAVIGATION BACKS */
@@ -669,6 +670,10 @@ async function handleUniversalBack(){
   }
 
   if(customerFormScreen.classList.contains("active")){
+  if(window.resetCustomerFormUI){
+    resetCustomerFormUI();
+  }
+
   if(customerFormTitle.textContent === "নতুন গ্রাহক যোগ করুন"){
     currentCustomer = null;
     await loadDashboard();

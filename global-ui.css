@@ -149,7 +149,7 @@
 .premium-input-icon{
   margin-left:16px;
   font-size:18px;
-  color:#6b7280;
+  color:#9ca3af;
   transition:.2s ease;
 }
 
@@ -194,8 +194,8 @@
 .premium-taka{
   margin-left:16px;
   margin-right:8px;
-  font-size:28px;
-  font-weight:700;
+  font-size:22px;
+  font-weight:600;
   color:#374151;
   flex-shrink:0;
   line-height:1;

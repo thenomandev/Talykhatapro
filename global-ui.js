@@ -34,6 +34,10 @@ function initPremiumCustomerUI(){
   const customerDateBtn = document.getElementById("customerDateBtn");
   const customerDatePicker = document.getElementById("customerDatePicker");
   const customerDateText = document.getElementById("customerDateText");
+customerDateText.textContent = new Date().toLocaleDateString("bn-BD", {
+  day:"numeric",
+  month:"short"
+});
 
   function setupFloating(input, box){
     if(!input || !box) return;
@@ -69,6 +73,12 @@ setupFloating(openingInput, openingBox);
 
 openingBox.classList.remove("active","has-value");
 phoneBox.classList.remove("active","has-value");
+nameBox.classList.remove("active","has-value");
+
+openingInput.value = "";
+phoneInput.value = "";
+nameInput.value = "";
+
 openingBox.style.display = "none";
   
 
@@ -99,6 +109,29 @@ openingBox.style.display = "none";
 
     if(openingBox) openingBox.style.display = "none";
   }
+}
+
+window.resetCustomerFormUI = function(){
+  nameInput.value = "";
+  phoneInput.value = "";
+  openingInput.value = "";
+
+  nameBox.classList.remove("active","has-value");
+  phoneBox.classList.remove("active","has-value");
+  openingBox.classList.remove("active","has-value");
+
+  openingBox.style.display = "none";
+
+  document.getElementById("customerNameWarning").style.display = "none";
+  document.getElementById("customerNameError").style.display = "none";
+
+  saveBtn.classList.remove("active");
+
+  avatarPreview.style.display = "none";
+  avatarIcon.style.display = "block";
+
+  customerPremiumState.avatarImage = "";
+  customerPremiumState.attachedPhoto = "";
 }
 
   customerBtn.onclick = ()=>{
