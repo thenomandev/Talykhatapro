@@ -1,0 +1,200 @@
+window.customerPremiumState = {
+  userType: "customer",
+  avatarImage: "",
+  attachedPhoto: "",
+  selectedDate: new Date()
+};
+
+function initPremiumCustomerUI(){
+
+  const nameInput = document.getElementById("customerName");
+  const phoneInput = document.getElementById("customerPhone");
+  const openingInput = document.getElementById("customerOpening");
+
+  const nameBox = document.getElementById("customerNameBox");
+  const phoneBox = document.getElementById("customerPhoneBox");
+  const openingBox = document.getElementById("openingBalContainer");
+
+  const saveBtn = document.getElementById("saveCustomerBtn");
+
+  const customerBtn = document.getElementById("customerTypeCustomer");
+  const supplierBtn = document.getElementById("customerTypeSupplier");
+
+  const avatarPreview = document.getElementById("customerAvatarPreview");
+  const avatarIcon = document.getElementById("customerAvatarIcon");
+
+  const cameraInput = document.getElementById("customerCameraInput");
+  const galleryInput = document.getElementById("customerGalleryInput");
+
+  const attachPhotoInput = document.getElementById("customerAttachPhotoInput");
+
+  const avatarPickerBackdrop = document.getElementById("avatarPickerBackdrop");
+  const avatarPickerSheet = document.getElementById("avatarPickerSheet");
+
+  const customerDateBtn = document.getElementById("customerDateBtn");
+  const customerDatePicker = document.getElementById("customerDatePicker");
+  const customerDateText = document.getElementById("customerDateText");
+
+  function setupFloating(input, box){
+    if(!input || !box) return;
+
+    input.addEventListener("focus", ()=>{
+      box.classList.add("active");
+    });
+
+    input.addEventListener("blur", ()=>{
+      box.classList.remove("active");
+
+      if(input.value.trim()){
+        box.classList.add("has-value");
+      }else{
+        box.classList.remove("has-value");
+      }
+    });
+
+    input.addEventListener("input", ()=>{
+      updateSaveButton();
+    });
+  }
+
+  setupFloating(nameInput, nameBox);
+  setupFloating(phoneInput, phoneBox);
+  setupFloating(openingInput, openingBox);
+
+  function updateSaveButton(){
+    if(nameInput.value.trim().length >= 2){
+      saveBtn.classList.add("active");
+    }else{
+      saveBtn.classList.remove("active");
+    }
+  }
+
+  customerBtn.onclick = ()=>{
+    customerPremiumState.userType = "customer";
+    customerBtn.classList.add("active");
+    supplierBtn.classList.remove("active");
+  };
+
+  supplierBtn.onclick = ()=>{
+    customerPremiumState.userType = "supplier";
+    supplierBtn.classList.add("active");
+    customerBtn.classList.remove("active");
+  };
+
+  function openPicker(){
+    avatarPickerBackdrop.classList.add("show");
+    avatarPickerSheet.classList.add("show");
+  }
+
+  function closePicker(){
+    avatarPickerBackdrop.classList.remove("show");
+    avatarPickerSheet.classList.remove("show");
+  }
+
+  document.getElementById("openAvatarPickerBtn").onclick = openPicker;
+  avatarPickerBackdrop.onclick = closePicker;
+
+  document.getElementById("pickCameraBtn").onclick = ()=>{
+    closePicker();
+    cameraInput.click();
+  };
+
+  document.getElementById("pickGalleryBtn").onclick = ()=>{
+    closePicker();
+    galleryInput.click();
+  };
+
+  function loadAvatar(file){
+    if(!file) return;
+
+    const reader = new FileReader();
+
+    reader.onload = function(e){
+      customerPremiumState.avatarImage = e.target.result;
+      avatarPreview.src = e.target.result;
+      avatarPreview.style.display = "block";
+      avatarIcon.style.display = "none";
+    };
+
+    reader.readAsDataURL(file);
+  }
+
+  cameraInput.onchange = e => loadAvatar(e.target.files[0]);
+  galleryInput.onchange = e => loadAvatar(e.target.files[0]);
+
+  document.getElementById("customerAttachPhotoBtn").onclick = ()=>{
+    attachPhotoInput.click();
+  };
+
+  attachPhotoInput.onchange = e=>{
+    const file = e.target.files[0];
+    if(!file) return;
+
+    const reader = new FileReader();
+
+    reader.onload = function(ev){
+      customerPremiumState.attachedPhoto = ev.target.result;
+    };
+
+    reader.readAsDataURL(file);
+  };
+
+  customerDateBtn.onclick = ()=>{
+    if(customerDatePicker.showPicker){
+      customerDatePicker.showPicker();
+    }else{
+      customerDatePicker.click();
+    }
+  };
+
+  customerDatePicker.onchange = ()=>{
+    if(customerDatePicker.value){
+      customerPremiumState.selectedDate = new Date(customerDatePicker.value);
+      customerDateText.textContent =
+        customerPremiumState.selectedDate.toLocaleDateString("bn-BD", {
+          day:"numeric",
+          month:"short"
+        });
+    }
+  };
+
+  document.getElementById("importContactBtn").onclick = async ()=>{
+    try{
+      if("contacts" in navigator && "ContactsManager" in window){
+        const contacts = await navigator.contacts.select(
+          ["name","tel"],
+          { multiple:false }
+        );
+
+        if(contacts.length){
+          if(contacts[0].name){
+            nameInput.value = contacts[0].name[0] || "";
+            nameBox.classList.add("has-value");
+          }
+
+          if(contacts[0].tel){
+            phoneInput.value = contacts[0].tel[0] || "";
+            phoneBox.classList.add("has-value");
+          }
+
+          updateSaveButton();
+        }
+      }else{
+        alert("এই ডিভাইসে ফোনবুক সাপোর্ট নেই");
+      }
+    }catch(e){}
+  };
+}
+
+function showCustomerSuccess(name){
+  const overlay = document.getElementById("customerSuccessOverlay");
+  const text = document.getElementById("customerSuccessText");
+
+  text.textContent = `"${name}" যোগ করা হয়েছে`;
+
+  overlay.classList.add("show");
+
+  setTimeout(()=>{
+    overlay.classList.remove("show");
+  }, 2000);
+}

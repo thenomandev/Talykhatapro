@@ -13,6 +13,7 @@
   <link rel="stylesheet" href="home.css" />
   <link rel="stylesheet" href="ledger.css" />
   <link rel="stylesheet" href="form.css" />
+  <link rel="stylesheet" href="global-ui.css" />
 
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;500;600;700;800&display=swap"
         rel="stylesheet">
@@ -177,7 +178,7 @@
 <!-- CUSTOMER FORM -->
 <section id="customerFormScreen" class="screen">
 
-  <header class="simple-header">
+  <header class="simple-header premium-customer-header">
     <button id="backFromCustomerForm" class="back-btn">
       <i class="fa-solid fa-arrow-left"></i>
     </button>
@@ -185,25 +186,112 @@
     <h2 id="customerFormTitle">নতুন গ্রাহক যোগ করুন</h2>
   </header>
 
-  <div class="form-body">
+  <div class="premium-customer-form-body">
 
-    <div class="input-item">
-      <label>গ্রাহকের নাম</label>
-      <input id="customerName" type="text" placeholder="নাম লিখুন" />
+    <div class="customer-type-row">
+
+      <div class="avatar-upload-wrap">
+        <div id="customerAvatarCircle" class="customer-avatar-circle">
+          <i id="customerAvatarIcon" class="fa-solid fa-user"></i>
+          <img id="customerAvatarPreview" class="customer-avatar-preview" />
+        </div>
+
+        <button id="openAvatarPickerBtn" class="avatar-camera-btn">
+          <i class="fa-solid fa-camera"></i>
+        </button>
+
+        <input type="file" id="customerCameraInput" accept="image/*" capture="environment" hidden>
+        <input type="file" id="customerGalleryInput" accept="image/*" hidden>
+      </div>
+
+      <div class="customer-type-toggle">
+
+        <button id="customerTypeCustomer" class="type-toggle-btn active" data-type="customer">
+          <span class="type-radio-dot"></span>
+          কাস্টমার
+        </button>
+
+        <button id="customerTypeSupplier" class="type-toggle-btn" data-type="supplier">
+          <span class="type-radio-dot"></span>
+          সাপ্লায়ার
+        </button>
+
+      </div>
+
     </div>
 
-    <div class="input-item">
-      <label>মোবাইল নম্বর</label>
-      <input id="customerPhone" type="tel" placeholder="মোবাইল নম্বর লিখুন" />
+    <button id="importContactBtn" class="import-contact-btn">
+      <i class="fa-solid fa-address-book"></i>
+      ফোনবুক থেকে যোগ করি
+    </button>
+
+    <div class="premium-input-box" id="customerNameBox">
+      <i class="fa-regular fa-user premium-input-icon" id="customerNameIcon"></i>
+      <label id="customerNameLabel" class="floating-label">নাম</label>
+      <input id="customerName" type="text" autocomplete="off">
     </div>
 
-    <div class="input-item" id="openingBalContainer">
-      <label>শুরুর ব্যালেন্স (ঐচ্ছিক)</label>
-      <input id="customerOpening" type="text" inputmode="none" readonly placeholder="০.০০" class="money-input" />
+    <div class="premium-input-box" id="customerPhoneBox">
+      <i class="fa-solid fa-phone premium-input-icon" id="customerPhoneIcon"></i>
+      <label id="customerPhoneLabel" class="floating-label">মোবাইল নম্বর</label>
+      <input id="customerPhone" type="tel" autocomplete="off">
     </div>
 
-    <button id="saveCustomerBtn" class="submit-btn">
-      সংরক্ষণ করুন
+    <div class="premium-input-box" id="openingBalContainer">
+      <span class="premium-taka">৳</span>
+      <label id="customerOpeningLabel" class="floating-label">পূর্বের বাকি (জের)</label>
+      <input id="customerOpening" type="text" inputmode="none" readonly class="money-input">
+    </div>
+
+    <div class="customer-extra-actions">
+
+      <button id="customerDateBtn" class="customer-mini-pill">
+        <i class="fa-regular fa-calendar"></i>
+        <span id="customerDateText">আজ</span>
+      </button>
+
+      <input type="date" id="customerDatePicker" hidden>
+
+      <button id="customerAttachPhotoBtn" class="customer-mini-pill">
+        <i class="fa-solid fa-camera"></i>
+        ছবি
+      </button>
+
+      <input type="file" id="customerAttachPhotoInput" accept="image/*" capture="environment" hidden>
+
+    </div>
+
+  </div>
+
+  <div id="customerSaveFooter" class="premium-save-footer">
+    <button id="saveCustomerBtn" class="premium-save-btn">
+      নিশ্চিত
+    </button>
+  </div>
+
+  <div id="customerSuccessOverlay" class="customer-success-overlay">
+    <div class="customer-success-box">
+      <div class="customer-success-check">
+        <i class="fa-solid fa-check"></i>
+      </div>
+      <p id="customerSuccessText"></p>
+    </div>
+  </div>
+
+  <div id="avatarPickerBackdrop" class="avatar-picker-backdrop"></div>
+
+  <div id="avatarPickerSheet" class="avatar-picker-sheet">
+
+    <div class="sheet-handle"></div>
+
+    <button id="pickCameraBtn" class="sheet-action-btn">
+      <i class="fa-solid fa-camera"></i>
+      ছবি তুলুন
+    </button>
+
+    <button id="pickGalleryBtn" class="sheet-action-btn">
+      <i class="fa-regular fa-image"></i>
+      গ্যালারি থেকে নিন
     </button>
 
   </div>
@@ -372,6 +460,7 @@
 
 <script src="db.js"></script>
 <script src="utils.js"></script>
+<script src="global-ui.js"></script>
 <script src="app.js"></script>
 
 </body>

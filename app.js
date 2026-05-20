@@ -23,6 +23,7 @@ const customerName = document.getElementById("customerName");
 const customerPhone = document.getElementById("customerPhone");
 const customerOpening = document.getElementById("customerOpening");
 const openingBalContainer = document.getElementById("openingBalContainer");
+const customerDatePicker = document.getElementById("customerDatePicker");
 
 const backToHome = document.getElementById("backToHome");
 const ledgerAvatar = document.getElementById("ledgerAvatar");
@@ -75,6 +76,7 @@ const reportTotalGot = document.getElementById("reportTotalGot");
 window.addEventListener("DOMContentLoaded", async () => {
   await loadDashboard();
   updateTxnDateButton();
+  initPremiumCustomerUI();
   history.replaceState({screen:"home"}, "");
   history.pushState({screen:"ready"}, "");
 });
@@ -213,12 +215,17 @@ history.pushState({screen:"ledger"}, "");
   
   ledgerName.textContent = customer.name;
 
-ledgerAvatar.textContent =
-  customer.name.trim().length >= 2
-    ? customer.name.trim().substring(0,2).toUpperCase()
-    : customer.name.trim().charAt(0).toUpperCase();
+if(customer.avatarImage){
+  ledgerAvatar.innerHTML = `<img src="${customer.avatarImage}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">`;
+  ledgerAvatar.style.background = "transparent";
+}else{
+  ledgerAvatar.textContent =
+    customer.name.trim().length >= 2
+      ? customer.name.trim().substring(0,2).toUpperCase()
+      : customer.name.trim().charAt(0).toUpperCase();
 
-ledgerAvatar.style.background = customer.avatarColor || "#0b61a4";
+  ledgerAvatar.style.background = customer.avatarColor || "#0b61a4";
+}
 
   if (threeDotMenu) threeDotMenu.classList.remove("active");
   if (reportViewContainer) reportViewContainer.style.display = "none";
@@ -358,11 +365,39 @@ if (closeReportBtn) {
 if (optEdit) {
   optEdit.onclick = () => {
     customerFormTitle.textContent = "গ্রাহক তথ্য এডিট করুন";
-    customerName.value = currentCustomer.name;
+
+    customerName.value = currentCustomer.name || "";
     customerPhone.value = currentCustomer.phone || "";
-    if (openingBalContainer) openingBalContainer.style.display = "none"; 
+    customerOpening.value = currentCustomer.openingBalance || "";
+
+    document.getElementById("customerNameBox").classList.add("has-value");
+    document.getElementById("customerPhoneBox").classList.add("has-value");
+    document.getElementById("openingBalContainer").classList.add("has-value");
+
+    customerPremiumState.userType = currentCustomer.userType || "customer";
+    customerPremiumState.avatarImage = currentCustomer.avatarImage || "";
+    customerPremiumState.attachedPhoto = currentCustomer.attachedPhoto || "";
+
+    if(currentCustomer.avatarImage){
+      document.getElementById("customerAvatarPreview").src = currentCustomer.avatarImage;
+      document.getElementById("customerAvatarPreview").style.display = "block";
+      document.getElementById("customerAvatarIcon").style.display = "none";
+    }
+
+    document.getElementById("customerTypeCustomer").classList.toggle(
+      "active",
+      customerPremiumState.userType === "customer"
+    );
+
+    document.getElementById("customerTypeSupplier").classList.toggle(
+      "active",
+      customerPremiumState.userType === "supplier"
+    );
+
+    if (openingBalContainer) openingBalContainer.style.display = "block";
+
     switchScreen(customerFormScreen);
-history.pushState({screen:"form"}, "");
+    history.pushState({screen:"form"}, "");
   };
 }
 
@@ -434,14 +469,26 @@ if (saveCustomerBtn) {
     }
 
     if (customerFormTitle.textContent === "গ্রাহক তথ্য এডিট করুন") {
-      currentCustomer.name = name;
-      currentCustomer.phone = phone;
-      await updateCustomer(currentCustomer);
-      
-      await loadDashboard();
-      const updated = customers.find(c => c.id === currentCustomer.id);
-      await openLedger(updated || currentCustomer);
-    } else {
+  currentCustomer.name = name;
+  currentCustomer.phone = phone;
+  currentCustomer.openingBalance = opening;
+
+  currentCustomer.userType = customerPremiumState.userType || "customer";
+  currentCustomer.avatarImage = customerPremiumState.avatarImage || "";
+  currentCustomer.attachedPhoto = customerPremiumState.attachedPhoto || "";
+
+  await updateCustomer(currentCustomer);
+
+  showCustomerSuccess(name);
+
+  await loadDashboard();
+
+  const updated = customers.find(c => c.id === currentCustomer.id);
+
+  setTimeout(async ()=>{
+    await openLedger(updated || currentCustomer);
+  }, 2100);
+} else {
      
  const avatarColors = ["#c8e6c9", "#f3e5ab", "#d9e2f3", "#f6d6dc"];
  const lastColor = customers.length
@@ -463,18 +510,38 @@ const newCust = {
   phone: phone,
   openingBalance: opening,
   createdAt: Date.now(),
-  avatarColor: randomColor
+  avatarColor: randomColor,
+
+  userType: customerPremiumState.userType || "customer",
+  avatarImage: customerPremiumState.avatarImage || "",
+  attachedPhoto: customerPremiumState.attachedPhoto || "",
+  selectedDate: customerPremiumState.selectedDate
+    ? customerPremiumState.selectedDate.getTime()
+    : Date.now()
 };
       
       await addCustomer(newCust);
-      await loadDashboard();
-      
-      customerName.value = "";
-      customerPhone.value = "";
-      customerOpening.value = "";
-      
-      const saved = customers.find(c => c.id === newCust.id);
-      await openLedger(saved || newCust);
+await loadDashboard();
+
+showCustomerSuccess(name);
+
+customerName.value = "";
+customerPhone.value = "";
+customerOpening.value = "";
+
+customerPremiumState.avatarImage = "";
+customerPremiumState.attachedPhoto = "";
+customerPremiumState.userType = "customer";
+customerPremiumState.selectedDate = new Date();
+
+document.getElementById("customerAvatarPreview").style.display = "none";
+document.getElementById("customerAvatarIcon").style.display = "block";
+
+const saved = customers.find(c => c.id === newCust.id);
+
+setTimeout(async ()=>{
+  await openLedger(saved || newCust);
+}, 2100);
     }
   };
 }
@@ -697,3 +764,22 @@ document.addEventListener("focusin",(e)=>{
     hideCalculator();
   }
 });
+
+if (window.visualViewport) {
+  window.visualViewport.addEventListener("resize", () => {
+    const footer = document.getElementById("customerSaveFooter");
+    const formScreen = document.getElementById("customerFormScreen");
+
+    if (!footer || !formScreen.classList.contains("active")) return;
+
+    const vh = window.visualViewport.height;
+    const full = window.innerHeight;
+
+    if (vh < full * 0.85) {
+      footer.style.bottom =
+        (full - window.visualViewport.offsetTop - vh) + "px";
+    } else {
+      footer.style.bottom = "0px";
+    }
+  });
+}
