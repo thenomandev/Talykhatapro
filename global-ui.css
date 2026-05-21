@@ -166,16 +166,24 @@
 }
 
 .premium-input-box.active .premium-input-icon{
-  color:#9ca3af !important;
+  color:#111827 !important;
+}
+
+.premium-input-box .premium-input-icon,
+.premium-input-box .premium-input-icon svg{
+  color:#111827 !important;
+  stroke:currentColor !important;
+  opacity:1 !important;
 }
 
 .premium-input-icon svg{
   width:24px;
   height:24px;
-  stroke:#9ca3af;
+  stroke:currentColor !important;
   stroke-width:1.7;
   fill:none;
-  opacity:.72;
+  opacity:1 !important;
+  transform:none;
 }
 
 .premium-input-box input{
@@ -189,7 +197,7 @@
 
 .floating-label{
   position:absolute;
-  left:64px;
+  left:50px;
   top:50%;
   transform:translateY(-50%);
   font-size:16px;
@@ -221,31 +229,27 @@
   left:18px;
   top:50%;
   transform:translateY(-50%);
-  font-size:52px;
-  font-weight:300;
-  line-height:.72;
+  font-size:25px;
+  font-weight:400;
+  line-height:1;
   color:#111827;
   z-index:3;
   font-family:"Noto Sans Bengali", sans-serif;
 }
-  font-weight:600;
-  color:#374151;
-  flex-shrink:0;
-  line-height:1;
-}
 
 .customer-extra-actions{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:12px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:14px;
   margin-top:18px;
   width:100%;
 }
 
 .customer-mini-pill{
-  width:100%;
+  flex:1;
+  min-width:0;
   height:52px;
-  padding:0 14px;
   border:none;
   border-radius:999px;
   background:#f3f4f6;
@@ -377,4 +381,8 @@
   font-weight:600;
   color:#374151;
   margin-bottom:12px;
+}
+
+.premium-input-box:nth-of-type(2) .premium-input-icon{
+  left:18px !important;
 }
