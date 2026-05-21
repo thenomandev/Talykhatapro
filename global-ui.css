@@ -2,6 +2,10 @@
   background:#fff;
 }
 
+.premium-customer-header h2{
+  font-weight:600 !important;
+}
+
 .premium-customer-form-body{
   padding:16px;
   padding-bottom:140px;
@@ -172,7 +176,7 @@
 
 .floating-label{
   position:absolute;
-  left:34px;
+  left:18px;
   top:50%;
   transform:translateY(-50%);
   font-size:16px;
@@ -180,7 +184,7 @@
   pointer-events:none;
   transition:.2s ease;
   background:#fff;
-  padding:0 8px;
+  padding:0 10px;
 }
 
 .premium-input-box.active .floating-label{
