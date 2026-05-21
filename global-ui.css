@@ -172,7 +172,7 @@
 
 .floating-label{
   position:absolute;
-  left:48px;
+  left:34px;
   top:50%;
   transform:translateY(-50%);
   font-size:16px;
@@ -180,15 +180,21 @@
   pointer-events:none;
   transition:.2s ease;
   background:#fff;
-  padding:0 4px;
+  padding:0 8px;
 }
 
-.premium-input-box.active .floating-label,
-.premium-input-box.has-value .floating-label{
+.premium-input-box.active .floating-label{
   top:-9px;
   transform:none;
   font-size:12px;
   color:#b91c1c;
+}
+
+.premium-input-box.has-value .floating-label{
+  top:-9px;
+  transform:none;
+  font-size:12px;
+  color:#4b5563;
 }
 
 .premium-taka{

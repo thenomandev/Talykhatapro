@@ -557,7 +557,7 @@ setTimeout(async ()=>{
 
 if (openCustomerModal) {
   openCustomerModal.onclick = () => {
-  customerFormTitle.textContent = "নতুন গ্রাহক যোগ করুন";
+  customerFormTitle.textContent = "নতুন কাস্টমার/সাপ্লায়ার";
 
   if(window.resetCustomerFormUI){
     resetCustomerFormUI();
