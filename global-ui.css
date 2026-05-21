@@ -3,7 +3,7 @@
 }
 
 .premium-customer-header h2{
-  font-weight:600 !important;
+  font-weight:500 !important;
 }
 
 .premium-customer-form-body{
@@ -151,7 +151,12 @@
 }
 
 .premium-input-icon{
+  width:22px;
+  min-width:22px;
   margin-left:16px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
   font-size:18px;
   color:#9ca3af;
   transition:.2s ease;
@@ -176,7 +181,7 @@
 
 .floating-label{
   position:absolute;
-  left:18px;
+  left:42px;
   top:50%;
   transform:translateY(-50%);
   font-size:16px;
@@ -184,7 +189,7 @@
   pointer-events:none;
   transition:.2s ease;
   background:#fff;
-  padding:0 10px;
+  padding:0 8px;
 }
 
 .premium-input-box.active .floating-label{
@@ -212,7 +217,7 @@
 }
 
 #openingBalContainer .floating-label{
-  left:52px;
+  left:58px;
 }
 
 .customer-extra-actions{
