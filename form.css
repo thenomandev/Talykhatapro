@@ -210,3 +210,81 @@ input:checked + .slider:before {
   font-weight:600;
   margin-top:10px;
 }
+
+.phone-icon{
+  width:22px;
+  height:22px;
+  color:#111827;
+  display:block;
+  flex-shrink:0;
+}
+
+.error-alert-icon{
+  width:22px;
+  height:22px;
+  color:#111827;
+  display:block;
+  flex-shrink:0;
+}
+
+.mini-camera-icon{
+  width:14px;
+  height:14px;
+  color:#333333;
+  display:block;
+  flex-shrink:0;
+}
+
+.address-book-icon{
+  width:22px;
+  height:22px;
+  color:#4b5563;
+  display:block;
+  flex-shrink:0;
+}
+
+.input-user-icon{
+  width:22px;
+  height:22px;
+  color:#111827;
+  display:block;
+  flex-shrink:0;
+}
+
+.taka-icon-svg{
+  position:absolute;
+  left:18px;
+  top:50%;
+  transform:translateY(-50%);
+  width:22px;
+  height:22px;
+  color:#111827;
+  display:block;
+  flex-shrink:0;
+  z-index:3;
+}
+
+.calendar-icon{
+  width:22px;
+  height:22px;
+  color:#4b5563;
+  display:block;
+  flex-shrink:0;
+}
+
+.attach-camera-icon{
+  width:22px;
+  height:22px;
+  color:#4b5563;
+  display:block;
+  flex-shrink:0;
+}
+
+.avatar-user-icon{
+  width:24px;
+  height:24px;
+  color:#ffffff;
+  display:block;
+  flex-shrink:0;
+}
+

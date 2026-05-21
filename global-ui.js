@@ -135,11 +135,18 @@ window.resetCustomerFormUI = function(){
 
   saveBtn.classList.remove("active");
 
-  avatarPreview.style.display = "none";
-  avatarIcon.style.display = "block";
+  avatarPreview.src = "";
+avatarPreview.style.display = "none";
+avatarIcon.style.display = "block";
 
   customerPremiumState.avatarImage = "";
   customerPremiumState.attachedPhoto = "";
+customerPremiumState.selectedDate = new Date();
+
+customerDateText.textContent = new Date().toLocaleDateString("bn-BD", {
+  day:"numeric",
+  month:"short"
+});
 }
 
   customerBtn.onclick = ()=>{

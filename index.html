@@ -180,8 +180,8 @@
 
   <header class="simple-header premium-customer-header">
     <button id="backFromCustomerForm" class="back-btn">
-      <i class="fa-solid fa-arrow-left"></i>
-    </button>
+  <img src="assets/svg/back-arrow.svg" class="back-icon" alt="Back">
+</button>
 
     <h2 id="customerFormTitle">নতুন কাস্টমার/সাপ্লায়ার</h2>
   </header>
@@ -192,13 +192,13 @@
 
       <div class="avatar-upload-wrap">
         <div id="customerAvatarCircle" class="customer-avatar-circle">
-          <i id="customerAvatarIcon" class="fa-solid fa-user"></i>
+          <img id="customerAvatarIcon" src="assets/svg/avatar-user.svg" class="avatar-user-icon" alt="User">
           <img id="customerAvatarPreview" class="customer-avatar-preview" />
         </div>
 
         <button id="openAvatarPickerBtn" class="avatar-camera-btn">
-          <i class="fa-solid fa-camera"></i>
-        </button>
+  <img src="assets/svg/mini-camera.svg" class="mini-camera-icon" alt="Camera">
+</button>
 
         <input type="file" id="customerCameraInput" accept="image/*" capture="environment" hidden>
         <input type="file" id="customerGalleryInput" accept="image/*" hidden>
@@ -221,16 +221,18 @@
     </div>
 
     <button id="importContactBtn" class="import-contact-btn">
-      <i class="fa-solid fa-address-book"></i>
-      ফোনবুক থেকে যোগ করি
-    </button>
+  <img src="assets/svg/address-book.svg" class="address-book-icon" alt="Contacts">
+  ফোনবুক থেকে যোগ করি
+</button>
 
     <div class="premium-input-box" id="customerNameBox">
-      <i class="fa-regular fa-user premium-input-icon" id="customerNameIcon"></i>
+      <div class="premium-input-icon" id="customerNameIcon">
+  <img src="assets/svg/input-user.svg" class="input-user-icon" alt="User">
+</div>
       <label id="customerNameLabel" class="floating-label">নাম</label>
       <input id="customerName" type="text" autocomplete="off">
-<div id="customerNameWarning" style="display:none;margin-right:16px;color:#b91c1c;font-size:28px;">
-⚠
+<div id="customerNameWarning" style="display:none;margin-right:16px;">
+  <img src="assets/svg/error-alert.svg" class="error-alert-icon" alt="">
 </div>
     </div>
 
@@ -240,30 +242,16 @@
 
 <div class="premium-input-box" id="customerPhoneBox">
 
-    
-      <div class="premium-input-icon" id="customerPhoneIcon">
-  <svg viewBox="0 0 24 24" aria-hidden="true">
-    <path d="M22 16.92v3a2 2 0 0 1-2.18 2
-             19.79 19.79 0 0 1-8.63-3.07
-             19.5 19.5 0 0 1-6-6
-             19.79 19.79 0 0 1-3.07-8.67
-             A2 2 0 0 1 4.11 2h3
-             a2 2 0 0 1 2 1.72
-             c.12.9.32 1.78.59 2.62
-             a2 2 0 0 1-.45 2.11L8.09 9.91
-             a16 16 0 0 0 6 6
-             l1.46-1.16
-             a2 2 0 0 1 2.11-.45
-             c.84.27 1.72.47 2.62.59
-             A2 2 0 0 1 22 16.92z"/>
-  </svg>
+    <div class="premium-input-icon" id="customerPhoneIcon">
+  <img src="assets/svg/phone.svg" class="phone-icon" alt="Phone">
 </div>
+
       <label id="customerPhoneLabel" class="floating-label">মোবাইল নম্বর</label>
       <input id="customerPhone" type="tel" autocomplete="off">
     </div>
 
     <div class="premium-input-box" id="openingBalContainer">
-      <span class="premium-taka">৳</span>
+      <img src="assets/svg/taka.svg" class="taka-icon-svg" alt="Taka">
       <label id="customerOpeningLabel" class="floating-label">পূর্বের বাকি (জের)</label>
       <input id="customerOpening" type="text" inputmode="none" readonly class="money-input">
     </div>
@@ -271,16 +259,16 @@
     <div class="customer-extra-actions">
 
       <button id="customerDateBtn" class="customer-mini-pill">
-        <i class="fa-regular fa-calendar"></i>
-        <span id="customerDateText">আজ</span>
-      </button>
+  <img src="assets/svg/calendar.svg" class="calendar-icon" alt="Calendar">
+  <span id="customerDateText">আজ</span>
+</button>
 
       <input type="date" id="customerDatePicker" hidden>
 
       <button id="customerAttachPhotoBtn" class="customer-mini-pill">
-        <i class="fa-solid fa-camera"></i>
-        ছবি
-      </button>
+  <img src="assets/svg/attach-camera.svg" class="attach-camera-icon" alt="Camera">
+  ছবি
+</button>
 
       <input type="file" id="customerAttachPhotoInput" accept="image/*" capture="environment" hidden>
 
@@ -297,8 +285,8 @@
   <div id="customerSuccessOverlay" class="customer-success-overlay">
     <div class="customer-success-box">
       <div class="customer-success-check">
-        <i class="fa-solid fa-check"></i>
-      </div>
+  <img src="assets/svg/success-check.svg" class="success-check-icon" alt="Success">
+</div>
       <p id="customerSuccessText"></p>
     </div>
   </div>

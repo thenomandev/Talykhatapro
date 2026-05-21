@@ -39,11 +39,6 @@
   position:relative;
 }
 
-.customer-avatar-circle i{
-  font-size:28px;
-  color:#fff;
-}
-
 .customer-avatar-preview{
   position:absolute;
   inset:0;
@@ -66,11 +61,6 @@
   align-items:center;
   justify-content:center;
   z-index:3;
-}
-
-.avatar-camera-btn i{
-  font-size:12px;
-  color:#333;
 }
 
 .customer-type-toggle{
@@ -224,19 +214,6 @@
   color:#4b5563;
 }
 
-.premium-taka{
-  position:absolute;
-  left:18px;
-  top:50%;
-  transform:translateY(-50%);
-  font-size:25px;
-  font-weight:400;
-  line-height:1;
-  color:#111827;
-  z-index:3;
-  font-family:"Noto Sans Bengali", sans-serif;
-}
-
 .customer-extra-actions{
   display:flex;
   justify-content:space-between;
@@ -321,9 +298,11 @@
   margin:0 auto 18px;
 }
 
-.customer-success-check i{
-  font-size:42px;
-  color:#fff;
+.success-check-icon{
+  width:92px;
+  height:92px;
+  display:block;
+  flex-shrink:0;
 }
 
 .customer-success-box p{

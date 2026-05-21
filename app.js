@@ -387,11 +387,18 @@ if (optEdit) {
     customerPremiumState.avatarImage = currentCustomer.avatarImage || "";
     customerPremiumState.attachedPhoto = currentCustomer.attachedPhoto || "";
 
-    if(currentCustomer.avatarImage){
-      document.getElementById("customerAvatarPreview").src = currentCustomer.avatarImage;
-      document.getElementById("customerAvatarPreview").style.display = "block";
-      document.getElementById("customerAvatarIcon").style.display = "none";
-    }
+    const avatarPreviewEl = document.getElementById("customerAvatarPreview");
+const avatarIconEl = document.getElementById("customerAvatarIcon");
+
+if(currentCustomer.avatarImage){
+  avatarPreviewEl.src = currentCustomer.avatarImage;
+  avatarPreviewEl.style.display = "block";
+  avatarIconEl.style.display = "none";
+}else{
+  avatarPreviewEl.src = "";
+  avatarPreviewEl.style.display = "none";
+  avatarIconEl.style.display = "block";
+}
 
     document.getElementById("customerTypeCustomer").classList.toggle(
       "active",
@@ -674,7 +681,7 @@ async function handleUniversalBack(){
     resetCustomerFormUI();
   }
 
-  if(customerFormTitle.textContent === "নতুন গ্রাহক যোগ করুন"){
+  if(customerFormTitle.textContent === "নতুন কাস্টমার/সাপ্লায়ার"){
     currentCustomer = null;
     await loadDashboard();
     switchScreen(homeScreen);
