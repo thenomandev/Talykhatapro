@@ -238,16 +238,17 @@
   display:flex;
   justify-content:space-between;
   align-items:center;
-  gap:18px;
-  margin-top:22px;
+  gap:12px;
+  margin-top:18px;
   width:100%;
+  flex-wrap:nowrap;
 }
 
 .customer-mini-pill{
-  flex:0 0 auto;
-  min-width:160px;
+  flex:1;
+  min-width:0;
   height:52px;
-  padding:0 20px;
+  padding:0 14px;
   border-radius:999px;
   background:#f3f4f6;
   display:flex;
