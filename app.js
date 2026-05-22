@@ -2,6 +2,8 @@ let customers = [];
 let currentCustomer = null;
 let selectedTxnDate = new Date();
 let liveInterval = null;
+let isEditMode = false;
+let editDraft = null;
 
 /* ELEMENTS */
 const homeScreen = document.getElementById("homeScreen");
@@ -373,10 +375,43 @@ if (closeReportBtn) {
 
 if (optEdit) {
   optEdit.onclick = () => {
-    customerFormTitle.textContent = "গ্রাহক তথ্য এডিট করুন";
+    isEditMode = true;
+
+    editDraft = {
+      id: currentCustomer.id,
+      type: currentCustomer.type,
+      name: currentCustomer.name || "",
+      phone: currentCustomer.phone || "",
+      avatarImage: currentCustomer.avatarImage || ""
+    };
+    customerFormTitle.textContent =
+  currentCustomer?.userType === "supplier"
+    ? "সাপ্লায়ার এডিট"
+    : "কাস্টমার এডিট";
+
+saveCustomerBtn.textContent = "পরবর্তী";
+saveCustomerBtn.classList.remove("active");
 
     customerName.value = currentCustomer.name || "";
     customerPhone.value = currentCustomer.phone || "";
+
+window.checkEditChanges = () => {
+  if(!isEditMode || !editDraft) return;
+
+  const changed =
+    customerName.value.trim() !== (editDraft.name || "") ||
+    customerPhone.value.trim() !== (editDraft.phone || "") ||
+    (customerPremiumState.avatarImage || "") !== (editDraft.avatarImage || "");
+
+  if(changed){
+    saveCustomerBtn.classList.add("active");
+  }else{
+    saveCustomerBtn.classList.remove("active");
+  }
+};
+
+customerName.oninput = window.checkEditChanges;
+customerPhone.oninput = window.checkEditChanges;
     customerOpening.value = currentCustomer.openingBalance || "";
 
     document.getElementById("customerNameBox").classList.add("has-value");
@@ -410,7 +445,7 @@ if(currentCustomer.avatarImage){
       customerPremiumState.userType === "supplier"
     );
 
-    if (openingBalContainer) openingBalContainer.style.display = "block";
+    if (openingBalContainer) openingBalContainer.style.display = "none";
 
     switchScreen(customerFormScreen);
     history.pushState({screen:"form"}, "");
@@ -484,26 +519,13 @@ if (saveCustomerBtn) {
       return;
     }
 
-    if (customerFormTitle.textContent === "গ্রাহক তথ্য এডিট করুন") {
-  currentCustomer.name = name;
-  currentCustomer.phone = phone;
-  currentCustomer.openingBalance = opening;
+    if (isEditMode && currentCustomer) {
+  editDraft.name = name;
+  editDraft.phone = phone;
+  editDraft.avatarImage = customerPremiumState.avatarImage || "";
 
-  currentCustomer.userType = customerPremiumState.userType || "customer";
-  currentCustomer.avatarImage = customerPremiumState.avatarImage || "";
-  currentCustomer.attachedPhoto = customerPremiumState.attachedPhoto || "";
-
-  await updateCustomer(currentCustomer);
-
-  showCustomerSuccess(name);
-
-  await loadDashboard();
-
-  const updated = customers.find(c => c.id === currentCustomer.id);
-
-  setTimeout(async ()=>{
-    await openLedger(updated || currentCustomer);
-  }, 2100);
+  showEditConfirmScreen();
+  return;
 } else {
      
  const avatarColors = ["#c8e6c9", "#f3e5ab", "#d9e2f3", "#f6d6dc"];
@@ -565,6 +587,8 @@ setTimeout(async ()=>{
 if (openCustomerModal) {
   openCustomerModal.onclick = () => {
   customerFormTitle.textContent = "নতুন কাস্টমার/সাপ্লায়ার";
+saveCustomerBtn.textContent = "নিশ্চিত";
+isEditMode = false;
 
   if(window.resetCustomerFormUI){
     resetCustomerFormUI();
@@ -804,3 +828,63 @@ if (window.visualViewport) {
     }
   });
 }
+
+function showEditConfirmScreen(){
+  const screen = document.getElementById("editConfirmScreen");
+  const title = document.getElementById("editConfirmTitle");
+  const avatar = document.getElementById("editConfirmAvatar");
+  const defaultAvatar = document.getElementById("editConfirmDefaultAvatar");
+  const nameEl = document.getElementById("editConfirmName");
+  const phoneEl = document.getElementById("editConfirmPhone");
+
+  title.textContent =
+    editDraft.type === "supplier"
+      ? "সাপ্লায়ার এডিট"
+      : "কাস্টমার এডিট";
+
+  nameEl.textContent = editDraft.name || "";
+  phoneEl.textContent = editDraft.phone || "";
+
+  if(editDraft.avatarImage){
+    avatar.src = editDraft.avatarImage;
+    avatar.style.display = "block";
+    defaultAvatar.style.display = "none";
+  }else{
+    avatar.src = "";
+    avatar.style.display = "none";
+    defaultAvatar.style.display = "block";
+  }
+
+  screen.classList.add("show");
+}
+
+document.getElementById("backFromEditConfirm").onclick = ()=>{
+  document.getElementById("editConfirmScreen").classList.remove("show");
+};
+
+document.getElementById("confirmEditBtn").onclick = async ()=>{
+  if(!currentCustomer || !editDraft) return;
+
+  currentCustomer.name = editDraft.name;
+  currentCustomer.phone = editDraft.phone;
+  currentCustomer.avatarImage = editDraft.avatarImage || "";
+  currentCustomer.userType = editDraft.type || "customer";
+
+  await updateCustomer(currentCustomer);
+
+  document.getElementById("editConfirmScreen").classList.remove("show");
+
+  showCustomerSuccess(
+    currentCustomer.userType === "supplier"
+      ? "সাপ্লায়ারের তথ্য আপডেট করা হয়েছে।"
+      : "কাস্টমারের তথ্য আপডেট করা হয়েছে।"
+  );
+
+  await loadDashboard();
+
+  const updated = customers.find(c => c.id === currentCustomer.id);
+
+  setTimeout(async ()=>{
+    await openLedger(updated || currentCustomer);
+  }, 2100);
+};

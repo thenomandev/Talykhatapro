@@ -282,7 +282,50 @@
     </button>
   </div>
 
-  <div id="customerSuccessOverlay" class="customer-success-overlay">
+  <div id="editConfirmScreen" class="customer-edit-confirm-screen">
+
+  <header class="simple-header premium-customer-header">
+    <button id="backFromEditConfirm" class="back-btn">
+      <img src="assets/svg/back-arrow.svg" class="back-icon" alt="Back">
+    </button>
+
+    <h2 id="editConfirmTitle">কাস্টমার এডিট</h2>
+  </header>
+
+  <div class="edit-confirm-body">
+
+    <div class="edit-confirm-avatar-wrap">
+      <div class="customer-avatar-circle">
+        <img id="editConfirmAvatar" class="customer-avatar-preview" style="display:block;">
+        <img id="editConfirmDefaultAvatar" src="assets/svg/avatar-user.svg" class="avatar-user-icon">
+      </div>
+    </div>
+
+    <div class="edit-confirm-card">
+
+      <div class="edit-confirm-row">
+        <div class="edit-confirm-label">নাম</div>
+        <div id="editConfirmName" class="edit-confirm-value"></div>
+      </div>
+
+      <div class="edit-confirm-row">
+        <div class="edit-confirm-label">মোবাইল নম্বর</div>
+        <div id="editConfirmPhone" class="edit-confirm-value"></div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <div class="premium-save-footer">
+    <button id="confirmEditBtn" class="premium-save-btn active">
+      নিশ্চিত
+    </button>
+  </div>
+
+</div>
+
+<div id="customerSuccessOverlay" class="customer-success-overlay">
     <div class="customer-success-box">
       <div class="customer-success-check">
   <img src="assets/svg/success-check.svg" class="success-check-icon" alt="Success">
@@ -302,11 +345,15 @@
       ছবি তুলুন
     </button>
 
-    <button id="pickGalleryBtn" class="sheet-action-btn">
-      <i class="fa-regular fa-image"></i>
-      গ্যালারি থেকে নিন
-    </button>
+<button id="deleteAvatarBtn" class="sheet-action-btn">
+  <i class="fa-regular fa-trash-can"></i>
+  ডিলিট
+</button>
 
+<button id="pickGalleryBtn" class="sheet-action-btn">
+  <i class="fa-regular fa-image"></i>
+  গ্যালারি থেকে নিন
+</button>
   </div>
 
 </section>
