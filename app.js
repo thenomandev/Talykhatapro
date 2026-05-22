@@ -413,11 +413,11 @@ window.checkEditChanges = () => {
 
 customerName.oninput = window.checkEditChanges;
 customerPhone.oninput = window.checkEditChanges;
-    customerOpening.value = "";
+    customerOpening.value = currentCustomer.openingBalance || "";
 
-document.getElementById("customerNameBox").classList.add("has-value");
-document.getElementById("customerPhoneBox").classList.add("has-value");
-document.getElementById("openingBalContainer").classList.remove("has-value");
+    document.getElementById("customerNameBox").classList.add("has-value");
+    document.getElementById("customerPhoneBox").classList.add("has-value");
+    document.getElementById("openingBalContainer").classList.add("has-value");
 
     customerPremiumState.userType = currentCustomer.userType || "customer";
     customerPremiumState.avatarImage = currentCustomer.avatarImage || "";
@@ -426,25 +426,15 @@ document.getElementById("openingBalContainer").classList.remove("has-value");
     const avatarPreviewEl = document.getElementById("customerAvatarPreview");
 const avatarIconEl = document.getElementById("customerAvatarIcon");
 
-const badgeIcon = document.querySelector(".mini-camera-icon");
-
 if(currentCustomer.avatarImage){
   avatarPreviewEl.src = currentCustomer.avatarImage;
   avatarPreviewEl.style.display = "block";
   avatarIconEl.style.display = "none";
-
-  if(badgeIcon){
-    badgeIcon.src = "assets/svg/pen.svg";
-  }
-
 }else{
   avatarPreviewEl.src = "";
   avatarPreviewEl.style.display = "none";
+  avatarIconEl.src = "assets/svg/pen.svg";
   avatarIconEl.style.display = "block";
-
-  if(badgeIcon){
-    badgeIcon.src = "assets/svg/mini-camera.svg";
-  }
 }
 
     document.getElementById("customerTypeCustomer").classList.toggle(
@@ -458,15 +448,6 @@ if(currentCustomer.avatarImage){
     );
 
     if (openingBalContainer) openingBalContainer.style.display = "none";
-
-document.querySelector(".customer-type-toggle").style.display = "none";
-document.getElementById("importContactBtn").style.display = "none";
-document.getElementById("openingBalContainer").style.display = "none";
-document.querySelector(".customer-extra-actions").style.display = "none";
-
-document.querySelector(".customer-type-row").style.flexDirection = "column";
-document.querySelector(".customer-type-row").style.alignItems = "center";
-document.querySelector(".customer-type-row").style.gap = "10px";
 
     switchScreen(customerFormScreen);
     history.pushState({screen:"form"}, "");
@@ -611,19 +592,6 @@ if (openCustomerModal) {
 saveCustomerBtn.textContent = "নিশ্চিত";
 isEditMode = false;
 
-document.querySelector(".customer-type-toggle").style.display = "flex";
-document.getElementById("importContactBtn").style.display = "flex";
-document.querySelector(".customer-extra-actions").style.display = "flex";
-
-document.querySelector(".customer-type-row").style.flexDirection = "row";
-document.querySelector(".customer-type-row").style.alignItems = "center";
-document.querySelector(".customer-type-row").style.gap = "14px";
-
-const badgeIcon = document.querySelector(".mini-camera-icon");
-if(badgeIcon){
-  badgeIcon.src = "assets/svg/mini-camera.svg";
-}
-
   if(window.resetCustomerFormUI){
     resetCustomerFormUI();
   }
@@ -735,18 +703,6 @@ async function handleUniversalBack(){
   }
 
   if(customerFormScreen.classList.contains("active")){
-document.querySelector(".customer-type-toggle").style.display = "flex";
-document.getElementById("importContactBtn").style.display = "flex";
-document.querySelector(".customer-extra-actions").style.display = "flex";
-
-document.querySelector(".customer-type-row").style.flexDirection = "row";
-document.querySelector(".customer-type-row").style.alignItems = "center";
-document.querySelector(".customer-type-row").style.gap = "14px";
-
-const badgeIcon = document.querySelector(".mini-camera-icon");
-if(badgeIcon){
-  badgeIcon.src = "assets/svg/mini-camera.svg";
-}
   if(window.resetCustomerFormUI){
     resetCustomerFormUI();
   }
