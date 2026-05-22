@@ -163,17 +163,11 @@
   opacity:1 !important;
 }
 
-.premium-input-box .premium-input-icon svg{
-  stroke:currentColor !important;
-  opacity:1 !important;
-}
-
 .premium-input-icon svg{
   width:24px;
   height:24px;
   stroke:currentColor !important;
   stroke-width:1.7;
-  fill:none;
   opacity:1 !important;
   transform:none;
 }
