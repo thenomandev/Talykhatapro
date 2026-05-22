@@ -211,11 +211,3 @@ input:checked + .slider:before {
   margin-top:10px;
 }
 
-.avatar-user-icon{
-  width:24px;
-  height:24px;
-  color:#ffffff;
-  display:block;
-  flex-shrink:0;
-}
-
