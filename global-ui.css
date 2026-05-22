@@ -374,8 +374,8 @@
 }
 
 .error-alert-icon{
-  width:28px;
-  height:28px;
+  width:30px;
+  height:30px;
   color:#b91c1c;
   display:block;
   flex-shrink:0;
@@ -413,8 +413,8 @@
 }
 
 .input-user-icon{
-  width:26px;
-  height:26px;
+  width:30px;
+  height:30px;
   color:#111827;
   display:block;
   flex-shrink:0;
@@ -425,8 +425,8 @@
   left:18px;
   top:50%;
   transform:translateY(-50%);
-  width:26px;
-  height:26px;
+  width:28px;
+  height:28px;
   color:#111827;
   display:block;
   flex-shrink:0;
@@ -450,8 +450,8 @@
 }
 
 .mini-camera-icon{
-  width:14px;
-  height:14px;
+  width:26px;
+  height:26px;
   color:#333333;
   display:block;
   flex-shrink:0;
