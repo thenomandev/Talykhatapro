@@ -159,9 +159,12 @@
   color:#111827 !important;
 }
 
-.premium-input-box .premium-input-icon,
-.premium-input-box .premium-input-icon svg{
+.premium-input-box .premium-input-icon{
   color:#111827 !important;
+  opacity:1 !important;
+}
+
+.premium-input-box .premium-input-icon svg{
   stroke:currentColor !important;
   opacity:1 !important;
 }
