@@ -41,7 +41,7 @@ customerDateText.textContent = new Date().toLocaleDateString("bn-BD", {
   month:"short"
 });
 
-  function setupFloating(input, box){
+  function setupFloating( input, box ){
     if(!input || !box) return;
 
     input.addEventListener("focus", ()=>{
@@ -99,9 +99,11 @@ if(customerAttachBtn) customerAttachBtn.style.display = "none";
   if(warning) warning.style.display = "none";
   if(error) error.style.display = "none";
 
+  if(!window.isEditMode){
   if(openingBox) openingBox.style.display = "flex";
   if(customerDateBtn) customerDateBtn.style.display = "flex";
   if(customerAttachBtn) customerAttachBtn.style.display = "flex";
+}
 
 }else{
   saveBtn.classList.remove("active");

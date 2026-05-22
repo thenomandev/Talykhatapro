@@ -413,11 +413,11 @@ window.checkEditChanges = () => {
 
 customerName.oninput = window.checkEditChanges;
 customerPhone.oninput = window.checkEditChanges;
-    customerOpening.value = currentCustomer.openingBalance || "";
+    customerOpening.value = "";
 
-    document.getElementById("customerNameBox").classList.add("has-value");
-    document.getElementById("customerPhoneBox").classList.add("has-value");
-    document.getElementById("openingBalContainer").classList.add("has-value");
+document.getElementById("customerNameBox").classList.add("has-value");
+document.getElementById("customerPhoneBox").classList.add("has-value");
+document.getElementById("openingBalContainer").classList.remove("has-value");
 
     customerPremiumState.userType = currentCustomer.userType || "customer";
     customerPremiumState.avatarImage = currentCustomer.avatarImage || "";
@@ -466,7 +466,7 @@ document.querySelector(".customer-extra-actions").style.display = "none";
 
 document.querySelector(".customer-type-row").style.flexDirection = "column";
 document.querySelector(".customer-type-row").style.alignItems = "center";
-document.querySelector(".customer-type-row").style.gap = "18px";
+document.querySelector(".customer-type-row").style.gap = "10px";
 
     switchScreen(customerFormScreen);
     history.pushState({screen:"form"}, "");
