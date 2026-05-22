@@ -377,14 +377,13 @@ if (optEdit) {
   optEdit.onclick = () => {
     isEditMode = true;
 
-editDraft = {
-  id: currentCustomer.id,
-  userType: currentCustomer.userType || "customer",
-  name: currentCustomer.name || "",
-  phone: currentCustomer.phone || "",
-  avatarImage: currentCustomer.avatarImage || ""
-};
-
+    editDraft = {
+      id: currentCustomer.id,
+      type: currentCustomer.type,
+      name: currentCustomer.name || "",
+      phone: currentCustomer.phone || "",
+      avatarImage: currentCustomer.avatarImage || ""
+    };
     customerFormTitle.textContent =
   currentCustomer?.userType === "supplier"
     ? "সাপ্লায়ার এডিট"
@@ -433,7 +432,6 @@ if(currentCustomer.avatarImage){
 }else{
   avatarPreviewEl.src = "";
   avatarPreviewEl.style.display = "none";
-  avatarIconEl.src = "assets/svg/pen.svg";
   avatarIconEl.style.display = "block";
 }
 
@@ -563,7 +561,7 @@ const newCust = {
       await addCustomer(newCust);
 await loadDashboard();
 
-showCustomerSuccess(`${name} যোগ করা হয়েছে`);
+showCustomerSuccess(name);
 
 customerName.value = "";
 customerPhone.value = "";
@@ -840,7 +838,7 @@ function showEditConfirmScreen(){
   const phoneEl = document.getElementById("editConfirmPhone");
 
   title.textContent =
-  editDraft.userType === "supplier"
+    editDraft.type === "supplier"
       ? "সাপ্লায়ার এডিট"
       : "কাস্টমার এডিট";
 
@@ -870,7 +868,7 @@ document.getElementById("confirmEditBtn").onclick = async ()=>{
   currentCustomer.name = editDraft.name;
   currentCustomer.phone = editDraft.phone;
   currentCustomer.avatarImage = editDraft.avatarImage || "";
-  currentCustomer.userType = editDraft.userType || "customer";
+  currentCustomer.userType = editDraft.type || "customer";
 
   await updateCustomer(currentCustomer);
 
