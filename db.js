@@ -66,10 +66,12 @@ async function getCustomers() {
     const req = tx.objectStore(CUSTOMER_STORE).getAll();
 
     req.onsuccess = () => {
-      const customers = req.result || [];
-      customers.sort((a, b) => b.createdAt - a.createdAt);
-      resolve(customers);
-    };
+  const customers = req.result || [];
+
+  customers.sort((a, b) => b.createdAt - a.createdAt);
+
+  resolve(customers);
+};
     req.onerror = () => reject(req.error);
   });
 }
@@ -139,7 +141,9 @@ async function getTransactions(customerId) {
 
     req.onsuccess = () => {
       const list = req.result || [];
+
       list.sort((a, b) => b.createdAt - a.createdAt);
+
       resolve(list);
     };
 

@@ -30,17 +30,16 @@ function initPremiumCustomerUI(){
 
   const avatarPickerBackdrop = document.getElementById("avatarPickerBackdrop");
   const avatarPickerSheet = document.getElementById("avatarPickerSheet");
-  const deleteAvatarBtn = document.getElementById("deleteAvatarBtn");
+const deleteAvatarBtn = document.getElementById("deleteAvatarBtn");
 
   const customerDateBtn = document.getElementById("customerDateBtn");
   const customerDatePicker = document.getElementById("customerDatePicker");
   const customerDateText = document.getElementById("customerDateText");
-  const customerAttachBtn = document.getElementById("customerAttachPhotoBtn");
-  
-  customerDateText.textContent = new Date().toLocaleDateString("bn-BD", {
-    day:"numeric",
-    month:"short"
-  });
+const customerAttachBtn = document.getElementById("customerAttachPhotoBtn");
+customerDateText.textContent = new Date().toLocaleDateString("bn-BD", {
+  day:"numeric",
+  month:"short"
+});
 
   function setupFloating(input, box){
     if(!input || !box) return;
@@ -50,108 +49,106 @@ function initPremiumCustomerUI(){
     });
 
     input.addEventListener("blur", ()=>{
-      if(input.value.trim()){
-        box.classList.remove("active");
-        box.classList.add("has-value");
-      }else{
-        box.classList.remove("active");
-        box.classList.remove("has-value");
-      }
-    });
+  if(input.value.trim()){
+    box.classList.remove("active");
+    box.classList.add("has-value");
+  }else{
+    box.classList.remove("active");
+    box.classList.remove("has-value");
+  }
+});
 
     input.addEventListener("input", ()=>{
-      if(input.value.trim()){
-        box.classList.add("has-value");
-      }else{
-        box.classList.remove("has-value");
-      }
+  if(input.value.trim()){
+    box.classList.add("has-value");
+  }else{
+    box.classList.remove("has-value");
+  }
 
-      updateSaveButton();
-    });
+  updateSaveButton();
+});
   }
 
   setupFloating(nameInput, nameBox);
   setupFloating(phoneInput, phoneBox);
-  setupFloating(openingInput, openingBox);
+setupFloating(openingInput, openingBox);
 
-  openingBox.classList.remove("active","has-value");
-  phoneBox.classList.remove("active","has-value");
-  nameBox.classList.remove("active","has-value");
+openingBox.classList.remove("active","has-value");
+phoneBox.classList.remove("active","has-value");
+nameBox.classList.remove("active","has-value");
 
-  openingInput.value = "";
-  phoneInput.value = "";
-  nameInput.value = "";
+openingInput.value = "";
+phoneInput.value = "";
+nameInput.value = "";
 
-  openingBox.style.display = "none";
-  if(customerDateBtn) customerDateBtn.style.display = "none";
-  if(customerAttachBtn) customerAttachBtn.style.display = "none";
+openingBox.style.display = "none";
+if(customerDateBtn) customerDateBtn.style.display = "none";
+if(customerAttachBtn) customerAttachBtn.style.display = "none";
   
 
   function updateSaveButton(){
-    const name = nameInput.value.trim();
+  const name = nameInput.value.trim();
 
-    const warning = document.getElementById("customerNameWarning");
-    const error = document.getElementById("customerNameError");
-    const openingBox = document.getElementById("openingBalContainer");
+  const warning = document.getElementById("customerNameWarning");
+  const error = document.getElementById("customerNameError");
+  const openingBox = document.getElementById("openingBalContainer");
 
-    if(name.length >= 3 && name.length <= 35){
-      saveBtn.classList.add("active");
+  if(name.length >= 3 && name.length <= 35){
+  saveBtn.classList.add("active");
 
-      if(warning) warning.style.display = "none";
-      if(error) error.style.display = "none";
+  if(warning) warning.style.display = "none";
+  if(error) error.style.display = "none";
 
-      if(openingBox) openingBox.style.display = "flex";
-      if(customerDateBtn) customerDateBtn.style.display = "flex";
-      if(customerAttachBtn) customerAttachBtn.style.display = "flex";
+  if(openingBox) openingBox.style.display = "flex";
+  if(customerDateBtn) customerDateBtn.style.display = "flex";
+  if(customerAttachBtn) customerAttachBtn.style.display = "flex";
 
-    }else{
-      saveBtn.classList.remove("active");
+}else{
+  saveBtn.classList.remove("active");
 
-      if(name.length > 0){
-        if(warning) warning.style.display = "block";
-        if(error) error.style.display = "block";
-      }else{
-        if(warning) warning.style.display = "none";
-        if(error) error.style.display = "none";
-      }
-
-      if(openingBox) openingBox.style.display = "none";
-      if(customerDateBtn) customerDateBtn.style.display = "none";
-      if(customerAttachBtn) customerAttachBtn.style.display = "none";
-    }
+  if(name.length > 0){
+    if(warning) warning.style.display = "block";
+    if(error) error.style.display = "block";
+  }else{
+    if(warning) warning.style.display = "none";
+    if(error) error.style.display = "none";
   }
 
-  window.resetCustomerFormUI = function(){
-    nameInput.value = "";
-    phoneInput.value = "";
-    openingInput.value = "";
+  if(openingBox) openingBox.style.display = "none";
+  if(customerDateBtn) customerDateBtn.style.display = "none";
+  if(customerAttachBtn) customerAttachBtn.style.display = "none";
+}
+}
 
-    nameBox.classList.remove("active","has-value");
-    phoneBox.classList.remove("active","has-value");
-    openingBox.classList.remove("active","has-value");
+window.resetCustomerFormUI = function(){
+  nameInput.value = "";
+  phoneInput.value = "";
+  openingInput.value = "";
 
-    openingBox.style.display = "none";
+  nameBox.classList.remove("active","has-value");
+  phoneBox.classList.remove("active","has-value");
+  openingBox.classList.remove("active","has-value");
 
-    document.getElementById("customerNameWarning").style.display = "none";
-    document.getElementById("customerNameError").style.display = "none";
+  openingBox.style.display = "none";
 
-    saveBtn.classList.remove("active");
+  document.getElementById("customerNameWarning").style.display = "none";
+  document.getElementById("customerNameError").style.display = "none";
 
-    avatarPreview.src = "";
-    avatarPreview.style.display = "none";
-    avatarIcon.style.display = "block";
+  saveBtn.classList.remove("active");
 
-    customerPremiumState.avatarImage = "";
-    customerPremiumState.attachedPhoto = "";
-    customerPremiumState.selectedDate = new Date();
+  avatarPreview.src = "";
+avatarPreview.style.display = "none";
+avatarIcon.style.display = "block";
 
-    customerDateText.textContent = new Date().toLocaleDateString("bn-BD", {
-      day:"numeric",
-      month:"short"
-    });
-  };
+  customerPremiumState.avatarImage = "";
+  customerPremiumState.attachedPhoto = "";
+customerPremiumState.selectedDate = new Date();
 
-  window.setupEditFloating = setupFloating;
+customerDateText.textContent = new Date().toLocaleDateString("bn-BD", {
+  day:"numeric",
+  month:"short"
+});
+}
 
   customerBtn.onclick = ()=>{
     customerPremiumState.userType = "customer";
@@ -176,9 +173,8 @@ function initPremiumCustomerUI(){
   }
 
   document.getElementById("openAvatarPickerBtn").onclick = ()=>{
-    openPicker();
-  };
-  
+  openPicker();
+};
   avatarPickerBackdrop.onclick = closePicker;
 
   document.getElementById("pickCameraBtn").onclick = ()=>{
@@ -186,25 +182,25 @@ function initPremiumCustomerUI(){
     cameraInput.click();
   };
 
-  document.getElementById("pickGalleryBtn").onclick = ()=>{
+document.getElementById("pickGalleryBtn").onclick = ()=>{
+  closePicker();
+  galleryInput.click();
+};
+
+if(deleteAvatarBtn){
+  deleteAvatarBtn.onclick = ()=>{
     closePicker();
-    galleryInput.click();
+
+    customerPremiumState.avatarImage = "";
+    avatarPreview.src = "";
+    avatarPreview.style.display = "none";
+    avatarIcon.style.display = "block";
+
+    if(window.checkEditChanges){
+      window.checkEditChanges();
+    }
   };
-
-  if(deleteAvatarBtn){
-    deleteAvatarBtn.onclick = ()=>{
-      closePicker();
-
-      customerPremiumState.avatarImage = "";
-      avatarPreview.src = "";
-      avatarPreview.style.display = "none";
-      avatarIcon.style.display = "block";
-
-      if(window.checkEditChanges){
-        window.checkEditChanges();
-      }
-    };
-  }
+}
 
   function loadAvatar(file){
     if(!file) return;
@@ -212,15 +208,15 @@ function initPremiumCustomerUI(){
     const reader = new FileReader();
 
     reader.onload = function(e){
-      customerPremiumState.avatarImage = e.target.result;
-      avatarPreview.src = e.target.result;
-      avatarPreview.style.display = "block";
-      avatarIcon.style.display = "none";
+  customerPremiumState.avatarImage = e.target.result;
+  avatarPreview.src = e.target.result;
+  avatarPreview.style.display = "block";
+  avatarIcon.style.display = "none";
 
-      if(window.checkEditChanges){
-        window.checkEditChanges();
-      }
-    };
+  if(window.checkEditChanges){
+    window.checkEditChanges();
+  }
+};
 
     reader.readAsDataURL(file);
   }
@@ -229,9 +225,9 @@ function initPremiumCustomerUI(){
   galleryInput.onchange = e => loadAvatar(e.target.files[0]);
 
   document.getElementById("customerAttachPhotoBtn").onclick = ()=>{
-    attachPhotoInput.setAttribute("capture","environment");
-    attachPhotoInput.click();
-  };
+  attachPhotoInput.setAttribute("capture","environment");
+  attachPhotoInput.click();
+};
 
   attachPhotoInput.onchange = e=>{
     const file = e.target.files[0];

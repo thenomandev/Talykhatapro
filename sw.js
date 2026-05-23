@@ -1,4 +1,4 @@
-const CACHE_NAME = "tallybook-v4";
+const CACHE_NAME = "tallybook-v3"; // ভার্সন পরিবর্তন করা হলো ফোর্সবল আপডেটের জন্য
 
 const FILES = [
   "./",
@@ -13,6 +13,7 @@ const FILES = [
   "./utils.js",
   "./db.js",
   "./manifest.json",
+
   "./assets/svg/back-arrow.svg",
   "./assets/svg/avatar-user.svg",
   "./assets/svg/mini-camera.svg",
@@ -23,8 +24,7 @@ const FILES = [
   "./assets/svg/calendar.svg",
   "./assets/svg/attach-camera.svg",
   "./assets/svg/error-alert.svg",
-  "./assets/svg/success-check.svg",
-  "./assets/svg/pen.svg"
+  "./assets/svg/success-check.svg"
 ];
 
 self.addEventListener("install", event => {
