@@ -986,6 +986,13 @@ function setupLedgerKeyboardLift(){
     });
 
     input.addEventListener("blur", ()=>{
+      const isMoney =
+        input === txnGive || input === txnReceive;
+
+      if(isMoney){
+        return;
+      }
+
       setTimeout(updateLedgerFooter, 150);
     });
   });
