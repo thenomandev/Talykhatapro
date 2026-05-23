@@ -41,7 +41,7 @@ customerDateText.textContent = new Date().toLocaleDateString("bn-BD", {
   month:"short"
 });
 
-  function setupFloating(input, box){
+  function setupFloating( input, box ){
     if(!input || !box) return;
 
     input.addEventListener("focus", ()=>{
@@ -70,9 +70,38 @@ customerDateText.textContent = new Date().toLocaleDateString("bn-BD", {
   }
 
   setupFloating(nameInput, nameBox);
-  setupFloating(phoneInput, phoneBox);
+setupFloating(phoneInput, phoneBox);
 setupFloating(openingInput, openingBox);
 
+window.setupEditFloating = function( input, box ){
+  if(!input || !box) return;
+
+  input.addEventListener("focus", ()=>{
+    box.classList.add("active");
+  });
+
+  input.addEventListener("blur", ()=>{
+    if(input.value.trim()){
+      box.classList.remove("active");
+      box.classList.add("has-value");
+    }else{
+      box.classList.remove("active");
+      box.classList.remove("has-value");
+    }
+  });
+
+  input.addEventListener("input", ()=>{
+    if(input.value.trim()){
+      box.classList.add("has-value");
+    }else{
+      box.classList.remove("has-value");
+    }
+
+    if(window.checkEditChanges){
+      window.checkEditChanges();
+    }
+  });
+}
 openingBox.classList.remove("active","has-value");
 phoneBox.classList.remove("active","has-value");
 nameBox.classList.remove("active","has-value");
