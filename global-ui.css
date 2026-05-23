@@ -505,26 +505,3 @@
   flex-shrink:0;
 }
 
-.edit-customer-form-body{
-  padding:24px 16px 140px;
-  background:#fff;
-  min-height:calc(100dvh - 70px);
-}
-
-.edit-avatar-wrap{
-  display:flex;
-  justify-content:center;
-  margin-bottom:26px;
-}
-
-.edit-save-footer{
-  position:fixed;
-  left:50%;
-  transform:translateX(-50%);
-  bottom:0;
-  width:100%;
-  max-width:430px;
-  padding:14px 16px calc(14px + env(safe-area-inset-bottom));
-  background:#fff;
-  z-index:9998;
-}
