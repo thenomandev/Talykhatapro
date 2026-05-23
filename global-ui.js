@@ -73,7 +73,7 @@ customerDateText.textContent = new Date().toLocaleDateString("bn-BD", {
 setupFloating(phoneInput, phoneBox);
 setupFloating(openingInput, openingBox);
 
-function setupEditFloating(input, box){
+window.setupEditFloating = function(input, box){
   if(!input || !box) return;
 
   input.addEventListener("focus", ()=>{

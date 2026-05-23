@@ -42,6 +42,10 @@ const editCustomerAvatarIcon = document.getElementById("editCustomerAvatarIcon")
 const editCustomerAvatarPreview = document.getElementById("editCustomerAvatarPreview");
 const editAvatarBadgeIcon = document.getElementById("editAvatarBadgeIcon");
 const editOpenAvatarPickerBtn = document.getElementById("editOpenAvatarPickerBtn");
+if(window.setupEditFloating){
+  window.setupEditFloating(editCustomerName, editCustomerNameBox);
+  window.setupEditFloating(editCustomerPhone, editCustomerPhoneBox);
+}
 
 const backToHome = document.getElementById("backToHome");
 const ledgerAvatar = document.getElementById("ledgerAvatar");
@@ -426,6 +430,7 @@ if (optEdit) {
       editAvatarBadgeIcon.src = "assets/svg/mini-camera.svg";
     }
 
+editSaveBtn.classList.remove("active");
     switchScreen(editCustomerScreen);
     history.pushState({screen:"edit"}, "");
   };
