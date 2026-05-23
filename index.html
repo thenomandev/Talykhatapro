@@ -408,24 +408,55 @@
 
   <div class="transaction-form" id="ledgerFormContainer">
 
-    <div class="txn-row">
+    <div class="txn-row premium-ledger-row">
 
-      <div class="txn-box">
-        <span class="taka-icon">৳</span>
-        <input id="txnGive" type="text" inputmode="none" readonly placeholder="দিলাম/বেচা" class="money-input" />
-      </div>
-
-      <div class="txn-box">
-        <span class="taka-icon">৳</span>
-        <input id="txnReceive" type="text" inputmode="none" readonly placeholder="পেলাম" class="money-input" />
-      </div>
-
+  <div class="premium-input-box ledger-premium-box" id="txnGiveBox">
+    <div class="premium-input-icon">
+      <img src="assets/svg/taka.svg" class="taka-icon-svg" alt="Taka">
     </div>
 
-    <div class="txn-note-box">
-      <i class="fa-regular fa-file-lines desc-icon"></i>
-      <input id="txnNote" type="text" placeholder="বিবরণ" />
+    <label class="floating-label">দিলাম/বেচা</label>
+
+    <input
+      id="txnGive"
+      type="text"
+      inputmode="none"
+      readonly
+      class="money-input"
+    >
+  </div>
+
+  <div class="premium-input-box ledger-premium-box" id="txnReceiveBox">
+    <div class="premium-input-icon">
+      <img src="assets/svg/taka.svg" class="taka-icon-svg" alt="Taka">
     </div>
+
+    <label class="floating-label">পেলাম</label>
+
+    <input
+      id="txnReceive"
+      type="text"
+      inputmode="none"
+      readonly
+      class="money-input"
+    >
+  </div>
+
+</div>
+
+<div class="premium-input-box ledger-note-box" id="txnNoteBox">
+  <div class="premium-input-icon">
+    <i class="fa-regular fa-note-sticky"></i>
+  </div>
+
+  <label class="floating-label">বিবরণ</label>
+
+  <input
+    id="txnNote"
+    type="text"
+    autocomplete="off"
+  >
+</div>
 
     <div class="txn-action-row">
       <button type="button" class="date-pill" id="txnDateBtn">📅 আজ</button>

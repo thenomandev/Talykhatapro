@@ -50,15 +50,52 @@ const saveTxnBtn = document.getElementById("saveTxnBtn");
 function updateSaveBtnState(){
   if(!saveTxnBtn) return;
 
-  const hasAmount =
-    (parseFloat(txnGive.value) || 0) > 0 ||
-    (parseFloat(txnReceive.value) || 0) > 0;
+  const giveVal = (parseFloat(txnGive?.value) || 0);
+  const receiveVal = (parseFloat(txnReceive?.value) || 0);
+
+  const hasAmount = giveVal > 0 || receiveVal > 0;
 
   if(hasAmount){
     saveTxnBtn.classList.add("active");
   }else{
     saveTxnBtn.classList.remove("active");
   }
+}
+
+function setupLedgerFloatingUI(){
+  const fields = [
+    { input: txnGive, box: document.getElementById("txnGiveBox") },
+    { input: txnReceive, box: document.getElementById("txnReceiveBox") },
+    { input: txnNote, box: document.getElementById("txnNoteBox") }
+  ];
+
+  fields.forEach(({input, box})=>{
+    if(!input || !box) return;
+
+    input.addEventListener("focus", ()=>{
+      box.classList.add("active");
+    });
+
+    input.addEventListener("blur", ()=>{
+      box.classList.remove("active");
+
+      if(input.value.trim()){
+        box.classList.add("has-value");
+      }else{
+        box.classList.remove("has-value");
+      }
+    });
+
+    input.addEventListener("input", ()=>{
+      if(input.value.trim()){
+        box.classList.add("has-value");
+      }else{
+        box.classList.remove("has-value");
+      }
+
+      updateSaveBtnState();
+    });
+  });
 }
 
 const moneyInputs = document.querySelectorAll(".money-input");
@@ -79,6 +116,8 @@ window.addEventListener("DOMContentLoaded", async () => {
   await loadDashboard();
   updateTxnDateButton();
   initPremiumCustomerUI();
+  setupLedgerFloatingUI();
+  setupLedgerKeyboardLift();
   history.replaceState({screen:"home"}, "");
   history.pushState({screen:"ready"}, "");
 });
@@ -495,7 +534,15 @@ await updateCustomer(currentCustomer);
     txnGive.value = "";
     txnReceive.value = "";
     txnNote.value = "";
-updateSaveBtnState();
+
+    document.getElementById("txnGiveBox")?.classList.remove("active","has-value");
+    document.getElementById("txnReceiveBox")?.classList.remove("active","has-value");
+    document.getElementById("txnNoteBox")?.classList.remove("active","has-value");
+
+    saveTxnBtn.style.bottom = "";
+
+    updateSaveBtnState();
+
     selectedTxnDate = new Date();
     updateTxnDateButton();
 
@@ -890,3 +937,31 @@ document.getElementById("confirmEditBtn").onclick = async ()=>{
     await openLedger(updated || currentCustomer);
   }, 2100);
 };
+
+function setupLedgerKeyboardLift(){
+  if(!saveTxnBtn) return;
+
+  const ledgerInputs = [txnGive, txnReceive, txnNote];
+
+  ledgerInputs.forEach(input=>{
+    if(!input) return;
+
+    input.addEventListener("focus", ()=>{
+      saveTxnBtn.style.bottom = "calc(300px + env(safe-area-inset-bottom))";
+    });
+
+    input.addEventListener("blur", ()=>{
+      setTimeout(()=>{
+        const active = document.activeElement;
+
+        if(
+          active !== txnGive &&
+          active !== txnReceive &&
+          active !== txnNote
+        ){
+          saveTxnBtn.style.bottom = "";
+        }
+      }, 120);
+    });
+  });
+}

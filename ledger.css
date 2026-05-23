@@ -109,57 +109,92 @@
   margin-bottom:20px;
 }
 
-.txn-box {
+.txn-box input::placeholder{
+  color:#b0bec5;
+}
+
+.premium-ledger-row{
+  gap:15px;
+  margin-bottom:20px;
+}
+
+.ledger-premium-box{
   flex:1;
-  position:relative;
+  margin-bottom:0;
+  height:86px;
   border:1px solid #555555 !important;
-  border-radius:10px;
-  display:flex;
-  align-items:center;
-  background:#fff;
+  border-radius:14px;
 }
 
-.taka-icon {
-  position:absolute;
-  left:15px;
-  color:#424242;
-  font-size:18px;
-  font-weight:bold;
+.ledger-premium-box.active{
+  border:2px solid #b91c1c !important;
 }
 
-.txn-box input {
-  padding:14px 15px 14px 38px;
+.ledger-premium-box.has-value{
+  border:1px solid #555555 !important;
+}
+
+.ledger-premium-box .premium-input-icon{
+  left:18px;
+}
+
+.ledger-premium-box .floating-label{
+  left:50px;
+}
+
+.ledger-premium-box input{
+  width:100%;
+  height:100%;
+  padding:18px 16px 8px 64px;
+  background:transparent;
   font-size:16px;
-  color:#212121;
+  color:#111827;
   font-weight:500;
 }
 
-.txn-note-box {
+.ledger-note-box{
   position:relative;
+  height:86px;
   border:1px solid #555555 !important;
-  border-radius:10px;
+  border-radius:14px;
   margin-bottom:25px;
   display:flex;
   align-items:center;
   background:#fff;
 }
 
-.desc-icon {
-  position:absolute;
-  left:15px;
-  color:#616161;
-  font-size:16px;
+.ledger-note-box.active{
+  border:2px solid #b91c1c !important;
 }
 
-.txn-note-box input {
-  padding:14px 15px 14px 45px;
-  font-size:16px;
-  color:#212121;
+.ledger-note-box.has-value{
+  border:1px solid #555555 !important;
 }
 
-.txn-box input::placeholder,
-.txn-note-box input::placeholder {
-  color:#b0bec5;
+.ledger-note-box .premium-input-icon{
+  left:18px;
+}
+
+.ledger-note-box .floating-label{
+  left:50px;
+}
+
+.ledger-note-box input{
+  width:100%;
+  height:100%;
+  padding:18px 16px 8px 64px;
+  background:transparent;
+  font-size:16px;
+  color:#111827;
+}
+
+.ledger-note-box .premium-input-icon i{
+  font-size:20px;
+  color:#9ca3af;
+}
+
+.ledger-note-box.active .premium-input-icon i{
+  color:#111827;
 }
 
 .txn-action-row {
@@ -190,7 +225,7 @@
   position:fixed;
   left:22px;
   right:22px;
-  bottom:300px;
+  bottom:calc(220px + env(safe-area-inset-bottom));
   height:54px;
   width:auto;
   border-radius:999px;
@@ -200,7 +235,7 @@
   font-weight:700;
   text-align:center;
   z-index:9998;
-  transition:.2s ease;
+  transition:bottom .25s ease, background .2s ease;
 }
 
 /* PREMIUM INLINE CALCULATOR DESIGN - INSTANT TOUCH FEEDBACK */
