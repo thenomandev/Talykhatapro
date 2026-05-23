@@ -482,8 +482,9 @@ if(editSaveBtn){
     }
 
     const changed =
-      name !== (editDraft.name || "") ||
-      editCustomerPhone.value.trim() !== (editDraft.phone || "");
+      name !== (currentCustomer?.name || "") ||
+      editCustomerPhone.value.trim() !== (currentCustomer?.phone || "") ||
+      (editDraft?.avatarImage || "") !== (currentCustomer?.avatarImage || "");
 
     if(!changed) return;
 
@@ -508,8 +509,9 @@ if(editSaveBtn){
     }
 
     const changed =
-      name !== (editDraft?.name || "") ||
-      editCustomerPhone.value.trim() !== (editDraft?.phone || "");
+      name !== (currentCustomer?.name || "") ||
+      editCustomerPhone.value.trim() !== (currentCustomer?.phone || "") ||
+      (editDraft?.avatarImage || "") !== (currentCustomer?.avatarImage || "");
 
     if(changed && name.length >= 3 && name.length <= 35){
       editSaveBtn.classList.add("active");
@@ -534,67 +536,6 @@ if(editOpenAvatarPickerBtn){
     avatarPickerSheet.classList.add("show");
   };
 }
-
-if(avatarPickerBackdrop){
-  avatarPickerBackdrop.onclick = () => {
-    avatarPickerBackdrop.classList.remove("show");
-    avatarPickerSheet.classList.remove("show");
-  };
-}
-
-if(pickCameraBtn){
-  pickCameraBtn.onclick = () => {
-    customerCameraInput.click();
-  };
-}
-
-if(pickGalleryBtn){
-  pickGalleryBtn.onclick = () => {
-    customerGalleryInput.click();
-  };
-}
-
-if(deleteAvatarBtn){
-  deleteAvatarBtn.onclick = () => {
-    editDraft.avatarImage = "";
-    editCustomerAvatarPreview.style.display = "none";
-    editCustomerAvatarIcon.style.display = "block";
-    editAvatarBadgeIcon.src = "assets/svg/mini-camera.svg";
-
-    avatarPickerBackdrop.classList.remove("show");
-    avatarPickerSheet.classList.remove("show");
-
-    if(window.checkEditChanges){
-      window.checkEditChanges();
-    }
-  };
-}
-
-customerCameraInput.onchange = e => {
-  const file = e.target.files[0];
-  if(!file) return;
-
-  const reader = new FileReader();
-
-  reader.onload = ev => {
-    editDraft.avatarImage = ev.target.result;
-    editCustomerAvatarPreview.src = ev.target.result;
-    editCustomerAvatarPreview.style.display = "block";
-    editCustomerAvatarIcon.style.display = "none";
-    editAvatarBadgeIcon.src = "assets/svg/pen.svg";
-
-    avatarPickerBackdrop.classList.remove("show");
-    avatarPickerSheet.classList.remove("show");
-
-    if(window.checkEditChanges){
-      window.checkEditChanges();
-    }
-  };
-
-  reader.readAsDataURL(file);
-};
-
-customerGalleryInput.onchange = customerCameraInput.onchange;
 
 if (saveTxnBtn) {
   saveTxnBtn.onclick = async () => {
