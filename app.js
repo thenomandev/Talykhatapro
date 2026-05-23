@@ -9,7 +9,6 @@ let editDraft = null;
 const homeScreen = document.getElementById("homeScreen");
 const customerFormScreen = document.getElementById("customerFormScreen");
 const ledgerScreen = document.getElementById("ledgerScreen");
-const editCustomerScreen = document.getElementById("editCustomerScreen");
 
 const customerList = document.getElementById("customerList");
 const customerCount = document.getElementById("customerCount");
@@ -27,42 +26,6 @@ const customerPhone = document.getElementById("customerPhone");
 const customerOpening = document.getElementById("customerOpening");
 const openingBalContainer = document.getElementById("openingBalContainer");
 const customerDatePicker = document.getElementById("customerDatePicker");
-
-const editCustomerTitle = document.getElementById("editCustomerTitle");
-const editCustomerName = document.getElementById("editCustomerName");
-const editCustomerPhone = document.getElementById("editCustomerPhone");
-const editSaveBtn = document.getElementById("editSaveBtn");
-
-const editCustomerNameBox = document.getElementById("editCustomerNameBox");
-const editCustomerPhoneBox = document.getElementById("editCustomerPhoneBox");
-
-const backFromEditCustomer = document.getElementById("backFromEditCustomer");
-
-const editCustomerAvatarIcon = document.getElementById("editCustomerAvatarIcon");
-const editCustomerAvatarPreview = document.getElementById("editCustomerAvatarPreview");
-const editAvatarBadgeIcon = document.getElementById("editAvatarBadgeIcon");
-const editOpenAvatarPickerBtn = document.getElementById("editOpenAvatarPickerBtn");
-
-if(window.setupEditFloating){
-  window.setupEditFloating(editCustomerName, editCustomerNameBox);
-  window.setupEditFloating(editCustomerPhone, editCustomerPhoneBox);
-}
-
-const avatarPickerBackdrop = document.getElementById("avatarPickerBackdrop");
-const avatarPickerSheet = document.getElementById("avatarPickerSheet");
-const pickCameraBtn = document.getElementById("pickCameraBtn");
-const pickGalleryBtn = document.getElementById("pickGalleryBtn");
-const deleteAvatarBtn = document.getElementById("deleteAvatarBtn");
-const customerCameraInput = document.getElementById("customerCameraInput");
-const customerGalleryInput = document.getElementById("customerGalleryInput");
-
-const editAvatarPickerBackdrop = document.getElementById("editAvatarPickerBackdrop");
-const editAvatarPickerSheet = document.getElementById("editAvatarPickerSheet");
-const editPickCameraBtn = document.getElementById("editPickCameraBtn");
-const editPickGalleryBtn = document.getElementById("editPickGalleryBtn");
-const editDeleteAvatarBtn = document.getElementById("editDeleteAvatarBtn");
-const editCameraInput = document.getElementById("editCameraInput");
-const editGalleryInput = document.getElementById("editGalleryInput");
 
 const backToHome = document.getElementById("backToHome");
 const ledgerAvatar = document.getElementById("ledgerAvatar");
@@ -412,51 +375,82 @@ if (closeReportBtn) {
 
 if (optEdit) {
   optEdit.onclick = () => {
-
     isEditMode = true;
 
-    editDraft = {
-      id: currentCustomer.id,
-      userType: currentCustomer.userType || "customer",
-      name: currentCustomer.name || "",
-      phone: currentCustomer.phone || "",
-      avatarImage: currentCustomer.avatarImage || ""
-    };
+editDraft = {
+  id: currentCustomer.id,
+  userType: currentCustomer.userType || "customer",
+  name: currentCustomer.name || "",
+  phone: currentCustomer.phone || "",
+  avatarImage: currentCustomer.avatarImage || ""
+};
 
-    editCustomerTitle.textContent =
-      currentCustomer?.userType === "supplier"
-        ? "সাপ্লায়ার এডিট"
-        : "কাস্টমার এডিট";
+    customerFormTitle.textContent =
+  currentCustomer?.userType === "supplier"
+    ? "সাপ্লায়ার এডিট"
+    : "কাস্টমার এডিট";
 
-    editCustomerName.value = editDraft.name;
-    editCustomerPhone.value = editDraft.phone;
+saveCustomerBtn.textContent = "পরবর্তী";
+saveCustomerBtn.classList.remove("active");
 
-    editCustomerNameBox.classList.add("has-value");
-    editCustomerPhoneBox.classList.add("has-value");
+    customerName.value = currentCustomer.name || "";
+    customerPhone.value = currentCustomer.phone || "";
 
-    if(editDraft.avatarImage){
-      editCustomerAvatarPreview.src = editDraft.avatarImage;
-      editCustomerAvatarPreview.style.display = "block";
-      editCustomerAvatarIcon.style.display = "none";
+window.checkEditChanges = () => {
+  if(!isEditMode || !editDraft) return;
 
-      editAvatarBadgeIcon.src = "assets/svg/pen.svg";
-    }else{
-      editCustomerAvatarPreview.style.display = "none";
-      editCustomerAvatarIcon.style.display = "block";
+  const changed =
+    customerName.value.trim() !== (editDraft.name || "") ||
+    customerPhone.value.trim() !== (editDraft.phone || "") ||
+    (customerPremiumState.avatarImage || "") !== (editDraft.avatarImage || "");
 
-      editAvatarBadgeIcon.src = "assets/svg/mini-camera.svg";
-    }
+  if(changed){
+    saveCustomerBtn.classList.add("active");
+  }else{
+    saveCustomerBtn.classList.remove("active");
+  }
+};
 
-editSaveBtn.classList.remove("active");
-document.getElementById("editCustomerNameWarning").style.display = "none";
-document.getElementById("editCustomerNameError").style.display = "none";
+customerName.oninput = window.checkEditChanges;
+customerPhone.oninput = window.checkEditChanges;
+    customerOpening.value = currentCustomer.openingBalance || "";
 
-if(window.setupEditFloating){
-  window.setupEditFloating(editCustomerName, editCustomerNameBox);
-  window.setupEditFloating(editCustomerPhone, editCustomerPhoneBox);
+    document.getElementById("customerNameBox").classList.add("has-value");
+    document.getElementById("customerPhoneBox").classList.add("has-value");
+    document.getElementById("openingBalContainer").classList.add("has-value");
+
+    customerPremiumState.userType = currentCustomer.userType || "customer";
+    customerPremiumState.avatarImage = currentCustomer.avatarImage || "";
+    customerPremiumState.attachedPhoto = currentCustomer.attachedPhoto || "";
+
+    const avatarPreviewEl = document.getElementById("customerAvatarPreview");
+const avatarIconEl = document.getElementById("customerAvatarIcon");
+
+if(currentCustomer.avatarImage){
+  avatarPreviewEl.src = currentCustomer.avatarImage;
+  avatarPreviewEl.style.display = "block";
+  avatarIconEl.style.display = "none";
+}else{
+  avatarPreviewEl.src = "";
+  avatarPreviewEl.style.display = "none";
+  avatarIconEl.src = "assets/svg/pen.svg";
+  avatarIconEl.style.display = "block";
 }
-    switchScreen(editCustomerScreen);
-    history.pushState({screen:"edit"}, "");
+
+    document.getElementById("customerTypeCustomer").classList.toggle(
+      "active",
+      customerPremiumState.userType === "customer"
+    );
+
+    document.getElementById("customerTypeSupplier").classList.toggle(
+      "active",
+      customerPremiumState.userType === "supplier"
+    );
+
+    if (openingBalContainer) openingBalContainer.style.display = "none";
+
+    switchScreen(customerFormScreen);
+    history.pushState({screen:"form"}, "");
   };
 }
 
@@ -473,137 +467,6 @@ if (optDelete) {
 }
 
 /* SAVE NEW TRANSACTION */
-if(editSaveBtn){
-  editSaveBtn.onclick = () => {
-    const name = editCustomerName.value.trim();
-
-    const warning = document.getElementById("editCustomerNameWarning");
-    const error = document.getElementById("editCustomerNameError");
-
-    if(name.length < 3 || name.length > 35){
-      warning.style.display = "block";
-      error.style.display = "block";
-      return;
-    }else{
-      warning.style.display = "none";
-      error.style.display = "none";
-    }
-
-    const changed =
-      name !== (editDraft.name || "") ||
-      editCustomerPhone.value.trim() !== (editDraft.phone || "");
-
-    if(!changed) return;
-
-    editDraft.name = name;
-    editDraft.phone = editCustomerPhone.value.trim();
-
-    showEditConfirmScreen();
-  };
-
-  function checkEditChanges(){
-    const name = editCustomerName.value.trim();
-
-    const warning = document.getElementById("editCustomerNameWarning");
-    const error = document.getElementById("editCustomerNameError");
-
-    if(name.length > 0 && (name.length < 3 || name.length > 35)){
-      warning.style.display = "block";
-      error.style.display = "block";
-    }else{
-      warning.style.display = "none";
-      error.style.display = "none";
-    }
-
-    const changed =
-      name !== (editDraft?.name || "") ||
-      editCustomerPhone.value.trim() !== (editDraft?.phone || "");
-
-    if(changed && name.length >= 3 && name.length <= 35){
-      editSaveBtn.classList.add("active");
-    }else{
-      editSaveBtn.classList.remove("active");
-    }
-  }
-
-  editCustomerName.oninput = checkEditChanges;
-  editCustomerPhone.oninput = checkEditChanges;
-}
-
-if(backFromEditCustomer){
-  backFromEditCustomer.onclick = () => {
-    switchScreen(ledgerScreen);
-  };
-}
-
-if(editOpenAvatarPickerBtn){
-  editOpenAvatarPickerBtn.onclick = () => {
-    editAvatarPickerBackdrop.classList.add("show");
-    editAvatarPickerSheet.classList.add("show");
-  };
-}
-
-if(editAvatarPickerBackdrop){
-  editAvatarPickerBackdrop.onclick = () => {
-    editAvatarPickerBackdrop.classList.remove("show");
-    editAvatarPickerSheet.classList.remove("show");
-  };
-}
-
-if(editPickCameraBtn){
-  editPickCameraBtn.onclick = () => {
-    editAvatarPickerBackdrop.classList.remove("show");
-    editAvatarPickerSheet.classList.remove("show");
-    editCameraInput.click();
-  };
-}
-
-if(editPickGalleryBtn){
-  editPickGalleryBtn.onclick = () => {
-    editAvatarPickerBackdrop.classList.remove("show");
-    editAvatarPickerSheet.classList.remove("show");
-    editGalleryInput.click();
-  };
-}
-
-if(editDeleteAvatarBtn){
-  editDeleteAvatarBtn.onclick = () => {
-    if(!editDraft) return;
-
-    editDraft.avatarImage = "";
-    editCustomerAvatarPreview.style.display = "none";
-    editCustomerAvatarIcon.style.display = "block";
-    editAvatarBadgeIcon.src = "assets/svg/mini-camera.svg";
-
-    if(window.checkEditChanges){
-      window.checkEditChanges();
-    }
-  };
-}
-
-function loadEditAvatar(file){
-  if(!file || !editDraft) return;
-
-  const reader = new FileReader();
-
-  reader.onload = ev => {
-    editDraft.avatarImage = ev.target.result;
-    editCustomerAvatarPreview.src = ev.target.result;
-    editCustomerAvatarPreview.style.display = "block";
-    editCustomerAvatarIcon.style.display = "none";
-    editAvatarBadgeIcon.src = "assets/svg/pen.svg";
-
-    if(window.checkEditChanges){
-      window.checkEditChanges();
-    }
-  };
-
-  reader.readAsDataURL(file);
-}
-
-editCameraInput.onchange = e => loadEditAvatar(e.target.files[0]);
-editGalleryInput.onchange = e => loadEditAvatar(e.target.files[0]);
-
 if (saveTxnBtn) {
   saveTxnBtn.onclick = async () => {
     const giveVal = parseFloat(txnGive.value) || 0;
@@ -951,21 +814,10 @@ document.addEventListener("focusin",(e)=>{
 
 if (window.visualViewport) {
   window.visualViewport.addEventListener("resize", () => {
-    const addFooter = document.getElementById("customerSaveFooter");
-    const editFooter = document.querySelector(".edit-save-footer");
+    const footer = document.getElementById("customerSaveFooter");
+    const formScreen = document.getElementById("customerFormScreen");
 
-    const addScreen = document.getElementById("customerFormScreen");
-    const editScreen = document.getElementById("editCustomerScreen");
-
-    let footer = null;
-
-    if(addScreen.classList.contains("active")){
-      footer = addFooter;
-    }else if(editScreen.classList.contains("active")){
-      footer = editFooter;
-    }
-
-    if (!footer) return;
+    if (!footer || !formScreen.classList.contains("active")) return;
 
     const vh = window.visualViewport.height;
     const full = window.innerHeight;
