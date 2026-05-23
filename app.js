@@ -9,6 +9,7 @@ let editDraft = null;
 const homeScreen = document.getElementById("homeScreen");
 const customerFormScreen = document.getElementById("customerFormScreen");
 const ledgerScreen = document.getElementById("ledgerScreen");
+const editCustomerScreen = document.getElementById("editCustomerScreen");
 
 const customerList = document.getElementById("customerList");
 const customerCount = document.getElementById("customerCount");
@@ -26,6 +27,21 @@ const customerPhone = document.getElementById("customerPhone");
 const customerOpening = document.getElementById("customerOpening");
 const openingBalContainer = document.getElementById("openingBalContainer");
 const customerDatePicker = document.getElementById("customerDatePicker");
+
+const editCustomerTitle = document.getElementById("editCustomerTitle");
+const editCustomerName = document.getElementById("editCustomerName");
+const editCustomerPhone = document.getElementById("editCustomerPhone");
+const editSaveBtn = document.getElementById("editSaveBtn");
+
+const editCustomerNameBox = document.getElementById("editCustomerNameBox");
+const editCustomerPhoneBox = document.getElementById("editCustomerPhoneBox");
+
+const backFromEditCustomer = document.getElementById("backFromEditCustomer");
+
+const editCustomerAvatarIcon = document.getElementById("editCustomerAvatarIcon");
+const editCustomerAvatarPreview = document.getElementById("editCustomerAvatarPreview");
+const editAvatarBadgeIcon = document.getElementById("editAvatarBadgeIcon");
+const editOpenAvatarPickerBtn = document.getElementById("editOpenAvatarPickerBtn");
 
 const backToHome = document.getElementById("backToHome");
 const ledgerAvatar = document.getElementById("ledgerAvatar");
@@ -375,82 +391,43 @@ if (closeReportBtn) {
 
 if (optEdit) {
   optEdit.onclick = () => {
+
     isEditMode = true;
 
-editDraft = {
-  id: currentCustomer.id,
-  userType: currentCustomer.userType || "customer",
-  name: currentCustomer.name || "",
-  phone: currentCustomer.phone || "",
-  avatarImage: currentCustomer.avatarImage || ""
-};
+    editDraft = {
+      id: currentCustomer.id,
+      userType: currentCustomer.userType || "customer",
+      name: currentCustomer.name || "",
+      phone: currentCustomer.phone || "",
+      avatarImage: currentCustomer.avatarImage || ""
+    };
 
-    customerFormTitle.textContent =
-  currentCustomer?.userType === "supplier"
-    ? "সাপ্লায়ার এডিট"
-    : "কাস্টমার এডিট";
+    editCustomerTitle.textContent =
+      currentCustomer?.userType === "supplier"
+        ? "সাপ্লায়ার এডিট"
+        : "কাস্টমার এডিট";
 
-saveCustomerBtn.textContent = "পরবর্তী";
-saveCustomerBtn.classList.remove("active");
+    editCustomerName.value = editDraft.name;
+    editCustomerPhone.value = editDraft.phone;
 
-    customerName.value = currentCustomer.name || "";
-    customerPhone.value = currentCustomer.phone || "";
+    editCustomerNameBox.classList.add("has-value");
+    editCustomerPhoneBox.classList.add("has-value");
 
-window.checkEditChanges = () => {
-  if(!isEditMode || !editDraft) return;
+    if(editDraft.avatarImage){
+      editCustomerAvatarPreview.src = editDraft.avatarImage;
+      editCustomerAvatarPreview.style.display = "block";
+      editCustomerAvatarIcon.style.display = "none";
 
-  const changed =
-    customerName.value.trim() !== (editDraft.name || "") ||
-    customerPhone.value.trim() !== (editDraft.phone || "") ||
-    (customerPremiumState.avatarImage || "") !== (editDraft.avatarImage || "");
+      editAvatarBadgeIcon.src = "assets/svg/pen.svg";
+    }else{
+      editCustomerAvatarPreview.style.display = "none";
+      editCustomerAvatarIcon.style.display = "block";
 
-  if(changed){
-    saveCustomerBtn.classList.add("active");
-  }else{
-    saveCustomerBtn.classList.remove("active");
-  }
-};
+      editAvatarBadgeIcon.src = "assets/svg/mini-camera.svg";
+    }
 
-customerName.oninput = window.checkEditChanges;
-customerPhone.oninput = window.checkEditChanges;
-    customerOpening.value = currentCustomer.openingBalance || "";
-
-    document.getElementById("customerNameBox").classList.add("has-value");
-    document.getElementById("customerPhoneBox").classList.add("has-value");
-    document.getElementById("openingBalContainer").classList.add("has-value");
-
-    customerPremiumState.userType = currentCustomer.userType || "customer";
-    customerPremiumState.avatarImage = currentCustomer.avatarImage || "";
-    customerPremiumState.attachedPhoto = currentCustomer.attachedPhoto || "";
-
-    const avatarPreviewEl = document.getElementById("customerAvatarPreview");
-const avatarIconEl = document.getElementById("customerAvatarIcon");
-
-if(currentCustomer.avatarImage){
-  avatarPreviewEl.src = currentCustomer.avatarImage;
-  avatarPreviewEl.style.display = "block";
-  avatarIconEl.style.display = "none";
-}else{
-  avatarPreviewEl.src = "";
-  avatarPreviewEl.style.display = "none";
-  avatarIconEl.src = "assets/svg/pen.svg";
-  avatarIconEl.style.display = "block";
-}
-
-    document.getElementById("customerTypeCustomer").classList.toggle(
-      "active",
-      customerPremiumState.userType === "customer"
-    );
-
-    document.getElementById("customerTypeSupplier").classList.toggle(
-      "active",
-      customerPremiumState.userType === "supplier"
-    );
-
-    if (openingBalContainer) openingBalContainer.style.display = "none";
-
-    switchScreen(customerFormScreen);
-    history.pushState({screen:"form"}, "");
+    switchScreen(editCustomerScreen);
+    history.pushState({screen:"edit"}, "");
   };
 }
 
@@ -467,6 +444,43 @@ if (optDelete) {
 }
 
 /* SAVE NEW TRANSACTION */
+if(editSaveBtn){
+  editSaveBtn.onclick = () => {
+    const changed =
+      editCustomerName.value.trim() !== (editDraft.name || "") ||
+      editCustomerPhone.value.trim() !== (editDraft.phone || "");
+
+    if(!changed) return;
+
+    editDraft.name = editCustomerName.value.trim();
+    editDraft.phone = editCustomerPhone.value.trim();
+
+    window.checkEditChanges = checkEditChanges;
+    showEditConfirmScreen();
+  };
+
+  function checkEditChanges(){
+    const changed =
+      editCustomerName.value.trim() !== (editDraft?.name || "") ||
+      editCustomerPhone.value.trim() !== (editDraft?.phone || "");
+
+    if(changed){
+      editSaveBtn.classList.add("active");
+    }else{
+      editSaveBtn.classList.remove("active");
+    }
+  }
+
+  editCustomerName.oninput = checkEditChanges;
+  editCustomerPhone.oninput = checkEditChanges;
+}
+
+if(backFromEditCustomer){
+  backFromEditCustomer.onclick = () => {
+    switchScreen(ledgerScreen);
+  };
+}
+
 if (saveTxnBtn) {
   saveTxnBtn.onclick = async () => {
     const giveVal = parseFloat(txnGive.value) || 0;
