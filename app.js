@@ -973,7 +973,18 @@ function setupLedgerKeyboardLift(){
   [txnGive, txnReceive, txnNote].forEach(input=>{
     if(!input) return;
 
-    input.addEventListener("focus", updateLedgerFooter);
+    input.addEventListener("focus", ()=>{
+      const isMoney =
+        input === txnGive || input === txnReceive;
+
+      if(isMoney){
+        footer.style.transform =
+          "translateX(-50%) translateY(-300px)";
+      }else{
+        updateLedgerFooter();
+      }
+    });
+
     input.addEventListener("blur", ()=>{
       setTimeout(updateLedgerFooter, 150);
     });
