@@ -534,9 +534,33 @@ if(backFromEditCustomer){
 
 if(editOpenAvatarPickerBtn){
   editOpenAvatarPickerBtn.onclick = () => {
-    document.getElementById("openAvatarPickerBtn").click();
+    customerGalleryInput.click();
   };
 }
+
+customerGalleryInput.onchange = e => {
+  const file = e.target.files[0];
+  if(!file) return;
+
+  const reader = new FileReader();
+
+  reader.onload = ev => {
+    if(editCustomerScreen.classList.contains("active")){
+      editDraft.avatarImage = ev.target.result;
+
+      editCustomerAvatarPreview.src = ev.target.result;
+      editCustomerAvatarPreview.style.display = "block";
+      editCustomerAvatarIcon.style.display = "none";
+      editAvatarBadgeIcon.src = "assets/svg/pen.svg";
+
+      if(window.checkEditChanges){
+        window.checkEditChanges();
+      }
+    }
+  };
+
+  reader.readAsDataURL(file);
+};
 
 if (saveTxnBtn) {
   saveTxnBtn.onclick = async () => {
