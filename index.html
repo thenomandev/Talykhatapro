@@ -394,7 +394,15 @@
 
       <label class="floating-label">নাম</label>
       <input id="editCustomerName" type="text" autocomplete="off">
+
+      <div id="editCustomerNameWarning" style="display:none;margin-right:16px;">
+        <img src="assets/svg/error-alert.svg" class="error-alert-icon" alt="">
+      </div>
     </div>
+
+<div id="editCustomerNameError" style="display:none;color:#b91c1c;font-size:13px;margin:-10px 0 14px 4px;">
+নাম ৩ থেকে ৩৫ অক্ষরের মধ্যে হতে হবে।
+</div>
 
     <div class="premium-input-box" id="editCustomerPhoneBox">
       <div class="premium-input-icon">

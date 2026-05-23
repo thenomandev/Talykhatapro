@@ -42,10 +42,19 @@ const editCustomerAvatarIcon = document.getElementById("editCustomerAvatarIcon")
 const editCustomerAvatarPreview = document.getElementById("editCustomerAvatarPreview");
 const editAvatarBadgeIcon = document.getElementById("editAvatarBadgeIcon");
 const editOpenAvatarPickerBtn = document.getElementById("editOpenAvatarPickerBtn");
+
 if(window.setupEditFloating){
   window.setupEditFloating(editCustomerName, editCustomerNameBox);
   window.setupEditFloating(editCustomerPhone, editCustomerPhoneBox);
 }
+
+const avatarPickerBackdrop = document.getElementById("avatarPickerBackdrop");
+const avatarPickerSheet = document.getElementById("avatarPickerSheet");
+const pickCameraBtn = document.getElementById("pickCameraBtn");
+const pickGalleryBtn = document.getElementById("pickGalleryBtn");
+const deleteAvatarBtn = document.getElementById("deleteAvatarBtn");
+const customerCameraInput = document.getElementById("customerCameraInput");
+const customerGalleryInput = document.getElementById("customerGalleryInput");
 
 const backToHome = document.getElementById("backToHome");
 const ledgerAvatar = document.getElementById("ledgerAvatar");
@@ -431,6 +440,13 @@ if (optEdit) {
     }
 
 editSaveBtn.classList.remove("active");
+document.getElementById("editCustomerNameWarning").style.display = "none";
+document.getElementById("editCustomerNameError").style.display = "none";
+
+if(window.setupEditFloating){
+  window.setupEditFloating(editCustomerName, editCustomerNameBox);
+  window.setupEditFloating(editCustomerPhone, editCustomerPhoneBox);
+}
     switchScreen(editCustomerScreen);
     history.pushState({screen:"edit"}, "");
   };
@@ -451,25 +467,51 @@ if (optDelete) {
 /* SAVE NEW TRANSACTION */
 if(editSaveBtn){
   editSaveBtn.onclick = () => {
+    const name = editCustomerName.value.trim();
+
+    const warning = document.getElementById("editCustomerNameWarning");
+    const error = document.getElementById("editCustomerNameError");
+
+    if(name.length < 3 || name.length > 35){
+      warning.style.display = "block";
+      error.style.display = "block";
+      return;
+    }else{
+      warning.style.display = "none";
+      error.style.display = "none";
+    }
+
     const changed =
-      editCustomerName.value.trim() !== (editDraft.name || "") ||
+      name !== (editDraft.name || "") ||
       editCustomerPhone.value.trim() !== (editDraft.phone || "");
 
     if(!changed) return;
 
-    editDraft.name = editCustomerName.value.trim();
+    editDraft.name = name;
     editDraft.phone = editCustomerPhone.value.trim();
 
-    window.checkEditChanges = checkEditChanges;
     showEditConfirmScreen();
   };
 
   function checkEditChanges(){
+    const name = editCustomerName.value.trim();
+
+    const warning = document.getElementById("editCustomerNameWarning");
+    const error = document.getElementById("editCustomerNameError");
+
+    if(name.length > 0 && (name.length < 3 || name.length > 35)){
+      warning.style.display = "block";
+      error.style.display = "block";
+    }else{
+      warning.style.display = "none";
+      error.style.display = "none";
+    }
+
     const changed =
-      editCustomerName.value.trim() !== (editDraft?.name || "") ||
+      name !== (editDraft?.name || "") ||
       editCustomerPhone.value.trim() !== (editDraft?.phone || "");
 
-    if(changed){
+    if(changed && name.length >= 3 && name.length <= 35){
       editSaveBtn.classList.add("active");
     }else{
       editSaveBtn.classList.remove("active");
@@ -485,6 +527,74 @@ if(backFromEditCustomer){
     switchScreen(ledgerScreen);
   };
 }
+
+if(editOpenAvatarPickerBtn){
+  editOpenAvatarPickerBtn.onclick = () => {
+    avatarPickerBackdrop.classList.add("show");
+    avatarPickerSheet.classList.add("show");
+  };
+}
+
+if(avatarPickerBackdrop){
+  avatarPickerBackdrop.onclick = () => {
+    avatarPickerBackdrop.classList.remove("show");
+    avatarPickerSheet.classList.remove("show");
+  };
+}
+
+if(pickCameraBtn){
+  pickCameraBtn.onclick = () => {
+    customerCameraInput.click();
+  };
+}
+
+if(pickGalleryBtn){
+  pickGalleryBtn.onclick = () => {
+    customerGalleryInput.click();
+  };
+}
+
+if(deleteAvatarBtn){
+  deleteAvatarBtn.onclick = () => {
+    editDraft.avatarImage = "";
+    editCustomerAvatarPreview.style.display = "none";
+    editCustomerAvatarIcon.style.display = "block";
+    editAvatarBadgeIcon.src = "assets/svg/mini-camera.svg";
+
+    avatarPickerBackdrop.classList.remove("show");
+    avatarPickerSheet.classList.remove("show");
+
+    if(window.checkEditChanges){
+      window.checkEditChanges();
+    }
+  };
+}
+
+customerCameraInput.onchange = e => {
+  const file = e.target.files[0];
+  if(!file) return;
+
+  const reader = new FileReader();
+
+  reader.onload = ev => {
+    editDraft.avatarImage = ev.target.result;
+    editCustomerAvatarPreview.src = ev.target.result;
+    editCustomerAvatarPreview.style.display = "block";
+    editCustomerAvatarIcon.style.display = "none";
+    editAvatarBadgeIcon.src = "assets/svg/pen.svg";
+
+    avatarPickerBackdrop.classList.remove("show");
+    avatarPickerSheet.classList.remove("show");
+
+    if(window.checkEditChanges){
+      window.checkEditChanges();
+    }
+  };
+
+  reader.readAsDataURL(file);
+};
+
+customerGalleryInput.onchange = customerCameraInput.onchange;
 
 if (saveTxnBtn) {
   saveTxnBtn.onclick = async () => {
@@ -833,10 +943,21 @@ document.addEventListener("focusin",(e)=>{
 
 if (window.visualViewport) {
   window.visualViewport.addEventListener("resize", () => {
-    const footer = document.getElementById("customerSaveFooter");
-    const formScreen = document.getElementById("customerFormScreen");
+    const addFooter = document.getElementById("customerSaveFooter");
+    const editFooter = document.querySelector(".edit-save-footer");
 
-    if (!footer || !formScreen.classList.contains("active")) return;
+    const addScreen = document.getElementById("customerFormScreen");
+    const editScreen = document.getElementById("editCustomerScreen");
+
+    let footer = null;
+
+    if(addScreen.classList.contains("active")){
+      footer = addFooter;
+    }else if(editScreen.classList.contains("active")){
+      footer = editFooter;
+    }
+
+    if (!footer) return;
 
     const vh = window.visualViewport.height;
     const full = window.innerHeight;
