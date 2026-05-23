@@ -534,33 +534,37 @@ if(backFromEditCustomer){
 
 if(editOpenAvatarPickerBtn){
   editOpenAvatarPickerBtn.onclick = () => {
-    customerGalleryInput.click();
+    const tempInput = document.createElement("input");
+    tempInput.type = "file";
+    tempInput.accept = "image/*";
+
+    tempInput.onchange = e => {
+      const file = e.target.files[0];
+      if(!file) return;
+
+      const reader = new FileReader();
+
+      reader.onload = ev => {
+        if(!editDraft) return;
+
+        editDraft.avatarImage = ev.target.result;
+
+        editCustomerAvatarPreview.src = ev.target.result;
+        editCustomerAvatarPreview.style.display = "block";
+        editCustomerAvatarIcon.style.display = "none";
+        editAvatarBadgeIcon.src = "assets/svg/pen.svg";
+
+        if(window.checkEditChanges){
+          window.checkEditChanges();
+        }
+      };
+
+      reader.readAsDataURL(file);
+    };
+
+    tempInput.click();
   };
 }
-
-customerGalleryInput.onchange = e => {
-  const file = e.target.files[0];
-  if(!file) return;
-
-  const reader = new FileReader();
-
-  reader.onload = ev => {
-    if(editCustomerScreen.classList.contains("active")){
-      editDraft.avatarImage = ev.target.result;
-
-      editCustomerAvatarPreview.src = ev.target.result;
-      editCustomerAvatarPreview.style.display = "block";
-      editCustomerAvatarIcon.style.display = "none";
-      editAvatarBadgeIcon.src = "assets/svg/pen.svg";
-
-      if(window.checkEditChanges){
-        window.checkEditChanges();
-      }
-    }
-  };
-
-  reader.readAsDataURL(file);
-};
 
 if (saveTxnBtn) {
   saveTxnBtn.onclick = async () => {
@@ -938,6 +942,7 @@ if (window.visualViewport) {
 }
 
 function showEditConfirmScreen(){
+  if(!editDraft) return;
   const screen = document.getElementById("editConfirmScreen");
   const title = document.getElementById("editConfirmTitle");
   const avatar = document.getElementById("editConfirmAvatar");
