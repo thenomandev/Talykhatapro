@@ -289,11 +289,11 @@ if(deleteAvatarBtn){
   };
 }
 
-function showCustomerSuccess(name){
+function showCustomerSuccess(message){
   const overlay = document.getElementById("customerSuccessOverlay");
   const text = document.getElementById("customerSuccessText");
 
-  text.textContent = `"${name}" যোগ করা হয়েছে`;
+  text.textContent = message;
 
   overlay.classList.add("show");
 
