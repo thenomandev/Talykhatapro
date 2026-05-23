@@ -954,13 +954,10 @@ function setupLedgerKeyboardLift(){
       active === txnReceive ||
       active === txnNote;
 
-    const keyboardHeight =
-  window.innerHeight - window.visualViewport.height;
-
-if(!isLedgerInput || keyboardHeight < 120){
-  footer.style.transform = "translateX(-50%)";
-  return;
-}
+    if(!isLedgerInput){
+      footer.style.transform = "translateX(-50%)";
+      return;
+    }
 
     const keyboardHeight =
       window.innerHeight - window.visualViewport.height;
