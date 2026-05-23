@@ -944,30 +944,43 @@ document.getElementById("confirmEditBtn").onclick = async ()=>{
 
 function setupLedgerKeyboardLift(){
   const footer = document.querySelector(".ledger-save-footer");
-  if(!footer) return;
+  if(!footer || !window.visualViewport) return;
 
-  const ledgerInputs = [txnGive, txnReceive, txnNote];
+  function updateLedgerFooter(){
+    const active = document.activeElement;
 
-  ledgerInputs.forEach(input=>{
+    const isLedgerInput =
+      active === txnGive ||
+      active === txnReceive ||
+      active === txnNote;
+
+    if(!isLedgerInput){
+      footer.style.transform = "translateX(-50%)";
+      return;
+    }
+
+    const keyboardHeight =
+      window.innerHeight - window.visualViewport.height;
+
+    if(keyboardHeight > 120){
+      footer.style.transform =
+        `translateX(-50%) translateY(-${keyboardHeight}px)`;
+    }else{
+      footer.style.transform = "translateX(-50%)";
+    }
+  }
+
+  [txnGive, txnReceive, txnNote].forEach(input=>{
     if(!input) return;
 
-    input.addEventListener("focus", ()=>{
-      footer.style.transform =
-        "translateX(-50%) translateY(-300px)";
-    });
-
+    input.addEventListener("focus", updateLedgerFooter);
     input.addEventListener("blur", ()=>{
-      setTimeout(()=>{
-        const active = document.activeElement;
-
-        if(
-          active !== txnGive &&
-          active !== txnReceive &&
-          active !== txnNote
-        ){
-          footer.style.transform = "translateX(-50%)";
-        }
-      },120);
+      setTimeout(updateLedgerFooter, 150);
     });
   });
+
+  window.visualViewport.addEventListener(
+    "resize",
+    updateLedgerFooter
+  );
 }
