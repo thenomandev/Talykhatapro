@@ -520,6 +520,8 @@ if(editSaveBtn){
     }
   }
 
+  window.checkEditChanges = checkEditChanges;
+
   editCustomerName.oninput = checkEditChanges;
   editCustomerPhone.oninput = checkEditChanges;
 }
@@ -532,8 +534,7 @@ if(backFromEditCustomer){
 
 if(editOpenAvatarPickerBtn){
   editOpenAvatarPickerBtn.onclick = () => {
-    avatarPickerBackdrop.classList.add("show");
-    avatarPickerSheet.classList.add("show");
+    document.getElementById("openAvatarPickerBtn").click();
   };
 }
 
