@@ -482,9 +482,8 @@ if(editSaveBtn){
     }
 
     const changed =
-      name !== (currentCustomer?.name || "") ||
-      editCustomerPhone.value.trim() !== (currentCustomer?.phone || "") ||
-      (editDraft?.avatarImage || "") !== (currentCustomer?.avatarImage || "");
+      name !== (editDraft.name || "") ||
+      editCustomerPhone.value.trim() !== (editDraft.phone || "");
 
     if(!changed) return;
 
@@ -509,9 +508,8 @@ if(editSaveBtn){
     }
 
     const changed =
-      name !== (currentCustomer?.name || "") ||
-      editCustomerPhone.value.trim() !== (currentCustomer?.phone || "") ||
-      (editDraft?.avatarImage || "") !== (currentCustomer?.avatarImage || "");
+      name !== (editDraft?.name || "") ||
+      editCustomerPhone.value.trim() !== (editDraft?.phone || "");
 
     if(changed && name.length >= 3 && name.length <= 35){
       editSaveBtn.classList.add("active");
@@ -519,8 +517,6 @@ if(editSaveBtn){
       editSaveBtn.classList.remove("active");
     }
   }
-
-  window.checkEditChanges = checkEditChanges;
 
   editCustomerName.oninput = checkEditChanges;
   editCustomerPhone.oninput = checkEditChanges;
@@ -534,37 +530,71 @@ if(backFromEditCustomer){
 
 if(editOpenAvatarPickerBtn){
   editOpenAvatarPickerBtn.onclick = () => {
-    const tempInput = document.createElement("input");
-    tempInput.type = "file";
-    tempInput.accept = "image/*";
-
-    tempInput.onchange = e => {
-      const file = e.target.files[0];
-      if(!file) return;
-
-      const reader = new FileReader();
-
-      reader.onload = ev => {
-        if(!editDraft) return;
-
-        editDraft.avatarImage = ev.target.result;
-
-        editCustomerAvatarPreview.src = ev.target.result;
-        editCustomerAvatarPreview.style.display = "block";
-        editCustomerAvatarIcon.style.display = "none";
-        editAvatarBadgeIcon.src = "assets/svg/pen.svg";
-
-        if(window.checkEditChanges){
-          window.checkEditChanges();
-        }
-      };
-
-      reader.readAsDataURL(file);
-    };
-
-    tempInput.click();
+    avatarPickerBackdrop.classList.add("show");
+    avatarPickerSheet.classList.add("show");
   };
 }
+
+if(avatarPickerBackdrop){
+  avatarPickerBackdrop.onclick = () => {
+    avatarPickerBackdrop.classList.remove("show");
+    avatarPickerSheet.classList.remove("show");
+  };
+}
+
+if(pickCameraBtn){
+  pickCameraBtn.onclick = () => {
+    customerCameraInput.click();
+  };
+}
+
+if(pickGalleryBtn){
+  pickGalleryBtn.onclick = () => {
+    customerGalleryInput.click();
+  };
+}
+
+if(deleteAvatarBtn){
+  deleteAvatarBtn.onclick = () => {
+    editDraft.avatarImage = "";
+    editCustomerAvatarPreview.style.display = "none";
+    editCustomerAvatarIcon.style.display = "block";
+    editAvatarBadgeIcon.src = "assets/svg/mini-camera.svg";
+
+    avatarPickerBackdrop.classList.remove("show");
+    avatarPickerSheet.classList.remove("show");
+
+    if(window.checkEditChanges){
+      window.checkEditChanges();
+    }
+  };
+}
+
+customerCameraInput.onchange = e => {
+  const file = e.target.files[0];
+  if(!file) return;
+
+  const reader = new FileReader();
+
+  reader.onload = ev => {
+    editDraft.avatarImage = ev.target.result;
+    editCustomerAvatarPreview.src = ev.target.result;
+    editCustomerAvatarPreview.style.display = "block";
+    editCustomerAvatarIcon.style.display = "none";
+    editAvatarBadgeIcon.src = "assets/svg/pen.svg";
+
+    avatarPickerBackdrop.classList.remove("show");
+    avatarPickerSheet.classList.remove("show");
+
+    if(window.checkEditChanges){
+      window.checkEditChanges();
+    }
+  };
+
+  reader.readAsDataURL(file);
+};
+
+customerGalleryInput.onchange = customerCameraInput.onchange;
 
 if (saveTxnBtn) {
   saveTxnBtn.onclick = async () => {
@@ -942,7 +972,6 @@ if (window.visualViewport) {
 }
 
 function showEditConfirmScreen(){
-  if(!editDraft) return;
   const screen = document.getElementById("editConfirmScreen");
   const title = document.getElementById("editConfirmTitle");
   const avatar = document.getElementById("editConfirmAvatar");
