@@ -167,12 +167,25 @@ function updateEditValidation(){
   const name = customerName.value.trim();
   const phone = customerPhone.value.trim();
 
+  const warning = document.getElementById("customerNameWarning");
+  const error = document.getElementById("customerNameError");
+
   const changed =
     name !== (editState.draft.name || "") ||
     phone !== (editState.draft.phone || "") ||
     (getCustomerUIState().avatarImage || "") !== (editState.draft.avatarImage || "");
 
-  if(changed && name.length >= 3 && name.length <= 35){
+  const valid = name.length >= 3 && name.length <= 35;
+
+  if(name.length > 0 && !valid){
+    if(warning) warning.style.display = "block";
+    if(error) error.style.display = "block";
+  }else{
+    if(warning) warning.style.display = "none";
+    if(error) error.style.display = "none";
+  }
+
+  if(changed && valid){
     saveCustomerBtn.classList.add("active");
   }else{
     saveCustomerBtn.classList.remove("active");
