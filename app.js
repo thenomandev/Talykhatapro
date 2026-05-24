@@ -1255,15 +1255,18 @@ document.getElementById("confirmEditBtn").onclick = async ()=>{
   await updateCustomer(currentCustomer);
   await loadDashboard();
 
-  document.getElementById("editConfirmScreen").classList.remove("show");
-
   showCustomerSuccess(
     currentCustomer.userType === "supplier"
       ? "সাপ্লায়ারের তথ্য আপডেট করা হয়েছে।"
       : "কাস্টমারের তথ্য আপডেট করা হয়েছে।"
   );
 
-  setTimeout(()=>{
+  document.getElementById("confirmEditBtn").disabled = true;
+document.getElementById("editConfirmScreen").classList.remove("show");
+
+setTimeout(()=>{
+    document.getElementById("confirmEditBtn").disabled = false;
+
     editState.isEditMode = false;
     editState.draft = null;
     window.onAvatarChanged = null;
