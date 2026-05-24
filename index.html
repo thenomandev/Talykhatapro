@@ -186,44 +186,25 @@
     <h2 id="customerFormTitle">নতুন কাস্টমার/সাপ্লায়ার</h2>
   </header>
 
-  <div class="premium-customer-form-body">
+  <div class="premium-customer-form-body edit-clean-layout">
 
-    <div class="customer-type-row">
+    <div class="customer-type-row edit-avatar-only">
 
-      <div class="avatar-upload-wrap">
-        <div id="customerAvatarCircle" class="customer-avatar-circle">
+      <div class="avatar-upload-wrap edit-avatar-wrap">
+        <div id="customerAvatarCircle" class="customer-avatar-circle edit-avatar-circle">
           <img id="customerAvatarIcon" src="assets/svg/avatar-user.svg" class="avatar-user-icon" alt="User">
           <img id="customerAvatarPreview" class="customer-avatar-preview" />
         </div>
 
         <button id="openAvatarPickerBtn" class="avatar-camera-btn">
-  <img src="assets/svg/mini-camera.svg" class="mini-camera-icon" alt="Camera">
-</button>
+          <img src="assets/svg/mini-camera.svg" class="mini-camera-icon" alt="Camera">
+        </button>
 
         <input type="file" id="customerCameraInput" accept="image/*" capture="environment" hidden>
         <input type="file" id="customerGalleryInput" accept="image/*" hidden>
       </div>
 
-      <div class="customer-type-toggle">
-
-        <button id="customerTypeCustomer" class="type-toggle-btn active" data-type="customer">
-          <span class="type-radio-dot"></span>
-          কাস্টমার
-        </button>
-
-        <button id="customerTypeSupplier" class="type-toggle-btn" data-type="supplier">
-          <span class="type-radio-dot"></span>
-          সাপ্লায়ার
-        </button>
-
-      </div>
-
     </div>
-
-    <button id="importContactBtn" class="import-contact-btn">
-  <img src="assets/svg/address-book.svg" class="address-book-icon" alt="Contacts">
-  ফোনবুক থেকে যোগ করি
-</button>
 
     <div class="premium-input-box" id="customerNameBox">
       <div class="premium-input-icon" id="customerNameIcon">
@@ -248,30 +229,6 @@
 
       <label id="customerPhoneLabel" class="floating-label">মোবাইল নম্বর</label>
       <input id="customerPhone" type="tel" autocomplete="off">
-    </div>
-
-    <div class="premium-input-box" id="openingBalContainer">
-      <img src="assets/svg/taka.svg" class="taka-icon-svg" alt="Taka">
-      <label id="customerOpeningLabel" class="floating-label">পূর্বের বাকি (জের)</label>
-      <input id="customerOpening" type="text" inputmode="none" readonly class="money-input">
-    </div>
-
-    <div class="customer-extra-actions">
-
-      <button id="customerDateBtn" class="customer-mini-pill">
-  <img src="assets/svg/calendar.svg" class="calendar-icon" alt="Calendar">
-  <span id="customerDateText">আজ</span>
-</button>
-
-      <input type="date" id="customerDatePicker" hidden>
-
-      <button id="customerAttachPhotoBtn" class="customer-mini-pill">
-  <img src="assets/svg/attach-camera.svg" class="attach-camera-icon" alt="Camera">
-  ছবি
-</button>
-
-      <input type="file" id="customerAttachPhotoInput" accept="image/*" capture="environment" hidden>
-
     </div>
 
   </div>

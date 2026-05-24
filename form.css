@@ -211,3 +211,23 @@ input:checked + .slider:before {
   margin-top:10px;
 }
 
+.edit-clean-layout .edit-avatar-only{
+  justify-content: center;
+  margin-bottom: 28px;
+}
+
+.edit-clean-layout .edit-avatar-wrap{
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.edit-clean-layout .edit-avatar-circle{
+  width: 132px;
+  height: 132px;
+}
+
+.edit-clean-layout .avatar-camera-btn{
+  right: -4px;
+  bottom: 6px;
+}
