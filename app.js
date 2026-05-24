@@ -637,7 +637,6 @@ customerPhone.oninput = window.onAvatarChanged;
 
     document.getElementById("customerNameBox").classList.add("has-value");
     document.getElementById("customerPhoneBox").classList.add("has-value");
-    document.getElementById("openingBalContainer").classList.add("has-value");
 
     getCustomerUIState().userType = currentCustomer.userType || "customer";
     getCustomerUIState().avatarImage = currentCustomer.avatarImage || "";
@@ -656,16 +655,6 @@ if(currentCustomer.avatarImage){
   avatarIconEl.src = "assets/svg/pen.svg";
   avatarIconEl.style.display = "block";
 }
-
-    document.getElementById("customerTypeCustomer").classList.toggle(
-      "active",
-      getCustomerUIState().userType === "customer"
-    );
-
-    document.getElementById("customerTypeSupplier").classList.toggle(
-      "active",
-      getCustomerUIState().userType === "supplier"
-    );
 
     if (openingBalContainer) openingBalContainer.style.display = "none";
 
