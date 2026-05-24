@@ -956,8 +956,11 @@ function setupLedgerKeyboardLift(){
   }
 
   function raiseFooterForCalculator(){
-    footer.style.transform =
-      "translateX(-50%) translateY(-360px)";
+    setTimeout(() => {
+      const calc = document.getElementById("inlineCalculator");
+      const calcHeight = calc && calc.offsetHeight > 0 ? calc.offsetHeight : 280;
+      footer.style.transform = `translateX(-50%) translateY(-${calcHeight}px)`;
+    }, 50);
   }
 
   function updateKeyboardFooter(){
