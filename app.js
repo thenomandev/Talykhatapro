@@ -720,6 +720,11 @@ function isTextInput(el){
 function hideCalculator(){
   inlineCalculator.classList.remove("show");
   activeMoneyInput = null;
+
+  const footer = document.querySelector(".ledger-save-footer");
+  if(footer){
+    footer.style.transform = "translateX(-50%)";
+  }
 }
 
 function hideKeyboard(){
@@ -944,61 +949,63 @@ document.getElementById("confirmEditBtn").onclick = async ()=>{
 
 function setupLedgerKeyboardLift(){
   const footer = document.querySelector(".ledger-save-footer");
-  if(!footer || !window.visualViewport) return;
+  if(!footer) return;
 
-  function updateLedgerFooter(){
-    const active = document.activeElement;
+  function resetFooter(){
+    footer.style.transform = "translateX(-50%)";
+  }
 
-    const isLedgerInput =
-      active === txnGive ||
-      active === txnReceive ||
-      active === txnNote;
+  function raiseFooterForCalculator(){
+    footer.style.transform =
+      "translateX(-50%) translateY(-360px)";
+  }
 
-    if(!isLedgerInput){
-      footer.style.transform = "translateX(-50%)";
+  function updateKeyboardFooter(){
+    if(!window.visualViewport){
+      resetFooter();
       return;
     }
 
     const keyboardHeight =
       window.innerHeight - window.visualViewport.height;
 
-    if(keyboardHeight > 120){
+    if(document.activeElement === txnNote && keyboardHeight > 120){
       footer.style.transform =
         `translateX(-50%) translateY(-${keyboardHeight}px)`;
     }else{
-      footer.style.transform = "translateX(-50%)";
+      resetFooter();
     }
   }
 
-  [txnGive, txnReceive, txnNote].forEach(input=>{
-    if(!input) return;
+  if(txnGive){
+    txnGive.addEventListener("focus", raiseFooterForCalculator);
+  }
 
-    input.addEventListener("focus", ()=>{
-      const isMoney =
-        input === txnGive || input === txnReceive;
+  if(txnReceive){
+    txnReceive.addEventListener("focus", raiseFooterForCalculator);
+  }
 
-      if(isMoney){
-        footer.style.transform =
-          "translateX(-50%) translateY(-300px)";
-      }else{
-        updateLedgerFooter();
-      }
+  if(txnNote){
+    txnNote.addEventListener("focus", updateKeyboardFooter);
+
+    txnNote.addEventListener("blur", ()=>{
+      setTimeout(resetFooter,150);
     });
+  }
 
-    input.addEventListener("blur", ()=>{
-      const isMoney =
-        input === txnGive || input === txnReceive;
+  if(window.visualViewport){
+    window.visualViewport.addEventListener(
+      "resize",
+      updateKeyboardFooter
+    );
+  }
 
-      if(isMoney){
-        return;
-      }
-
-      setTimeout(updateLedgerFooter, 150);
-    });
+  document.addEventListener("click",(e)=>{
+    if(
+      !e.target.closest(".transaction-form") &&
+      !e.target.closest(".inline-calculator")
+    ){
+      resetFooter();
+    }
   });
-
-  window.visualViewport.addEventListener(
-    "resize",
-    updateLedgerFooter
-  );
 }
