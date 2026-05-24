@@ -744,7 +744,7 @@ if (saveCustomerBtn) {
       return;
     }
 
-    if (editState.isEditMode && currentCustomer) {
+    if (editState.isEditMode) {
   if(name.length < 3 || name.length > 35){
     return;
   }

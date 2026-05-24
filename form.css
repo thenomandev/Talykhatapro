@@ -213,7 +213,8 @@ input:checked + .slider:before {
 
 .edit-clean-layout .edit-avatar-only{
   justify-content: center;
-  margin-bottom: 28px;
+  margin-top: 10px;
+  margin-bottom: 48px;
 }
 
 .edit-clean-layout .edit-avatar-wrap{
@@ -223,11 +224,19 @@ input:checked + .slider:before {
 }
 
 .edit-clean-layout .edit-avatar-circle{
-  width: 132px;
-  height: 132px;
+  width: 118px;
+  height: 118px;
 }
 
 .edit-clean-layout .avatar-camera-btn{
-  right: 110px;
-  bottom: 34px;
+  right: 122px;
+  bottom: 12px;
+}
+
+.edit-clean-layout #customerNameBox{
+  margin-top: 18px;
+}
+
+.edit-clean-layout #customerPhoneBox{
+  margin-top: 18px;
 }
