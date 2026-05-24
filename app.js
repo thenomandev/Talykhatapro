@@ -654,7 +654,7 @@ if(currentCustomer.avatarImage){
 }else{
   avatarPreviewEl.src = "";
   avatarPreviewEl.style.display = "none";
-  avatarIconEl.src = "assets/svg/pen.svg";
+  avatarIconEl.src = "assets/svg/avatar-user.svg";
   avatarIconEl.style.display = "block";
 }
 

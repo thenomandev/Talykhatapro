@@ -228,6 +228,6 @@ input:checked + .slider:before {
 }
 
 .edit-clean-layout .avatar-camera-btn{
-  right: -4px;
-  bottom: 6px;
+  right: 110px;
+  bottom: 34px;
 }
