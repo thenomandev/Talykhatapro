@@ -58,6 +58,12 @@ const addCustomerPhone = document.getElementById("addCustomerPhone");
 const addCustomerOpening = document.getElementById("addCustomerOpening");
 const addSaveCustomerBtn = document.getElementById("addSaveCustomerBtn");
 
+const backFromCustomerAdd = document.getElementById("backFromCustomerAdd");
+const addCustomerNameBox = document.getElementById("addCustomerNameBox");
+const addCustomerPhoneBox = document.getElementById("addCustomerPhoneBox");
+const addCustomerAvatarPreview = document.getElementById("addCustomerAvatarPreview");
+const addCustomerAvatarIcon = document.getElementById("addCustomerAvatarIcon");
+
 const addOpeningBalContainer =
   document.getElementById("addOpeningBalContainer");
 
@@ -65,7 +71,37 @@ if(addOpeningBalContainer){
   addOpeningBalContainer.style.display = "none";
 }
 
+if(addCustomerPhone){
+  addCustomerPhone.addEventListener("focus", ()=>{
+    addCustomerPhoneBox?.classList.add("active");
+  });
+
+  addCustomerPhone.addEventListener("blur", ()=>{
+    addCustomerPhoneBox?.classList.remove("active");
+
+    if(addCustomerPhone.value.trim()){
+      addCustomerPhoneBox?.classList.add("has-value");
+    }else{
+      addCustomerPhoneBox?.classList.remove("has-value");
+    }
+  });
+}
+
 if(addCustomerName){
+  addCustomerName.addEventListener("focus", ()=>{
+    addCustomerNameBox?.classList.add("active");
+  });
+
+  addCustomerName.addEventListener("blur", ()=>{
+    addCustomerNameBox?.classList.remove("active");
+
+    if(addCustomerName.value.trim()){
+      addCustomerNameBox?.classList.add("has-value");
+    }else{
+      addCustomerNameBox?.classList.remove("has-value");
+    }
+  });
+
   addCustomerName.addEventListener("input", updateAddCustomerValidation);
 }
 
@@ -724,7 +760,7 @@ function updateAddCustomerValidation(){
   if(name.length >= 3 && name.length <= 35){
     addSaveCustomerBtn.classList.add("active");
 
-    if(warning) warning.style.display = "block";
+    if(warning) warning.style.display = "none";
     if(error) error.style.display = "none";
 
     if(openingBox) openingBox.style.display = "flex";
@@ -782,6 +818,36 @@ if (addSaveCustomerBtn) {
     await addCustomer(newCust);
     await loadDashboard();
 
+    switchScreen(homeScreen);
+  };
+}
+
+if(backFromCustomerAdd){
+  backFromCustomerAdd.onclick = async ()=>{
+    addCustomerName.value = "";
+    addCustomerPhone.value = "";
+    addCustomerOpening.value = "";
+
+    addCustomerState.avatarImage = "";
+
+    addCustomerNameBox?.classList.remove("active","has-value");
+    addCustomerPhoneBox?.classList.remove("active","has-value");
+
+    if(addCustomerAvatarPreview){
+      addCustomerAvatarPreview.src = "";
+      addCustomerAvatarPreview.style.display = "none";
+    }
+
+    if(addCustomerAvatarIcon){
+      addCustomerAvatarIcon.style.display = "block";
+    }
+
+    document.getElementById("addCustomerNameWarning").style.display = "none";
+    document.getElementById("addCustomerNameError").style.display = "none";
+
+    addSaveCustomerBtn?.classList.remove("active");
+
+    await loadDashboard();
     switchScreen(homeScreen);
   };
 }
