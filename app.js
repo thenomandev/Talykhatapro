@@ -50,15 +50,52 @@ const saveTxnBtn = document.getElementById("saveTxnBtn");
 function updateSaveBtnState(){
   if(!saveTxnBtn) return;
 
-  const hasAmount =
-    (parseFloat(txnGive.value) || 0) > 0 ||
-    (parseFloat(txnReceive.value) || 0) > 0;
+  const giveVal = (parseFloat(txnGive?.value) || 0);
+  const receiveVal = (parseFloat(txnReceive?.value) || 0);
+
+  const hasAmount = giveVal > 0 || receiveVal > 0;
 
   if(hasAmount){
     saveTxnBtn.classList.add("active");
   }else{
     saveTxnBtn.classList.remove("active");
   }
+}
+
+function setupLedgerFloatingUI(){
+  const fields = [
+    { input: txnGive, box: document.getElementById("txnGiveBox") },
+    { input: txnReceive, box: document.getElementById("txnReceiveBox") },
+    { input: txnNote, box: document.getElementById("txnNoteBox") }
+  ];
+
+  fields.forEach(({input, box})=>{
+    if(!input || !box) return;
+
+    input.addEventListener("focus", ()=>{
+      box.classList.add("active");
+    });
+
+    input.addEventListener("blur", ()=>{
+      box.classList.remove("active");
+
+      if(input.value.trim()){
+        box.classList.add("has-value");
+      }else{
+        box.classList.remove("has-value");
+      }
+    });
+
+    input.addEventListener("input", ()=>{
+      if(input.value.trim()){
+        box.classList.add("has-value");
+      }else{
+        box.classList.remove("has-value");
+      }
+
+      updateSaveBtnState();
+    });
+  });
 }
 
 const moneyInputs = document.querySelectorAll(".money-input");
@@ -79,6 +116,8 @@ window.addEventListener("DOMContentLoaded", async () => {
   await loadDashboard();
   updateTxnDateButton();
   initPremiumCustomerUI();
+  setupLedgerFloatingUI();
+  setupLedgerKeyboardLift();
   history.replaceState({screen:"home"}, "");
   history.pushState({screen:"ready"}, "");
 });
@@ -495,7 +534,19 @@ await updateCustomer(currentCustomer);
     txnGive.value = "";
     txnReceive.value = "";
     txnNote.value = "";
-updateSaveBtnState();
+
+    document.getElementById("txnGiveBox")?.classList.remove("active","has-value");
+    document.getElementById("txnReceiveBox")?.classList.remove("active","has-value");
+    document.getElementById("txnNoteBox")?.classList.remove("active","has-value");
+
+    const ledgerFooter = document.querySelector(".ledger-save-footer");
+
+    if(ledgerFooter){
+      ledgerFooter.style.transform = "translateX(-50%)";
+    }
+
+    updateSaveBtnState();
+
     selectedTxnDate = new Date();
     updateTxnDateButton();
 
@@ -626,13 +677,7 @@ if (searchInput) {
 
 function updateTxnDateButton() {
   if (txnDateBtn) {
-    txnDateBtn.innerHTML = `
-      <img src="assets/svg/calendar.svg" class="calendar-icon" alt="Calendar">
-      ${selectedTxnDate.toLocaleDateString("bn-BD", {
-        day:"numeric",
-        month:"short"
-      })}
-    `;
+    txnDateBtn.textContent = "📅 " + selectedTxnDate.toLocaleDateString("bn-BD", { day: "numeric", month: "short" });
   }
 }
 
@@ -675,6 +720,11 @@ function isTextInput(el){
 function hideCalculator(){
   inlineCalculator.classList.remove("show");
   activeMoneyInput = null;
+
+  const footer = document.querySelector(".ledger-save-footer");
+  if(footer){
+    footer.style.transform = "translateX(-50%)";
+  }
 }
 
 function hideKeyboard(){
@@ -820,35 +870,19 @@ document.addEventListener("focusin",(e)=>{
 
 if (window.visualViewport) {
   window.visualViewport.addEventListener("resize", () => {
-    const customerFooter = document.getElementById("customerSaveFooter");
-    const ledgerFooter = document.getElementById("ledgerSaveFooter");
-
+    const footer = document.getElementById("customerSaveFooter");
     const formScreen = document.getElementById("customerFormScreen");
-    const ledgerScreen = document.getElementById("ledgerScreen");
+
+    if (!footer || !formScreen.classList.contains("active")) return;
 
     const vh = window.visualViewport.height;
     const full = window.innerHeight;
 
-    const keyboardOpen = vh < full * 0.85;
-    const offset =
-      (full - window.visualViewport.offsetTop - vh) + "px";
-
-    if (
-      customerFooter &&
-      formScreen &&
-      formScreen.classList.contains("active")
-    ) {
-      customerFooter.style.bottom =
-        keyboardOpen ? offset : "0px";
-    }
-
-    if (
-      ledgerFooter &&
-      ledgerScreen &&
-      ledgerScreen.classList.contains("active")
-    ) {
-      ledgerFooter.style.bottom =
-        keyboardOpen ? offset : "0px";
+    if (vh < full * 0.85) {
+      footer.style.bottom =
+        (full - window.visualViewport.offsetTop - vh) + "px";
+    } else {
+      footer.style.bottom = "0px";
     }
   });
 }
@@ -912,3 +946,69 @@ document.getElementById("confirmEditBtn").onclick = async ()=>{
     await openLedger(updated || currentCustomer);
   }, 2100);
 };
+
+function setupLedgerKeyboardLift(){
+  const footer = document.querySelector(".ledger-save-footer");
+  if(!footer) return;
+
+  function resetFooter(){
+    footer.style.transform = "translateX(-50%)";
+  }
+
+  function raiseFooterForCalculator(){
+    setTimeout(() => {
+      const calc = document.getElementById("inlineCalculator");
+      const calcHeight = calc && calc.offsetHeight > 0 ? calc.offsetHeight : 280;
+      footer.style.transform = `translateX(-50%) translateY(-${calcHeight}px)`;
+    }, 50);
+  }
+
+  function updateKeyboardFooter(){
+    if(!window.visualViewport){
+      resetFooter();
+      return;
+    }
+
+    const keyboardHeight =
+      window.innerHeight - window.visualViewport.height;
+
+    if(document.activeElement === txnNote && keyboardHeight > 120){
+      footer.style.transform =
+        `translateX(-50%) translateY(-${keyboardHeight}px)`;
+    }else{
+      resetFooter();
+    }
+  }
+
+  if(txnGive){
+    txnGive.addEventListener("focus", raiseFooterForCalculator);
+  }
+
+  if(txnReceive){
+    txnReceive.addEventListener("focus", raiseFooterForCalculator);
+  }
+
+  if(txnNote){
+    txnNote.addEventListener("focus", updateKeyboardFooter);
+
+    txnNote.addEventListener("blur", ()=>{
+      setTimeout(resetFooter,150);
+    });
+  }
+
+  if(window.visualViewport){
+    window.visualViewport.addEventListener(
+      "resize",
+      updateKeyboardFooter
+    );
+  }
+
+  document.addEventListener("click",(e)=>{
+    if(
+      !e.target.closest(".transaction-form") &&
+      !e.target.closest(".inline-calculator")
+    ){
+      resetFooter();
+    }
+  });
+}
