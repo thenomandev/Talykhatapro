@@ -166,6 +166,7 @@ customerDateText.textContent = new Date().toLocaleDateString("bn-BD", {
 });
 }
 
+  if(customerBtn && supplierBtn){
   customerBtn.onclick = ()=>{
     customerPremiumState.userType = "customer";
     customerBtn.classList.add("active");
@@ -177,6 +178,7 @@ customerDateText.textContent = new Date().toLocaleDateString("bn-BD", {
     supplierBtn.classList.add("active");
     customerBtn.classList.remove("active");
   };
+}
 
   function openPicker(){
     avatarPickerBackdrop.classList.add("show");
@@ -277,7 +279,10 @@ if(deleteAvatarBtn){
     }
   };
 
-  document.getElementById("importContactBtn").onclick = async ()=>{
+  const importBtn = document.getElementById("importContactBtn");
+
+if(importBtn){
+  importBtn.onclick = async ()=>{
     try{
       if("contacts" in navigator && "ContactsManager" in window){
         const contacts = await navigator.contacts.select(
