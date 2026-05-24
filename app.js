@@ -820,19 +820,35 @@ document.addEventListener("focusin",(e)=>{
 
 if (window.visualViewport) {
   window.visualViewport.addEventListener("resize", () => {
-    const footer = document.getElementById("customerSaveFooter");
-    const formScreen = document.getElementById("customerFormScreen");
+    const customerFooter = document.getElementById("customerSaveFooter");
+    const ledgerFooter = document.getElementById("ledgerSaveFooter");
 
-    if (!footer || !formScreen.classList.contains("active")) return;
+    const formScreen = document.getElementById("customerFormScreen");
+    const ledgerScreen = document.getElementById("ledgerScreen");
 
     const vh = window.visualViewport.height;
     const full = window.innerHeight;
 
-    if (vh < full * 0.85) {
-      footer.style.bottom =
-        (full - window.visualViewport.offsetTop - vh) + "px";
-    } else {
-      footer.style.bottom = "0px";
+    const keyboardOpen = vh < full * 0.85;
+    const offset =
+      (full - window.visualViewport.offsetTop - vh) + "px";
+
+    if (
+      customerFooter &&
+      formScreen &&
+      formScreen.classList.contains("active")
+    ) {
+      customerFooter.style.bottom =
+        keyboardOpen ? offset : "0px";
+    }
+
+    if (
+      ledgerFooter &&
+      ledgerScreen &&
+      ledgerScreen.classList.contains("active")
+    ) {
+      ledgerFooter.style.bottom =
+        keyboardOpen ? offset : "0px";
     }
   });
 }
