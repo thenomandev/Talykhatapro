@@ -261,19 +261,27 @@ function startLiveTimer(cust, txns) {
 
     if (!liveTimeCounter) return;
 
-    if (diffMins < 1) {
-      liveTimeCounter.textContent = "(এইমাত্র)";
-    } else if (diffMins < 60) {
-      liveTimeCounter.textContent = `(${formatBanglaNumber(diffMins)} মিনিট আগে)`;
-    } else if (diffHours < 24) {
-      liveTimeCounter.textContent = `(${formatBanglaNumber(diffHours)} ঘণ্টা আগে)`;
-    } else {
-      liveTimeCounter.textContent = `(${formatBanglaNumber(diffDays)} দিন আগে)`;
-    }
+    const diffSecs = Math.floor(diffMs / 1000);
+
+if (diffSecs < 5) {
+  liveTimeCounter.textContent = "(এইমাত্র)";
+} else if (diffSecs < 60) {
+  liveTimeCounter.textContent =
+    `(${formatBanglaNumber(diffSecs)} সেকেন্ড আগে)`;
+} else if (diffMins < 60) {
+  liveTimeCounter.textContent =
+    `(${formatBanglaNumber(diffMins)} মিনিট আগে)`;
+} else if (diffHours < 24) {
+  liveTimeCounter.textContent =
+    `(${formatBanglaNumber(diffHours)} ঘণ্টা আগে)`;
+} else {
+  liveTimeCounter.textContent =
+    `(${formatBanglaNumber(diffDays)} দিন আগে)`;
+}
   }
   
   updateTime();
-  liveInterval = setInterval(updateTime, 30000); 
+  liveInterval = setInterval(updateTime, 1000); 
 }
 
 /* LEDGER DETAILS VIEW */
@@ -434,6 +442,7 @@ if (closeReportBtn) {
 if (optEdit) {
   optEdit.onclick = () => {
     editState.isEditMode = true;
+window.__editModeActive = true;
 
 editState.draft = {
   id: currentCustomer.id,
@@ -663,7 +672,7 @@ saveCustomerBtn.textContent = "নিশ্চিত";
 editState.isEditMode = false;
 editState.draft = null;
 window.onAvatarChanged = null;
-window.onAvatarChanged = null;
+window.__editModeActive = false;
 
   if(window.resetCustomerFormUI){
     resetCustomerFormUI();
@@ -796,6 +805,11 @@ async function handleUniversalBack(){
     await loadDashboard();
     switchScreen(homeScreen);
   }else{
+    editState.isEditMode = false;
+    editState.draft = null;
+    window.onAvatarChanged = null;
+    window.__editModeActive = false;
+
     switchScreen(ledgerScreen);
   }
   return true;
@@ -961,6 +975,7 @@ document.getElementById("confirmEditBtn").onclick = async ()=>{
 editState.isEditMode = false;
 editState.draft = null;
 window.onAvatarChanged = null;
+window.__editModeActive = false;
 
   document.getElementById("editConfirmScreen").classList.remove("show");
 

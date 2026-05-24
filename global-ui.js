@@ -91,6 +91,13 @@ if(customerAttachBtn) customerAttachBtn.style.display = "none";
   
 
   function updateSaveButton(){
+if(window.__editModeActive){
+  return;
+}
+  if(window.__editModeActive){
+    return;
+  }
+
   const name = nameInput.value.trim();
 
   const warning = document.getElementById("customerNameWarning");
