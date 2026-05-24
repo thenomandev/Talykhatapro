@@ -1249,19 +1249,14 @@ document.getElementById("backFromEditConfirm").onclick = ()=>{
 document.getElementById("confirmEditBtn").onclick = async ()=>{
   if(!currentCustomer || !editState.draft) return;
 
-  currentCustomer.name = editState.draft.name;
-  currentCustomer.phone = editState.draft.phone;
-  currentCustomer.avatarImage = editState.draft.avatarImage || "";
-  currentCustomer.userType = editState.draft.userType || "customer";
+  const savedDraft = {...editState.draft};
+
+  currentCustomer.name = savedDraft.name;
+  currentCustomer.phone = savedDraft.phone;
+  currentCustomer.avatarImage = savedDraft.avatarImage || "";
+  currentCustomer.userType = savedDraft.userType || "customer";
 
   await updateCustomer(currentCustomer);
-
-  editState.isEditMode = false;
-  editState.draft = null;
-  window.onAvatarChanged = null;
-  window.__editModeActive = false;
-
-  document.getElementById("editConfirmScreen").classList.remove("show");
 
   showCustomerSuccess(
     currentCustomer.userType === "supplier"
@@ -1271,11 +1266,17 @@ document.getElementById("confirmEditBtn").onclick = async ()=>{
 
   await loadDashboard();
 
-  setTimeout(async ()=>{
-  document.getElementById("editConfirmScreen").classList.remove("show");
-  currentCustomer = null;
-  switchScreen(homeScreen);
-}, 2100);
+  setTimeout(()=>{
+    document.getElementById("editConfirmScreen").classList.remove("show");
+
+    editState.isEditMode = false;
+    editState.draft = null;
+    window.onAvatarChanged = null;
+    window.__editModeActive = false;
+
+    currentCustomer = null;
+    switchScreen(homeScreen);
+  }, 2100);
 };
 
 function setupLedgerKeyboardLift(){
