@@ -194,15 +194,6 @@
   color:#111827;
 }
 
-.ledger-note-box .premium-input-icon i {
-  font-size:20px;
-  color:#9ca3af;
-}
-
-.ledger-note-box.active .premium-input-icon i {
-  color:#111827;
-}
-
 .txn-action-row {
   display:flex;
   justify-content:space-between;
@@ -220,6 +211,25 @@
   display:flex;
   align-items:center;
   gap:8px;
+}
+
+.date-pill .calendar-icon,
+.photo-pill .attach-camera-icon {
+  width:26px !important;
+  height:26px !important;
+  display:block;
+  flex-shrink:0;
+}
+
+.ledger-note-box .note-icon-svg {
+  width:24px;
+  height:24px;
+  display:block;
+  flex-shrink:0;
+}
+
+.ledger-note-box.active .note-icon-svg {
+  filter:brightness(0);
 }
 
 .footer-container {
