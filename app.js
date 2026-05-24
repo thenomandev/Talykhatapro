@@ -2,6 +2,7 @@ let customers = [];
 let currentCustomer = null;
 let selectedTxnDate = new Date();
 let liveInterval = null;
+let homeLiveInterval = null;
 const editState = {
   isEditMode: false,
   draft: null
@@ -151,6 +152,16 @@ async function loadDashboard() {
   
   renderCustomerList(customers);
   updateSummary();
+
+if(homeLiveInterval){
+  clearInterval(homeLiveInterval);
+}
+
+homeLiveInterval = setInterval(()=>{
+  if(homeScreen.classList.contains("active")){
+    renderCustomerList(customers);
+  }
+}, 1000);
 }
 
 /* RENDER HOME CUSTOMER LIST */
@@ -196,15 +207,19 @@ const amountClass =
     const hours = Math.floor(mins / 60);
     const days = Math.floor(hours / 24);
 
-    if (mins < 1) {
-      timeText = "এইমাত্র";
-    } else if (mins < 60) {
-      timeText = `${formatBanglaNumber(mins)} মিনিট`;
-    } else if (hours < 24) {
-      timeText = `${formatBanglaNumber(hours)} ঘণ্টা`;
-    } else {
-      timeText = `${formatBanglaNumber(days)} দিন`;
-    }
+    const secs = Math.floor(diffMs / 1000);
+
+if (secs < 5) {
+  timeText = "এইমাত্র";
+} else if (secs < 60) {
+  timeText = `${formatBanglaNumber(secs)} সেকেন্ড`;
+} else if (mins < 60) {
+  timeText = `${formatBanglaNumber(mins)} মিনিট`;
+} else if (hours < 24) {
+  timeText = `${formatBanglaNumber(hours)} ঘণ্টা`;
+} else {
+  timeText = `${formatBanglaNumber(days)} দিন`;
+}
 
     div.innerHTML = `
       <div class="cust-left">
@@ -250,9 +265,11 @@ function startLiveTimer(cust, txns) {
   
   function updateTime() {
     let referenceTime = cust.createdAt || Date.now();
-    if (txns && txns.length > 0) {
-      referenceTime = txns[0].createdAt; 
-    }
+    if (cust.lastActivityAt) {
+  referenceTime = cust.lastActivityAt;
+} else if (txns && txns.length > 0) {
+  referenceTime = txns[0].createdAt;
+}
     
     const diffMs = Date.now() - referenceTime;
     const diffMins = Math.floor(diffMs / 60000);
@@ -771,6 +788,16 @@ function hideKeyboard(){
 function closeTransientUI(){
   hideCalculator();
   hideKeyboard();
+
+  if(txnGive) txnGive.value = "";
+  if(txnReceive) txnReceive.value = "";
+  if(txnNote) txnNote.value = "";
+
+  document.getElementById("txnGiveBox")?.classList.remove("active","has-value");
+  document.getElementById("txnReceiveBox")?.classList.remove("active","has-value");
+  document.getElementById("txnNoteBox")?.classList.remove("active","has-value");
+
+  updateSaveBtnState();
 }
 
 function hasTransientUIOpen(){
@@ -960,6 +987,11 @@ function showEditConfirmScreen(){
 
 document.getElementById("backFromEditConfirm").onclick = ()=>{
   document.getElementById("editConfirmScreen").classList.remove("show");
+
+  editState.isEditMode = false;
+  editState.draft = null;
+  window.onAvatarChanged = null;
+  window.__editModeActive = false;
 };
 
 document.getElementById("confirmEditBtn").onclick = async ()=>{

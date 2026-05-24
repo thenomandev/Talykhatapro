@@ -91,14 +91,18 @@ if(customerAttachBtn) customerAttachBtn.style.display = "none";
   
 
   function updateSaveButton(){
-if(window.__editModeActive){
-  return;
-}
+  const name = nameInput.value.trim();
+
   if(window.__editModeActive){
+    const changed =
+      typeof window.onAvatarChanged === "function";
+
+    if(changed){
+      window.onAvatarChanged();
+    }
+
     return;
   }
-
-  const name = nameInput.value.trim();
 
   const warning = document.getElementById("customerNameWarning");
   const error = document.getElementById("customerNameError");
