@@ -1239,7 +1239,6 @@ function showEditConfirmScreen(){
 }
 
 document.getElementById("backFromEditConfirm").onclick = ()=>{
-  document.getElementById("editConfirmScreen").classList.remove("show");
 
   editState.isEditMode = false;
   editState.draft = null;
@@ -1273,9 +1272,10 @@ document.getElementById("confirmEditBtn").onclick = async ()=>{
   await loadDashboard();
 
   setTimeout(async ()=>{
-    currentCustomer = null;
-    switchScreen(homeScreen);
-  }, 2100);
+  document.getElementById("editConfirmScreen").classList.remove("show");
+  currentCustomer = null;
+  switchScreen(homeScreen);
+}, 2100);
 };
 
 function setupLedgerKeyboardLift(){
