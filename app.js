@@ -1239,11 +1239,7 @@ function showEditConfirmScreen(){
 }
 
 document.getElementById("backFromEditConfirm").onclick = ()=>{
-
-  editState.isEditMode = false;
-  editState.draft = null;
-  window.onAvatarChanged = null;
-  window.__editModeActive = false;
+  document.getElementById("editConfirmScreen").classList.remove("show");
 };
 
 document.getElementById("confirmEditBtn").onclick = async ()=>{
@@ -1257,6 +1253,9 @@ document.getElementById("confirmEditBtn").onclick = async ()=>{
   currentCustomer.userType = savedDraft.userType || "customer";
 
   await updateCustomer(currentCustomer);
+  await loadDashboard();
+
+  document.getElementById("editConfirmScreen").classList.remove("show");
 
   showCustomerSuccess(
     currentCustomer.userType === "supplier"
@@ -1264,11 +1263,7 @@ document.getElementById("confirmEditBtn").onclick = async ()=>{
       : "কাস্টমারের তথ্য আপডেট করা হয়েছে।"
   );
 
-  await loadDashboard();
-
   setTimeout(()=>{
-    document.getElementById("editConfirmScreen").classList.remove("show");
-
     editState.isEditMode = false;
     editState.draft = null;
     window.onAvatarChanged = null;
