@@ -1257,10 +1257,10 @@ document.getElementById("confirmEditBtn").onclick = async ()=>{
 
   await updateCustomer(currentCustomer);
 
-editState.isEditMode = false;
-editState.draft = null;
-window.onAvatarChanged = null;
-window.__editModeActive = false;
+  editState.isEditMode = false;
+  editState.draft = null;
+  window.onAvatarChanged = null;
+  window.__editModeActive = false;
 
   document.getElementById("editConfirmScreen").classList.remove("show");
 
@@ -1272,10 +1272,9 @@ window.__editModeActive = false;
 
   await loadDashboard();
 
-  const updated = customers.find(c => c.id === currentCustomer.id);
-
   setTimeout(async ()=>{
-    await openLedger(updated || currentCustomer);
+    currentCustomer = null;
+    switchScreen(homeScreen);
   }, 2100);
 };
 
