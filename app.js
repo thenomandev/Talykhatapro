@@ -633,7 +633,9 @@ window.onAvatarChanged = updateEditValidation;
 
 customerName.oninput = window.onAvatarChanged;
 customerPhone.oninput = window.onAvatarChanged;
-    customerOpening.value = currentCustomer.openingBalance || "";
+    if(customerOpening){
+  customerOpening.value = currentCustomer.openingBalance || "";
+}
 
     document.getElementById("customerNameBox").classList.add("has-value");
     document.getElementById("customerPhoneBox").classList.add("has-value");
