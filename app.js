@@ -8,6 +8,11 @@ const editState = {
   draft: null
 };
 
+const addCustomerState = {
+  userType: "customer",
+  avatarImage: ""
+};
+
 function getCustomerUIState(){
   if(typeof createCustomerUIState !== "function"){
     return {
@@ -28,6 +33,7 @@ function getCustomerUIState(){
 /* ELEMENTS */
 const homeScreen = document.getElementById("homeScreen");
 const customerFormScreen = document.getElementById("customerFormScreen");
+const customerAddScreen = document.getElementById("customerAddScreen");
 const ledgerScreen = document.getElementById("ledgerScreen");
 
 const customerList = document.getElementById("customerList");
@@ -46,6 +52,22 @@ const customerPhone = document.getElementById("customerPhone");
 const customerOpening = document.getElementById("customerOpening");
 const openingBalContainer = document.getElementById("openingBalContainer");
 const customerDatePicker = document.getElementById("customerDatePicker");
+
+const addCustomerName = document.getElementById("addCustomerName");
+const addCustomerPhone = document.getElementById("addCustomerPhone");
+const addCustomerOpening = document.getElementById("addCustomerOpening");
+const addSaveCustomerBtn = document.getElementById("addSaveCustomerBtn");
+
+const addOpeningBalContainer =
+  document.getElementById("addOpeningBalContainer");
+
+if(addOpeningBalContainer){
+  addOpeningBalContainer.style.display = "none";
+}
+
+if(addCustomerName){
+  addCustomerName.addEventListener("input", updateAddCustomerValidation);
+}
 
 const backToHome = document.getElementById("backToHome");
 const ledgerAvatar = document.getElementById("ledgerAvatar");
@@ -135,7 +157,7 @@ const reportTotalGot = document.getElementById("reportTotalGot");
 window.addEventListener("DOMContentLoaded", async () => {
   await loadDashboard();
   updateTxnDateButton();
-  initPremiumCustomerUI();
+  // initPremiumCustomerUI();
   setupLedgerFloatingUI();
   setupLedgerKeyboardLift();
   history.replaceState({screen:"home"}, "");
@@ -691,22 +713,84 @@ setTimeout(async ()=>{
   };
 }
 
+function updateAddCustomerValidation(){
+  if(!addCustomerName || !addSaveCustomerBtn) return;
+
+  const name = addCustomerName.value.trim();
+  const warning = document.getElementById("addCustomerNameWarning");
+  const error = document.getElementById("addCustomerNameError");
+  const openingBox = document.getElementById("addOpeningBalContainer");
+
+  if(name.length >= 3 && name.length <= 35){
+    addSaveCustomerBtn.classList.add("active");
+
+    if(warning) warning.style.display = "block";
+    if(error) error.style.display = "none";
+
+    if(openingBox) openingBox.style.display = "flex";
+  }else{
+    addSaveCustomerBtn.classList.remove("active");
+
+    if(name.length > 0){
+      if(warning) warning.style.display = "block";
+      if(error) error.style.display = "block";
+    }else{
+      if(warning) warning.style.display = "none";
+      if(error) error.style.display = "none";
+    }
+
+    if(openingBox) openingBox.style.display = "none";
+  }
+}
+
+if (addSaveCustomerBtn) {
+  addSaveCustomerBtn.onclick = async (e) => {
+    if (e) e.preventDefault();
+
+    const name = addCustomerName.value.trim();
+    const phone = addCustomerPhone.value.trim();
+    const opening = parseFloat(addCustomerOpening.value) || 0;
+
+    if (name.length < 3 || name.length > 35) {
+      return;
+    }
+
+    const avatarColors = ["#c8e6c9", "#f3e5ab", "#d9e2f3", "#f6d6dc"];
+    const lastColor = customers.length
+      ? customers[customers.length - 1].avatarColor
+      : null;
+
+    const availableColors = avatarColors.filter(
+      color => color !== lastColor
+    );
+
+    const randomColor =
+      availableColors[
+        Math.floor(Math.random() * availableColors.length)
+      ];
+
+    const newCust = {
+      id: Date.now().toString(),
+      name,
+      phone,
+      openingBalance: opening,
+      createdAt: Date.now(),
+      avatarColor: randomColor,
+      userType: "customer"
+    };
+
+    await addCustomer(newCust);
+    await loadDashboard();
+
+    switchScreen(homeScreen);
+  };
+}
+
 if (openCustomerModal) {
   openCustomerModal.onclick = () => {
-  customerFormTitle.textContent = "নতুন কাস্টমার/সাপ্লায়ার";
-saveCustomerBtn.textContent = "নিশ্চিত";
-editState.isEditMode = false;
-editState.draft = null;
-window.onAvatarChanged = null;
-window.__editModeActive = false;
-
-  if(window.resetCustomerFormUI){
-    resetCustomerFormUI();
-  }
-
-  switchScreen(customerFormScreen);
-  history.pushState({screen:"form"}, "");
-};
+    switchScreen(customerAddScreen);
+    history.pushState({screen:"add"}, "");
+  };
 }
 
 /* NAVIGATION BACKS */
@@ -844,23 +928,14 @@ async function handleUniversalBack(){
     return true;
   }
 
-  if(customerFormScreen.classList.contains("active")){
+  if(customerAddScreen.classList.contains("active")){
   if(window.resetCustomerFormUI){
     resetCustomerFormUI();
   }
 
-  if(customerFormTitle.textContent === "নতুন কাস্টমার/সাপ্লায়ার"){
-    currentCustomer = null;
-    await loadDashboard();
-    switchScreen(homeScreen);
-  }else{
-    editState.isEditMode = false;
-    editState.draft = null;
-    window.onAvatarChanged = null;
-    window.__editModeActive = false;
-
-    switchScreen(ledgerScreen);
-  }
+  currentCustomer = null;
+await loadDashboard();
+switchScreen(homeScreen);
   return true;
 }
 
