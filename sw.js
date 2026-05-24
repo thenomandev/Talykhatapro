@@ -1,4 +1,4 @@
-const CACHE_NAME = "tallybook-v3"; // ভার্সন পরিবর্তন করা হলো ফোর্সবল আপডেটের জন্য
+const CACHE_NAME = "tallybook-v4"; // ভার্সন পরিবর্তন করা হলো ফোর্সবল আপডেটের জন্য
 
 const FILES = [
   "./",
@@ -21,6 +21,8 @@ const FILES = [
   "./assets/svg/input-user.svg",
   "./assets/svg/phone.svg",
   "./assets/svg/taka.svg",
+  "./assets/svg/note-icon.svg",
+  "./assets/svg/pen.svg",
   "./assets/svg/calendar.svg",
   "./assets/svg/attach-camera.svg",
   "./assets/svg/error-alert.svg",
