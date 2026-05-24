@@ -737,7 +737,9 @@ if (saveCustomerBtn) {
     
     const name = customerName.value.trim();
     const phone = customerPhone.value.trim();
-    const opening = parseFloat(customerOpening.value) || 0;
+    const opening = customerOpening
+  ? (parseFloat(customerOpening.value) || 0)
+  : 0;
 
     if (!name) {
       alert("অনুগ্রহ করে গ্রাহকের নাম লিখুন!");
