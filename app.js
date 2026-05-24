@@ -1014,9 +1014,17 @@ function hasTransientUIOpen(){
 async function handleUniversalBack(){
 
   if(hasTransientUIOpen()){
-    closeTransientUI();
+
+  if(inlineCalculator.classList.contains("show")){
+    hideCalculator();
     return true;
   }
+
+  if(isTextInput(document.activeElement)){
+    document.activeElement.blur();
+    return true;
+  }
+}
 
   if(customerAddScreen.classList.contains("active")){
     resetCustomerAddUI();
