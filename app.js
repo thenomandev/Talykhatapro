@@ -161,6 +161,37 @@ function updateSaveBtnState(){
   }
 }
 
+function setupEditFloatingUI(){
+  const fields = [
+    {
+      input: customerName,
+      box: document.getElementById("customerNameBox")
+    },
+    {
+      input: customerPhone,
+      box: document.getElementById("customerPhoneBox")
+    }
+  ];
+
+  fields.forEach(({input, box})=>{
+    if(!input || !box) return;
+
+    input.addEventListener("focus", ()=>{
+      box.classList.add("active");
+    });
+
+    input.addEventListener("blur", ()=>{
+      box.classList.remove("active");
+
+      if(input.value.trim()){
+        box.classList.add("has-value");
+      }else{
+        box.classList.remove("has-value");
+      }
+    });
+  });
+}
+
 function setupLedgerFloatingUI(){
   const fields = [
     { input: txnGive, box: document.getElementById("txnGiveBox") },
@@ -216,6 +247,7 @@ window.addEventListener("DOMContentLoaded", async () => {
   updateTxnDateButton();
   // initPremiumCustomerUI();
   setupLedgerFloatingUI();
+setupEditFloatingUI();
   setupLedgerKeyboardLift();
   history.replaceState({screen:"home"}, "");
   history.pushState({screen:"ready"}, "");
