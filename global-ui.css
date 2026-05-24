@@ -505,3 +505,9 @@
   flex-shrink:0;
 }
 
+.note-icon-svg{
+  width:24px;
+  height:24px;
+  display:block;
+  flex-shrink:0;
+}
