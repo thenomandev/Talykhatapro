@@ -224,10 +224,16 @@ if (secs < 5) {
     div.innerHTML = `
       <div class="cust-left">
         <div class="avatar" style="background:${cust.avatarColor || '#d9e2f3'};">
-          ${cust.name.trim().length >= 2
-  ? cust.name.trim().substring(0,2).toUpperCase()
-  : cust.name.trim().charAt(0).toUpperCase()}
-        </div>
+  ${
+    cust.avatarImage
+      ? `<img src="${cust.avatarImage}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">`
+      : (
+          cust.name.trim().length >= 2
+            ? cust.name.trim().substring(0,2).toUpperCase()
+            : cust.name.trim().charAt(0).toUpperCase()
+        )
+  }
+</div>
 
         <div>
           <div class="cust-name">${cust.name}</div>
@@ -401,7 +407,7 @@ if(customer.avatarImage){
       reportTxnList.appendChild(row);
     }
 
-    const reversedTxns = [...txns].reverse();
+    const reversedTxns = [...txns];
     reversedTxns.forEach(txn => {
       const row = document.createElement("div");
       row.className = "report-row";
@@ -618,6 +624,9 @@ if (saveCustomerBtn) {
     }
 
     if (editState.isEditMode && currentCustomer) {
+  if(name.length < 3 || name.length > 35){
+    return;
+  }
   editState.draft.name = name;
   editState.draft.phone = phone;
   editState.draft.avatarImage = getCustomerUIState().avatarImage || "";
@@ -752,6 +761,19 @@ if (txnDate) {
 }
 
 window.onpopstate = async function () {
+  const confirmScreen = document.getElementById("editConfirmScreen");
+
+  if(confirmScreen && confirmScreen.classList.contains("show")){
+    confirmScreen.classList.remove("show");
+
+    editState.isEditMode = false;
+    editState.draft = null;
+    window.onAvatarChanged = null;
+    window.__editModeActive = false;
+
+    return;
+  }
+
   const handled = await handleUniversalBack();
 
   if(handled){
