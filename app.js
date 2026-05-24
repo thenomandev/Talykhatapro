@@ -677,13 +677,7 @@ if (searchInput) {
 
 function updateTxnDateButton() {
   if (txnDateBtn) {
-    txnDateBtn.innerHTML = `
-      <img src="assets/svg/calendar.svg" class="calendar-icon" alt="Calendar">
-      ${selectedTxnDate.toLocaleDateString("bn-BD", {
-        day:"numeric",
-        month:"short"
-      })}
-    `;
+    txnDateBtn.textContent = "📅 " + selectedTxnDate.toLocaleDateString("bn-BD", { day: "numeric", month: "short" });
   }
 }
 
