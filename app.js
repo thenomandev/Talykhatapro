@@ -161,6 +161,24 @@ function updateSaveBtnState(){
   }
 }
 
+function updateEditValidation(){
+  if(!editState.isEditMode || !editState.draft) return;
+
+  const name = customerName.value.trim();
+  const phone = customerPhone.value.trim();
+
+  const changed =
+    name !== (editState.draft.name || "") ||
+    phone !== (editState.draft.phone || "") ||
+    (getCustomerUIState().avatarImage || "") !== (editState.draft.avatarImage || "");
+
+  if(changed && name.length >= 3 && name.length <= 35){
+    saveCustomerBtn.classList.add("active");
+  }else{
+    saveCustomerBtn.classList.remove("active");
+  }
+}
+
 function setupEditFloatingUI(){
   const fields = [
     {
@@ -598,20 +616,7 @@ saveCustomerBtn.classList.remove("active");
     customerName.value = currentCustomer.name || "";
     customerPhone.value = currentCustomer.phone || "";
 
-window.onAvatarChanged = () => {
-  if(!editState.isEditMode || !editState.draft) return;
-
-  const changed =
-    customerName.value.trim() !== (editState.draft.name || "") ||
-    customerPhone.value.trim() !== (editState.draft.phone || "") ||
-    (getCustomerUIState().avatarImage || "") !== (editState.draft.avatarImage || "");
-
-  if(changed){
-    saveCustomerBtn.classList.add("active");
-  }else{
-    saveCustomerBtn.classList.remove("active");
-  }
-};
+window.onAvatarChanged = updateEditValidation;
 
 customerName.oninput = window.onAvatarChanged;
 customerPhone.oninput = window.onAvatarChanged;
