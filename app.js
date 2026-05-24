@@ -44,6 +44,27 @@ const searchInput = document.getElementById("searchInput");
 
 const openCustomerModal = document.getElementById("openCustomerModal");
 const backFromCustomerForm = document.getElementById("backFromCustomerForm");
+
+if(backFromCustomerForm){
+  backFromCustomerForm.onclick = async ()=>{
+    editState.isEditMode = false;
+    editState.draft = null;
+    window.onAvatarChanged = null;
+    window.__editModeActive = false;
+
+    if(liveInterval) clearInterval(liveInterval);
+
+    const updated = customers.find(c => c.id === currentCustomer?.id);
+
+    if(updated || currentCustomer){
+      await openLedger(updated || currentCustomer);
+    }else{
+      await loadDashboard();
+      switchScreen(homeScreen);
+    }
+  };
+}
+
 const saveCustomerBtn = document.getElementById("saveCustomerBtn");
 
 const customerFormTitle = document.getElementById("customerFormTitle");
@@ -995,13 +1016,33 @@ async function handleUniversalBack(){
   }
 
   if(customerAddScreen.classList.contains("active")){
-  if(window.resetCustomerFormUI){
-    resetCustomerFormUI();
+  addCustomerName.value = "";
+  addCustomerPhone.value = "";
+  addCustomerOpening.value = "";
+
+  addCustomerState.avatarImage = "";
+
+  addCustomerNameBox?.classList.remove("active","has-value");
+  addCustomerPhoneBox?.classList.remove("active","has-value");
+
+  if(addCustomerAvatarPreview){
+    addCustomerAvatarPreview.src = "";
+    addCustomerAvatarPreview.style.display = "none";
   }
 
+  if(addCustomerAvatarIcon){
+    addCustomerAvatarIcon.style.display = "block";
+  }
+
+  document.getElementById("addCustomerNameWarning").style.display = "none";
+  document.getElementById("addCustomerNameError").style.display = "none";
+
+  addSaveCustomerBtn?.classList.remove("active");
+
   currentCustomer = null;
-await loadDashboard();
-switchScreen(homeScreen);
+  await loadDashboard();
+  switchScreen(homeScreen);
+
   return true;
 }
 
