@@ -1,11 +1,15 @@
-window.customerPremiumState = {
-  userType: "customer",
-  avatarImage: "",
-  attachedPhoto: "",
-  selectedDate: new Date()
-};
+function createCustomerUIState(){
+  return {
+    userType: "customer",
+    avatarImage: "",
+    attachedPhoto: "",
+    selectedDate: new Date()
+  };
+}
 
 function initPremiumCustomerUI(){
+  const customerPremiumState =
+  window.__customerUIState || (window.__customerUIState = createCustomerUIState());
 
   const nameInput = document.getElementById("customerName");
   const phoneInput = document.getElementById("customerPhone");
@@ -41,7 +45,7 @@ customerDateText.textContent = new Date().toLocaleDateString("bn-BD", {
   month:"short"
 });
 
-  function setupFloating(input, box){
+  function setupFloating( input, box ){
     if(!input || !box) return;
 
     input.addEventListener("focus", ()=>{
@@ -141,8 +145,9 @@ avatarPreview.style.display = "none";
 avatarIcon.style.display = "block";
 
   customerPremiumState.avatarImage = "";
-  customerPremiumState.attachedPhoto = "";
+customerPremiumState.attachedPhoto = "";
 customerPremiumState.selectedDate = new Date();
+customerPremiumState.userType = "customer";
 
 customerDateText.textContent = new Date().toLocaleDateString("bn-BD", {
   day:"numeric",
@@ -196,8 +201,8 @@ if(deleteAvatarBtn){
     avatarPreview.style.display = "none";
     avatarIcon.style.display = "block";
 
-    if(window.checkEditChanges){
-      window.checkEditChanges();
+    if(typeof window.onAvatarChanged === "function"){
+      window.onAvatarChanged();
     }
   };
 }
@@ -213,9 +218,9 @@ if(deleteAvatarBtn){
   avatarPreview.style.display = "block";
   avatarIcon.style.display = "none";
 
-  if(window.checkEditChanges){
-    window.checkEditChanges();
-  }
+  if(typeof window.onAvatarChanged === "function"){
+      window.onAvatarChanged();
+    }
 };
 
     reader.readAsDataURL(file);

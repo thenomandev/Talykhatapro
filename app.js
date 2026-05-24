@@ -2,8 +2,27 @@ let customers = [];
 let currentCustomer = null;
 let selectedTxnDate = new Date();
 let liveInterval = null;
-let isEditMode = false;
-let editDraft = null;
+const editState = {
+  isEditMode: false,
+  draft: null
+};
+
+function getCustomerUIState(){
+  if(typeof createCustomerUIState !== "function"){
+    return {
+      userType: "customer",
+      avatarImage: "",
+      attachedPhoto: "",
+      selectedDate: new Date()
+    };
+  }
+
+  if(!window.__customerUIState){
+    window.__customerUIState = createCustomerUIState();
+  }
+
+  return window.__customerUIState;
+}
 
 /* ELEMENTS */
 const homeScreen = document.getElementById("homeScreen");
@@ -414,9 +433,9 @@ if (closeReportBtn) {
 
 if (optEdit) {
   optEdit.onclick = () => {
-    isEditMode = true;
+    editState.isEditMode = true;
 
-editDraft = {
+editState.draft = {
   id: currentCustomer.id,
   userType: currentCustomer.userType || "customer",
   name: currentCustomer.name || "",
@@ -435,13 +454,13 @@ saveCustomerBtn.classList.remove("active");
     customerName.value = currentCustomer.name || "";
     customerPhone.value = currentCustomer.phone || "";
 
-window.checkEditChanges = () => {
-  if(!isEditMode || !editDraft) return;
+window.onAvatarChanged = () => {
+  if(!editState.isEditMode || !editState.draft) return;
 
   const changed =
-    customerName.value.trim() !== (editDraft.name || "") ||
-    customerPhone.value.trim() !== (editDraft.phone || "") ||
-    (customerPremiumState.avatarImage || "") !== (editDraft.avatarImage || "");
+    customerName.value.trim() !== (editState.draft.name || "") ||
+    customerPhone.value.trim() !== (editState.draft.phone || "") ||
+    (getCustomerUIState().avatarImage || "") !== (editState.draft.avatarImage || "");
 
   if(changed){
     saveCustomerBtn.classList.add("active");
@@ -450,17 +469,17 @@ window.checkEditChanges = () => {
   }
 };
 
-customerName.oninput = window.checkEditChanges;
-customerPhone.oninput = window.checkEditChanges;
+customerName.oninput = window.onAvatarChanged;
+customerPhone.oninput = window.onAvatarChanged;
     customerOpening.value = currentCustomer.openingBalance || "";
 
     document.getElementById("customerNameBox").classList.add("has-value");
     document.getElementById("customerPhoneBox").classList.add("has-value");
     document.getElementById("openingBalContainer").classList.add("has-value");
 
-    customerPremiumState.userType = currentCustomer.userType || "customer";
-    customerPremiumState.avatarImage = currentCustomer.avatarImage || "";
-    customerPremiumState.attachedPhoto = currentCustomer.attachedPhoto || "";
+    getCustomerUIState().userType = currentCustomer.userType || "customer";
+    getCustomerUIState().avatarImage = currentCustomer.avatarImage || "";
+    getCustomerUIState().attachedPhoto = currentCustomer.attachedPhoto || "";
 
     const avatarPreviewEl = document.getElementById("customerAvatarPreview");
 const avatarIconEl = document.getElementById("customerAvatarIcon");
@@ -478,12 +497,12 @@ if(currentCustomer.avatarImage){
 
     document.getElementById("customerTypeCustomer").classList.toggle(
       "active",
-      customerPremiumState.userType === "customer"
+      getCustomerUIState().userType === "customer"
     );
 
     document.getElementById("customerTypeSupplier").classList.toggle(
       "active",
-      customerPremiumState.userType === "supplier"
+      getCustomerUIState().userType === "supplier"
     );
 
     if (openingBalContainer) openingBalContainer.style.display = "none";
@@ -572,10 +591,10 @@ if (saveCustomerBtn) {
       return;
     }
 
-    if (isEditMode && currentCustomer) {
-  editDraft.name = name;
-  editDraft.phone = phone;
-  editDraft.avatarImage = customerPremiumState.avatarImage || "";
+    if (editState.isEditMode && currentCustomer) {
+  editState.draft.name = name;
+  editState.draft.phone = phone;
+  editState.draft.avatarImage = getCustomerUIState().avatarImage || "";
 
   showEditConfirmScreen();
   return;
@@ -603,11 +622,11 @@ const newCust = {
   createdAt: Date.now(),
   avatarColor: randomColor,
 
-  userType: customerPremiumState.userType || "customer",
-  avatarImage: customerPremiumState.avatarImage || "",
-  attachedPhoto: customerPremiumState.attachedPhoto || "",
-  selectedDate: customerPremiumState.selectedDate
-    ? customerPremiumState.selectedDate.getTime()
+  userType: getCustomerUIState().userType || "customer",
+  avatarImage: getCustomerUIState().avatarImage || "",
+  attachedPhoto: getCustomerUIState().attachedPhoto || "",
+  selectedDate: getCustomerUIState().selectedDate
+    ? getCustomerUIState().selectedDate.getTime()
     : Date.now()
 };
       
@@ -620,10 +639,10 @@ customerName.value = "";
 customerPhone.value = "";
 customerOpening.value = "";
 
-customerPremiumState.avatarImage = "";
-customerPremiumState.attachedPhoto = "";
-customerPremiumState.userType = "customer";
-customerPremiumState.selectedDate = new Date();
+getCustomerUIState().avatarImage = "";
+getCustomerUIState().attachedPhoto = "";
+getCustomerUIState().userType = "customer";
+getCustomerUIState().selectedDate = new Date();
 
 document.getElementById("customerAvatarPreview").style.display = "none";
 document.getElementById("customerAvatarIcon").style.display = "block";
@@ -641,7 +660,10 @@ if (openCustomerModal) {
   openCustomerModal.onclick = () => {
   customerFormTitle.textContent = "নতুন কাস্টমার/সাপ্লায়ার";
 saveCustomerBtn.textContent = "নিশ্চিত";
-isEditMode = false;
+editState.isEditMode = false;
+editState.draft = null;
+window.onAvatarChanged = null;
+window.onAvatarChanged = null;
 
   if(window.resetCustomerFormUI){
     resetCustomerFormUI();
@@ -902,15 +924,15 @@ function showEditConfirmScreen(){
   const phoneEl = document.getElementById("editConfirmPhone");
 
   title.textContent =
-  editDraft.userType === "supplier"
+  editState.draft.userType === "supplier"
       ? "সাপ্লায়ার এডিট"
       : "কাস্টমার এডিট";
 
-  nameEl.textContent = editDraft.name || "";
-  phoneEl.textContent = editDraft.phone || "";
+  nameEl.textContent = editState.draft.name || "";
+  phoneEl.textContent = editState.draft.phone || "";
 
-  if(editDraft.avatarImage){
-    avatar.src = editDraft.avatarImage;
+  if(editState.draft.avatarImage){
+    avatar.src = editState.draft.avatarImage;
     avatar.style.display = "block";
     defaultAvatar.style.display = "none";
   }else{
@@ -927,14 +949,18 @@ document.getElementById("backFromEditConfirm").onclick = ()=>{
 };
 
 document.getElementById("confirmEditBtn").onclick = async ()=>{
-  if(!currentCustomer || !editDraft) return;
+  if(!currentCustomer || !editState.draft) return;
 
-  currentCustomer.name = editDraft.name;
-  currentCustomer.phone = editDraft.phone;
-  currentCustomer.avatarImage = editDraft.avatarImage || "";
-  currentCustomer.userType = editDraft.userType || "customer";
+  currentCustomer.name = editState.draft.name;
+  currentCustomer.phone = editState.draft.phone;
+  currentCustomer.avatarImage = editState.draft.avatarImage || "";
+  currentCustomer.userType = editState.draft.userType || "customer";
 
   await updateCustomer(currentCustomer);
+
+editState.isEditMode = false;
+editState.draft = null;
+window.onAvatarChanged = null;
 
   document.getElementById("editConfirmScreen").classList.remove("show");
 
