@@ -388,6 +388,7 @@ if (diffSecs < 5) {
 
 /* LEDGER DETAILS VIEW */
 async function openLedger(customer) {
+closeTransientUI();
   currentCustomer = customer;
   switchScreen(ledgerScreen);
 history.pushState({screen:"ledger"}, "");
@@ -843,30 +844,40 @@ if (addSaveCustomerBtn) {
   };
 }
 
+function resetCustomerAddUI(){
+  addCustomerName.value = "";
+  addCustomerPhone.value = "";
+  addCustomerOpening.value = "";
+
+  addCustomerState.avatarImage = "";
+  addCustomerState.userType = "customer";
+
+  addCustomerNameBox?.classList.remove("active","has-value");
+  addCustomerPhoneBox?.classList.remove("active","has-value");
+
+  if(addOpeningBalContainer){
+    addOpeningBalContainer.style.display = "none";
+    addOpeningBalContainer.classList.remove("active","has-value");
+  }
+
+  if(addCustomerAvatarPreview){
+    addCustomerAvatarPreview.src = "";
+    addCustomerAvatarPreview.style.display = "none";
+  }
+
+  if(addCustomerAvatarIcon){
+    addCustomerAvatarIcon.style.display = "block";
+  }
+
+  document.getElementById("addCustomerNameWarning").style.display = "none";
+  document.getElementById("addCustomerNameError").style.display = "none";
+
+  addSaveCustomerBtn?.classList.remove("active");
+}
+
 if(backFromCustomerAdd){
   backFromCustomerAdd.onclick = async ()=>{
-    addCustomerName.value = "";
-    addCustomerPhone.value = "";
-    addCustomerOpening.value = "";
-
-    addCustomerState.avatarImage = "";
-
-    addCustomerNameBox?.classList.remove("active","has-value");
-    addCustomerPhoneBox?.classList.remove("active","has-value");
-
-    if(addCustomerAvatarPreview){
-      addCustomerAvatarPreview.src = "";
-      addCustomerAvatarPreview.style.display = "none";
-    }
-
-    if(addCustomerAvatarIcon){
-      addCustomerAvatarIcon.style.display = "block";
-    }
-
-    document.getElementById("addCustomerNameWarning").style.display = "none";
-    document.getElementById("addCustomerNameError").style.display = "none";
-
-    addSaveCustomerBtn?.classList.remove("active");
+    resetCustomerAddUI();
 
     await loadDashboard();
     switchScreen(homeScreen);
@@ -1004,6 +1015,24 @@ async function handleUniversalBack(){
   if(hasTransientUIOpen()){
     closeTransientUI();
 
+if(customerFormScreen.classList.contains("active")){
+  editState.isEditMode = false;
+  editState.draft = null;
+  window.onAvatarChanged = null;
+  window.__editModeActive = false;
+
+  const updated = customers.find(c => c.id === currentCustomer?.id);
+
+  if(updated || currentCustomer){
+    await openLedger(updated || currentCustomer);
+  }else{
+    await loadDashboard();
+    switchScreen(homeScreen);
+  }
+
+  return true;
+}
+
     if(ledgerScreen.classList.contains("active")){
       history.replaceState({screen:"ledger"}, "");
     }else if(customerFormScreen.classList.contains("active")){
@@ -1016,6 +1045,14 @@ async function handleUniversalBack(){
   }
 
   if(customerAddScreen.classList.contains("active")){
+  resetCustomerAddUI();
+
+  currentCustomer = null;
+  await loadDashboard();
+  switchScreen(homeScreen);
+
+  return true;
+}
   addCustomerName.value = "";
   addCustomerPhone.value = "";
   addCustomerOpening.value = "";
