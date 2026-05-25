@@ -10,16 +10,6 @@ async function loadDashboard() {
 
   renderCustomerList(customers);
   updateSummary();
-
-  if(homeLiveInterval){
-    clearInterval(homeLiveInterval);
-  }
-
-  homeLiveInterval = setInterval(()=>{
-    if(homeScreen.classList.contains("active")){
-      renderCustomerList(customers);
-    }
-  }, 1000);
 }
 
 function renderCustomerList(list) {
@@ -42,7 +32,7 @@ function renderCustomerList(list) {
     return;
   }
 
-  list.sort((a,b)=>
+  list.sort((a, b) =>
     ((b.lastActivityAt || b.createdAt || 0) -
      (a.lastActivityAt || a.createdAt || 0))
   );
@@ -63,16 +53,12 @@ function renderCustomerList(list) {
 
     const refTime = cust.lastActivityAt || cust.createdAt || Date.now();
     const diffMs = Date.now() - refTime;
-
-    const secs = Math.floor(diffMs / 1000);
     const mins = Math.floor(diffMs / 60000);
     const hours = Math.floor(mins / 60);
     const days = Math.floor(hours / 24);
 
-    if (secs < 5) {
+    if (mins < 1) {
       timeText = "এইমাত্র";
-    } else if (secs < 60) {
-      timeText = `${formatBanglaNumber(secs)} সেকেন্ড`;
     } else if (mins < 60) {
       timeText = `${formatBanglaNumber(mins)} মিনিট`;
     } else if (hours < 24) {
@@ -84,9 +70,15 @@ function renderCustomerList(list) {
     div.innerHTML = `
       <div class="cust-left">
         <div class="avatar" style="background:${cust.avatarColor || '#d9e2f3'};">
-          ${cust.name.trim().length >= 2
-            ? cust.name.trim().substring(0,2).toUpperCase()
-            : cust.name.trim().charAt(0).toUpperCase()}
+          ${
+            cust.avatarImage
+              ? `<img src="${cust.avatarImage}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">`
+              : (
+                  cust.name.trim().length >= 2
+                    ? cust.name.trim().substring(0,2).toUpperCase()
+                    : cust.name.trim().charAt(0).toUpperCase()
+                )
+          }
         </div>
 
         <div>
@@ -102,7 +94,6 @@ function renderCustomerList(list) {
     `;
 
     div.onclick = () => openLedger(cust);
-
     customerList.appendChild(div);
   });
 }
@@ -120,4 +111,14 @@ function updateSummary() {
 
   totalReceive.textContent = formatBanglaNumber(Math.round(rec));
   totalGive.textContent = formatBanglaNumber(Math.round(giv));
+}
+
+if (searchInput) {
+  searchInput.oninput = () => {
+    const q = searchInput.value.toLowerCase();
+    const filtered = customers.filter(c =>
+      c.name.toLowerCase().includes(q)
+    );
+    renderCustomerList(filtered);
+  };
 }
