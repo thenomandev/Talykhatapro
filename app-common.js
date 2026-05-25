@@ -236,3 +236,48 @@ function setupLedgerKeyboardLift(){
     }
   });
 }
+
+
+async function handleUniversalBack(){
+  if(hasTransientUIOpen()){
+    closeTransientUI();
+
+    if(ledgerScreen.classList.contains("active")){
+      history.replaceState({screen:"ledger"}, "");
+    }else if(customerFormScreen.classList.contains("active")){
+      history.replaceState({screen:"form"}, "");
+    }else{
+      history.replaceState({screen:"home"}, "");
+    }
+
+    return true;
+  }
+
+  if(customerFormScreen.classList.contains("active")){
+    if(window.resetCustomerFormUI){
+      resetCustomerFormUI();
+    }
+
+    if(customerFormTitle.textContent === "???? ????????/?????????"){
+      currentCustomer = null;
+      await loadDashboard();
+      switchScreen(homeScreen);
+    }else{
+      switchScreen(ledgerScreen);
+    }
+
+    return true;
+  }
+
+  if(ledgerScreen.classList.contains("active")){
+    if(liveInterval) clearInterval(liveInterval);
+
+    await loadDashboard();
+    switchScreen(homeScreen);
+
+    return true;
+  }
+
+  return false;
+}
+
