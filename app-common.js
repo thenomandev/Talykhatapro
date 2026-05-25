@@ -272,10 +272,17 @@ async function handleUniversalBack(){
   if(ledgerScreen.classList.contains("active")){
     if(liveInterval) clearInterval(liveInterval);
 
-    await loadDashboard();
-    switchScreen(homeScreen);
+    txnGive.value = "";
+txnReceive.value = "";
+txnNote.value = "";
 
-    return true;
+updateSaveBtnState();
+hideCalculator();
+
+await loadDashboard();
+switchScreen(homeScreen);
+
+return true;
   }
 
   return false;
