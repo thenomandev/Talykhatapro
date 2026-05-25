@@ -1,71 +1,13 @@
-let customers = [];
+
 let currentCustomer = null;
+let currentTransactions = [];
+let customers = [];
 let selectedTxnDate = new Date();
 let liveInterval = null;
-let homeLiveInterval = null;
-const editState = {
-  isEditMode: false,
-  draft: null
-};
-
-const addCustomerState = {
-  userType: "customer",
-  avatarImage: ""
-};
-
-function getCustomerUIState(){
-  if(typeof createCustomerUIState !== "function"){
-    return {
-      userType: "customer",
-      avatarImage: "",
-      attachedPhoto: "",
-      selectedDate: new Date()
-    };
-  }
-
-  if(!window.__customerUIState){
-    window.__customerUIState = createCustomerUIState();
-  }
-
-  return window.__customerUIState;
-}
+let isEditMode = false;
+let editDraft = null;
 
 /* ELEMENTS */
-const homeScreen = document.getElementById("homeScreen");
-const customerFormScreen = document.getElementById("customerFormScreen");
-const customerAddScreen = document.getElementById("customerAddScreen");
-const ledgerScreen = document.getElementById("ledgerScreen");
-
-const customerList = document.getElementById("customerList");
-const customerCount = document.getElementById("customerCount");
-const totalReceive = document.getElementById("totalReceive");
-const totalGive = document.getElementById("totalGive");
-const searchInput = document.getElementById("searchInput");
-
-const openCustomerModal = document.getElementById("openCustomerModal");
-const backFromCustomerForm = document.getElementById("backFromCustomerForm");
-
-if(backFromCustomerForm){
-  backFromCustomerForm.onclick = async ()=>{
-    editState.isEditMode = false;
-    editState.draft = null;
-    window.onAvatarChanged = null;
-    window.__editModeActive = false;
-
-    if(liveInterval) clearInterval(liveInterval);
-
-    const updated = customers.find(c => c.id === currentCustomer?.id);
-
-    if(updated || currentCustomer){
-      await openLedger(updated || currentCustomer);
-    }else{
-      await loadDashboard();
-      switchScreen(homeScreen);
-    }
-  };
-}
-
-const saveCustomerBtn = document.getElementById("saveCustomerBtn");
 
 const customerFormTitle = document.getElementById("customerFormTitle");
 const customerName = document.getElementById("customerName");
@@ -73,58 +15,6 @@ const customerPhone = document.getElementById("customerPhone");
 const customerOpening = document.getElementById("customerOpening");
 const openingBalContainer = document.getElementById("openingBalContainer");
 const customerDatePicker = document.getElementById("customerDatePicker");
-
-const addCustomerName = document.getElementById("addCustomerName");
-const addCustomerPhone = document.getElementById("addCustomerPhone");
-const addCustomerOpening = document.getElementById("addCustomerOpening");
-const addSaveCustomerBtn = document.getElementById("addSaveCustomerBtn");
-
-const backFromCustomerAdd = document.getElementById("backFromCustomerAdd");
-const addCustomerNameBox = document.getElementById("addCustomerNameBox");
-const addCustomerPhoneBox = document.getElementById("addCustomerPhoneBox");
-const addCustomerAvatarPreview = document.getElementById("addCustomerAvatarPreview");
-const addCustomerAvatarIcon = document.getElementById("addCustomerAvatarIcon");
-
-const addOpeningBalContainer =
-  document.getElementById("addOpeningBalContainer");
-
-if(addOpeningBalContainer){
-  addOpeningBalContainer.style.display = "none";
-}
-
-if(addCustomerPhone){
-  addCustomerPhone.addEventListener("focus", ()=>{
-    addCustomerPhoneBox?.classList.add("active");
-  });
-
-  addCustomerPhone.addEventListener("blur", ()=>{
-    addCustomerPhoneBox?.classList.remove("active");
-
-    if(addCustomerPhone.value.trim()){
-      addCustomerPhoneBox?.classList.add("has-value");
-    }else{
-      addCustomerPhoneBox?.classList.remove("has-value");
-    }
-  });
-}
-
-if(addCustomerName){
-  addCustomerName.addEventListener("focus", ()=>{
-    addCustomerNameBox?.classList.add("active");
-  });
-
-  addCustomerName.addEventListener("blur", ()=>{
-    addCustomerNameBox?.classList.remove("active");
-
-    if(addCustomerName.value.trim()){
-      addCustomerNameBox?.classList.add("has-value");
-    }else{
-      addCustomerNameBox?.classList.remove("has-value");
-    }
-  });
-
-  addCustomerName.addEventListener("input", updateAddCustomerValidation);
-}
 
 const backToHome = document.getElementById("backToHome");
 const ledgerAvatar = document.getElementById("ledgerAvatar");
@@ -159,68 +49,6 @@ function updateSaveBtnState(){
   }else{
     saveTxnBtn.classList.remove("active");
   }
-}
-
-function updateEditValidation(){
-  if(!editState.isEditMode || !editState.draft) return;
-
-  const name = customerName.value.trim();
-  const phone = customerPhone.value.trim();
-
-  const warning = document.getElementById("customerNameWarning");
-  const error = document.getElementById("customerNameError");
-
-  const changed =
-    name !== (editState.draft.name || "") ||
-    phone !== (editState.draft.phone || "") ||
-    (getCustomerUIState().avatarImage || "") !== (editState.draft.avatarImage || "");
-
-  const valid = name.length >= 3 && name.length <= 35;
-
-  if(name.length > 0 && !valid){
-    if(warning) warning.style.display = "block";
-    if(error) error.style.display = "block";
-  }else{
-    if(warning) warning.style.display = "none";
-    if(error) error.style.display = "none";
-  }
-
-  if(changed && valid){
-    saveCustomerBtn.classList.add("active");
-  }else{
-    saveCustomerBtn.classList.remove("active");
-  }
-}
-
-function setupEditFloatingUI(){
-  const fields = [
-    {
-      input: customerName,
-      box: document.getElementById("customerNameBox")
-    },
-    {
-      input: customerPhone,
-      box: document.getElementById("customerPhoneBox")
-    }
-  ];
-
-  fields.forEach(({input, box})=>{
-    if(!input || !box) return;
-
-    input.addEventListener("focus", ()=>{
-      box.classList.add("active");
-    });
-
-    input.addEventListener("blur", ()=>{
-      box.classList.remove("active");
-
-      if(input.value.trim()){
-        box.classList.add("has-value");
-      }else{
-        box.classList.remove("has-value");
-      }
-    });
-  });
 }
 
 function setupLedgerFloatingUI(){
@@ -273,12 +101,31 @@ const reportTotalGave = document.getElementById("reportTotalGave");
 const reportTotalGot = document.getElementById("reportTotalGot");
 
 /* INITIALIZE APP */
+function showCustomerSuccess(message){
+  const overlay = document.getElementById("customerSuccessOverlay");
+  const text = document.getElementById("customerSuccessText");
+
+  if(!overlay || !text) return;
+
+  text.textContent = message;
+  overlay.classList.add("show");
+
+  setTimeout(()=>{
+    overlay.classList.remove("show");
+  }, 2000);
+}
+function openAddCustomer(){
+  if(typeof resetCustomerFormUI === "function"){
+    resetCustomerFormUI();
+  }
+
+  isEditMode = false;
+  switchScreen(customerFormScreen);
+}
 window.addEventListener("DOMContentLoaded", async () => {
   await loadDashboard();
   updateTxnDateButton();
-  // initPremiumCustomerUI();
   setupLedgerFloatingUI();
-setupEditFloatingUI();
   setupLedgerKeyboardLift();
   history.replaceState({screen:"home"}, "");
   history.pushState({screen:"ready"}, "");
@@ -294,16 +141,6 @@ async function loadDashboard() {
   
   renderCustomerList(customers);
   updateSummary();
-
-if(homeLiveInterval){
-  clearInterval(homeLiveInterval);
-}
-
-homeLiveInterval = setInterval(()=>{
-  if(homeScreen.classList.contains("active")){
-    renderCustomerList(customers);
-  }
-}, 1000);
 }
 
 /* RENDER HOME CUSTOMER LIST */
@@ -349,33 +186,23 @@ const amountClass =
     const hours = Math.floor(mins / 60);
     const days = Math.floor(hours / 24);
 
-    const secs = Math.floor(diffMs / 1000);
-
-if (secs < 5) {
-  timeText = "এইমাত্র";
-} else if (secs < 60) {
-  timeText = `${formatBanglaNumber(secs)} সেকেন্ড`;
-} else if (mins < 60) {
-  timeText = `${formatBanglaNumber(mins)} মিনিট`;
-} else if (hours < 24) {
-  timeText = `${formatBanglaNumber(hours)} ঘণ্টা`;
-} else {
-  timeText = `${formatBanglaNumber(days)} দিন`;
-}
+    if (mins < 1) {
+      timeText = "এইমাত্র";
+    } else if (mins < 60) {
+      timeText = `${formatBanglaNumber(mins)} মিনিট`;
+    } else if (hours < 24) {
+      timeText = `${formatBanglaNumber(hours)} ঘণ্টা`;
+    } else {
+      timeText = `${formatBanglaNumber(days)} দিন`;
+    }
 
     div.innerHTML = `
       <div class="cust-left">
         <div class="avatar" style="background:${cust.avatarColor || '#d9e2f3'};">
-  ${
-    cust.avatarImage
-      ? `<img src="${cust.avatarImage}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">`
-      : (
-          cust.name.trim().length >= 2
-            ? cust.name.trim().substring(0,2).toUpperCase()
-            : cust.name.trim().charAt(0).toUpperCase()
-        )
-  }
-</div>
+          ${cust.name.trim().length >= 2
+  ? cust.name.trim().substring(0,2).toUpperCase()
+  : cust.name.trim().charAt(0).toUpperCase()}
+        </div>
 
         <div>
           <div class="cust-name">${cust.name}</div>
@@ -413,11 +240,9 @@ function startLiveTimer(cust, txns) {
   
   function updateTime() {
     let referenceTime = cust.createdAt || Date.now();
-    if (cust.lastActivityAt) {
-  referenceTime = cust.lastActivityAt;
-} else if (txns && txns.length > 0) {
-  referenceTime = txns[0].createdAt;
-}
+    if (txns && txns.length > 0) {
+      referenceTime = txns[0].createdAt; 
+    }
     
     const diffMs = Date.now() - referenceTime;
     const diffMins = Math.floor(diffMs / 60000);
@@ -426,32 +251,23 @@ function startLiveTimer(cust, txns) {
 
     if (!liveTimeCounter) return;
 
-    const diffSecs = Math.floor(diffMs / 1000);
-
-if (diffSecs < 5) {
-  liveTimeCounter.textContent = "(এইমাত্র)";
-} else if (diffSecs < 60) {
-  liveTimeCounter.textContent =
-    `(${formatBanglaNumber(diffSecs)} সেকেন্ড আগে)`;
-} else if (diffMins < 60) {
-  liveTimeCounter.textContent =
-    `(${formatBanglaNumber(diffMins)} মিনিট আগে)`;
-} else if (diffHours < 24) {
-  liveTimeCounter.textContent =
-    `(${formatBanglaNumber(diffHours)} ঘণ্টা আগে)`;
-} else {
-  liveTimeCounter.textContent =
-    `(${formatBanglaNumber(diffDays)} দিন আগে)`;
-}
+    if (diffMins < 1) {
+      liveTimeCounter.textContent = "(এইমাত্র)";
+    } else if (diffMins < 60) {
+      liveTimeCounter.textContent = `(${formatBanglaNumber(diffMins)} মিনিট আগে)`;
+    } else if (diffHours < 24) {
+      liveTimeCounter.textContent = `(${formatBanglaNumber(diffHours)} ঘণ্টা আগে)`;
+    } else {
+      liveTimeCounter.textContent = `(${formatBanglaNumber(diffDays)} দিন আগে)`;
+    }
   }
   
   updateTime();
-  liveInterval = setInterval(updateTime, 1000); 
+  liveInterval = setInterval(updateTime, 30000); 
 }
 
 /* LEDGER DETAILS VIEW */
 async function openLedger(customer) {
-closeTransientUI();
   currentCustomer = customer;
   switchScreen(ledgerScreen);
 history.pushState({screen:"ledger"}, "");
@@ -550,7 +366,7 @@ if(customer.avatarImage){
       reportTxnList.appendChild(row);
     }
 
-    const reversedTxns = [...txns];
+    const reversedTxns = [...txns].reverse();
     reversedTxns.forEach(txn => {
       const row = document.createElement("div");
       row.className = "report-row";
@@ -607,10 +423,9 @@ if (closeReportBtn) {
 
 if (optEdit) {
   optEdit.onclick = () => {
-    editState.isEditMode = true;
-window.__editModeActive = true;
+    isEditMode = true;
 
-editState.draft = {
+editDraft = {
   id: currentCustomer.id,
   userType: currentCustomer.userType || "customer",
   name: currentCustomer.name || "",
@@ -629,20 +444,32 @@ saveCustomerBtn.classList.remove("active");
     customerName.value = currentCustomer.name || "";
     customerPhone.value = currentCustomer.phone || "";
 
-window.onAvatarChanged = updateEditValidation;
+window.checkEditChanges = () => {
+  if(!isEditMode || !editDraft) return;
 
-customerName.oninput = window.onAvatarChanged;
-customerPhone.oninput = window.onAvatarChanged;
-    if(customerOpening){
-  customerOpening.value = currentCustomer.openingBalance || "";
-}
+  const changed =
+    customerName.value.trim() !== (editDraft.name || "") ||
+    customerPhone.value.trim() !== (editDraft.phone || "") ||
+    (customerPremiumState.avatarImage || "") !== (editDraft.avatarImage || "");
+
+  if(changed){
+    saveCustomerBtn.classList.add("active");
+  }else{
+    saveCustomerBtn.classList.remove("active");
+  }
+};
+
+customerName.oninput = window.checkEditChanges;
+customerPhone.oninput = window.checkEditChanges;
+    customerOpening.value = currentCustomer.openingBalance || "";
 
     document.getElementById("customerNameBox").classList.add("has-value");
     document.getElementById("customerPhoneBox").classList.add("has-value");
+    document.getElementById("openingBalContainer").classList.add("has-value");
 
-    getCustomerUIState().userType = currentCustomer.userType || "customer";
-    getCustomerUIState().avatarImage = currentCustomer.avatarImage || "";
-    getCustomerUIState().attachedPhoto = currentCustomer.attachedPhoto || "";
+    customerPremiumState.userType = currentCustomer.userType || "customer";
+    customerPremiumState.avatarImage = currentCustomer.avatarImage || "";
+    customerPremiumState.attachedPhoto = currentCustomer.attachedPhoto || "";
 
     const avatarPreviewEl = document.getElementById("customerAvatarPreview");
 const avatarIconEl = document.getElementById("customerAvatarIcon");
@@ -654,9 +481,19 @@ if(currentCustomer.avatarImage){
 }else{
   avatarPreviewEl.src = "";
   avatarPreviewEl.style.display = "none";
-  avatarIconEl.src = "assets/svg/avatar-user.svg";
+  avatarIconEl.src = "assets/svg/pen.svg";
   avatarIconEl.style.display = "block";
 }
+
+    document.getElementById("customerTypeCustomer").classList.toggle(
+      "active",
+      customerPremiumState.userType === "customer"
+    );
+
+    document.getElementById("customerTypeSupplier").classList.toggle(
+      "active",
+      customerPremiumState.userType === "supplier"
+    );
 
     if (openingBalContainer) openingBalContainer.style.display = "none";
 
@@ -737,22 +574,17 @@ if (saveCustomerBtn) {
     
     const name = customerName.value.trim();
     const phone = customerPhone.value.trim();
-    const opening = customerOpening
-  ? (parseFloat(customerOpening.value) || 0)
-  : 0;
+    const opening = parseFloat(customerOpening.value) || 0;
 
     if (!name) {
       alert("অনুগ্রহ করে গ্রাহকের নাম লিখুন!");
       return;
     }
 
-    if (editState.isEditMode) {
-  if(name.length < 3 || name.length > 35){
-    return;
-  }
-  editState.draft.name = name;
-  editState.draft.phone = phone;
-  editState.draft.avatarImage = getCustomerUIState().avatarImage || "";
+    if (isEditMode && currentCustomer) {
+  editDraft.name = name;
+  editDraft.phone = phone;
+  editDraft.avatarImage = customerPremiumState.avatarImage || "";
 
   showEditConfirmScreen();
   return;
@@ -780,11 +612,11 @@ const newCust = {
   createdAt: Date.now(),
   avatarColor: randomColor,
 
-  userType: getCustomerUIState().userType || "customer",
-  avatarImage: getCustomerUIState().avatarImage || "",
-  attachedPhoto: getCustomerUIState().attachedPhoto || "",
-  selectedDate: getCustomerUIState().selectedDate
-    ? getCustomerUIState().selectedDate.getTime()
+  userType: customerPremiumState.userType || "customer",
+  avatarImage: customerPremiumState.avatarImage || "",
+  attachedPhoto: customerPremiumState.attachedPhoto || "",
+  selectedDate: customerPremiumState.selectedDate
+    ? customerPremiumState.selectedDate.getTime()
     : Date.now()
 };
       
@@ -797,10 +629,10 @@ customerName.value = "";
 customerPhone.value = "";
 customerOpening.value = "";
 
-getCustomerUIState().avatarImage = "";
-getCustomerUIState().attachedPhoto = "";
-getCustomerUIState().userType = "customer";
-getCustomerUIState().selectedDate = new Date();
+customerPremiumState.avatarImage = "";
+customerPremiumState.attachedPhoto = "";
+customerPremiumState.userType = "customer";
+customerPremiumState.selectedDate = new Date();
 
 document.getElementById("customerAvatarPreview").style.display = "none";
 document.getElementById("customerAvatarIcon").style.display = "block";
@@ -811,126 +643,6 @@ setTimeout(async ()=>{
   await openLedger(saved || newCust);
 }, 2100);
     }
-  };
-}
-
-function updateAddCustomerValidation(){
-  if(!addCustomerName || !addSaveCustomerBtn) return;
-
-  const name = addCustomerName.value.trim();
-  const warning = document.getElementById("addCustomerNameWarning");
-  const error = document.getElementById("addCustomerNameError");
-  const openingBox = document.getElementById("addOpeningBalContainer");
-
-  if(name.length >= 3 && name.length <= 35){
-    addSaveCustomerBtn.classList.add("active");
-
-    if(warning) warning.style.display = "none";
-    if(error) error.style.display = "none";
-
-    if(openingBox) openingBox.style.display = "flex";
-  }else{
-    addSaveCustomerBtn.classList.remove("active");
-
-    if(name.length > 0){
-      if(warning) warning.style.display = "block";
-      if(error) error.style.display = "block";
-    }else{
-      if(warning) warning.style.display = "none";
-      if(error) error.style.display = "none";
-    }
-
-    if(openingBox) openingBox.style.display = "none";
-  }
-}
-
-if (addSaveCustomerBtn) {
-  addSaveCustomerBtn.onclick = async (e) => {
-    if (e) e.preventDefault();
-
-    const name = addCustomerName.value.trim();
-    const phone = addCustomerPhone.value.trim();
-    const opening = parseFloat(addCustomerOpening.value) || 0;
-
-    if (name.length < 3 || name.length > 35) {
-      return;
-    }
-
-    const avatarColors = ["#c8e6c9", "#f3e5ab", "#d9e2f3", "#f6d6dc"];
-    const lastColor = customers.length
-      ? customers[customers.length - 1].avatarColor
-      : null;
-
-    const availableColors = avatarColors.filter(
-      color => color !== lastColor
-    );
-
-    const randomColor =
-      availableColors[
-        Math.floor(Math.random() * availableColors.length)
-      ];
-
-    const newCust = {
-      id: Date.now().toString(),
-      name,
-      phone,
-      openingBalance: opening,
-      createdAt: Date.now(),
-      avatarColor: randomColor,
-      userType: "customer"
-    };
-
-    await addCustomer(newCust);
-    await loadDashboard();
-
-    switchScreen(homeScreen);
-  };
-}
-
-function resetCustomerAddUI(){
-  addCustomerName.value = "";
-  addCustomerPhone.value = "";
-  addCustomerOpening.value = "";
-
-  addCustomerState.avatarImage = "";
-  addCustomerState.userType = "customer";
-
-  addCustomerNameBox?.classList.remove("active","has-value");
-  addCustomerPhoneBox?.classList.remove("active","has-value");
-
-  if(addOpeningBalContainer){
-    addOpeningBalContainer.style.display = "none";
-    addOpeningBalContainer.classList.remove("active","has-value");
-  }
-
-  if(addCustomerAvatarPreview){
-    addCustomerAvatarPreview.src = "";
-    addCustomerAvatarPreview.style.display = "none";
-  }
-
-  if(addCustomerAvatarIcon){
-    addCustomerAvatarIcon.style.display = "block";
-  }
-
-  document.getElementById("addCustomerNameWarning").style.display = "none";
-  document.getElementById("addCustomerNameError").style.display = "none";
-
-  addSaveCustomerBtn?.classList.remove("active");
-}
-
-if(backFromCustomerAdd){
-  backFromCustomerAdd.onclick = async ()=>{
-    resetCustomerAddUI();
-
-    await loadDashboard();
-    switchScreen(homeScreen);
-  };
-}
-
-if (openCustomerModal) {
-  openCustomerModal.onclick = () => {
-    switchScreen(customerAddScreen);
-    history.pushState({screen:"add"}, "");
   };
 }
 
@@ -986,19 +698,6 @@ if (txnDate) {
 }
 
 window.onpopstate = async function () {
-  const confirmScreen = document.getElementById("editConfirmScreen");
-
-  if(confirmScreen && confirmScreen.classList.contains("show")){
-    confirmScreen.classList.remove("show");
-
-    editState.isEditMode = false;
-    editState.draft = null;
-    window.onAvatarChanged = null;
-    window.__editModeActive = false;
-
-    return;
-  }
-
   const handled = await handleUniversalBack();
 
   if(handled){
@@ -1035,16 +734,6 @@ function hideKeyboard(){
 function closeTransientUI(){
   hideCalculator();
   hideKeyboard();
-
-  if(txnGive) txnGive.value = "";
-  if(txnReceive) txnReceive.value = "";
-  if(txnNote) txnNote.value = "";
-
-  document.getElementById("txnGiveBox")?.classList.remove("active","has-value");
-  document.getElementById("txnReceiveBox")?.classList.remove("active","has-value");
-  document.getElementById("txnNoteBox")?.classList.remove("active","has-value");
-
-  updateSaveBtnState();
 }
 
 function hasTransientUIOpen(){
@@ -1055,45 +744,34 @@ function hasTransientUIOpen(){
 }
 
 async function handleUniversalBack(){
-
   if(hasTransientUIOpen()){
+    closeTransientUI();
 
-  if(inlineCalculator.classList.contains("show")){
-    hideCalculator();
-    return true;
-  }
-
-  if(isTextInput(document.activeElement)){
-    document.activeElement.blur();
-    return true;
-  }
-}
-
-  if(customerAddScreen.classList.contains("active")){
-    resetCustomerAddUI();
-    currentCustomer = null;
-    await loadDashboard();
-    switchScreen(homeScreen);
-    return true;
-  }
-
-  if(customerFormScreen.classList.contains("active")){
-    editState.isEditMode = false;
-    editState.draft = null;
-    window.onAvatarChanged = null;
-    window.__editModeActive = false;
-
-    const updated = customers.find(c => c.id === currentCustomer?.id);
-
-    if(updated || currentCustomer){
-      await openLedger(updated || currentCustomer);
+    if(ledgerScreen.classList.contains("active")){
+      history.replaceState({screen:"ledger"}, "");
+    }else if(customerFormScreen.classList.contains("active")){
+      history.replaceState({screen:"form"}, "");
     }else{
-      await loadDashboard();
-      switchScreen(homeScreen);
+      history.replaceState({screen:"home"}, "");
     }
 
     return true;
   }
+
+  if(customerFormScreen.classList.contains("active")){
+  if(window.resetCustomerFormUI){
+    resetCustomerFormUI();
+  }
+
+  if(customerFormTitle.textContent === "নতুন কাস্টমার/সাপ্লায়ার"){
+    currentCustomer = null;
+    await loadDashboard();
+    switchScreen(homeScreen);
+  }else{
+    switchScreen(ledgerScreen);
+  }
+  return true;
+}
 
   if(ledgerScreen.classList.contains("active")){
     if(liveInterval) clearInterval(liveInterval);
@@ -1218,15 +896,15 @@ function showEditConfirmScreen(){
   const phoneEl = document.getElementById("editConfirmPhone");
 
   title.textContent =
-  editState.draft.userType === "supplier"
+  editDraft.userType === "supplier"
       ? "সাপ্লায়ার এডিট"
       : "কাস্টমার এডিট";
 
-  nameEl.textContent = editState.draft.name || "";
-  phoneEl.textContent = editState.draft.phone || "";
+  nameEl.textContent = editDraft.name || "";
+  phoneEl.textContent = editDraft.phone || "";
 
-  if(editState.draft.avatarImage){
-    avatar.src = editState.draft.avatarImage;
+  if(editDraft.avatarImage){
+    avatar.src = editDraft.avatarImage;
     avatar.style.display = "block";
     defaultAvatar.style.display = "none";
   }else{
@@ -1243,22 +921,16 @@ document.getElementById("backFromEditConfirm").onclick = ()=>{
 };
 
 document.getElementById("confirmEditBtn").onclick = async ()=>{
-  if(!currentCustomer || !editState.draft) return;
+  if(!currentCustomer || !editDraft) return;
 
-  document.getElementById("confirmEditBtn").disabled = true;
-
-  const savedDraft = {...editState.draft};
-
-  currentCustomer.name = savedDraft.name;
-  currentCustomer.phone = savedDraft.phone;
-  currentCustomer.avatarImage = savedDraft.avatarImage || "";
-  currentCustomer.userType = savedDraft.userType || "customer";
+  currentCustomer.name = editDraft.name;
+  currentCustomer.phone = editDraft.phone;
+  currentCustomer.avatarImage = editDraft.avatarImage || "";
+  currentCustomer.userType = editDraft.userType || "customer";
 
   await updateCustomer(currentCustomer);
-  await loadDashboard();
 
   document.getElementById("editConfirmScreen").classList.remove("show");
-  switchScreen(homeScreen);
 
   showCustomerSuccess(
     currentCustomer.userType === "supplier"
@@ -1266,16 +938,13 @@ document.getElementById("confirmEditBtn").onclick = async ()=>{
       : "কাস্টমারের তথ্য আপডেট করা হয়েছে।"
   );
 
-  setTimeout(()=>{
-    document.getElementById("confirmEditBtn").disabled = false;
+  await loadDashboard();
 
-    editState.isEditMode = false;
-    editState.draft = null;
-    window.onAvatarChanged = null;
-    window.__editModeActive = false;
+  const updated = customers.find(c => c.id === currentCustomer.id);
 
-    currentCustomer = null;
-  }, 1900);
+  setTimeout(async ()=>{
+    await openLedger(updated || currentCustomer);
+  }, 2100);
 };
 
 function setupLedgerKeyboardLift(){

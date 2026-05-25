@@ -10,10 +10,11 @@
   <link rel="manifest" href="manifest.json" />
 
   <link rel="stylesheet" href="style.css" />
-  <link rel="stylesheet" href="home.css" />
-  <link rel="stylesheet" href="ledger.css" />
-  <link rel="stylesheet" href="form.css" />
-  <link rel="stylesheet" href="global-ui.css" />
+<link rel="stylesheet" href="home.css" />
+<link rel="stylesheet" href="addcustomer.css" />
+<link rel="stylesheet" href="editcustomer.css" />
+<link rel="stylesheet" href="ledger.css" />
+<link rel="stylesheet" href="report.css" />
 
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;500;600;700;800&display=swap"
         rel="stylesheet">
@@ -186,25 +187,44 @@
     <h2 id="customerFormTitle">নতুন কাস্টমার/সাপ্লায়ার</h2>
   </header>
 
-  <div class="premium-customer-form-body edit-clean-layout">
+  <div class="premium-customer-form-body">
 
-    <div class="customer-type-row edit-avatar-only">
+    <div class="customer-type-row">
 
-      <div class="avatar-upload-wrap edit-avatar-wrap">
-        <div id="customerAvatarCircle" class="customer-avatar-circle edit-avatar-circle">
+      <div class="avatar-upload-wrap">
+        <div id="customerAvatarCircle" class="customer-avatar-circle">
           <img id="customerAvatarIcon" src="assets/svg/avatar-user.svg" class="avatar-user-icon" alt="User">
           <img id="customerAvatarPreview" class="customer-avatar-preview" />
         </div>
 
         <button id="openAvatarPickerBtn" class="avatar-camera-btn">
-          <img src="assets/svg/mini-camera.svg" class="mini-camera-icon" alt="Camera">
-        </button>
+  <img src="assets/svg/mini-camera.svg" class="mini-camera-icon" alt="Camera">
+</button>
 
         <input type="file" id="customerCameraInput" accept="image/*" capture="environment" hidden>
         <input type="file" id="customerGalleryInput" accept="image/*" hidden>
       </div>
 
+      <div class="customer-type-toggle">
+
+        <button id="customerTypeCustomer" class="type-toggle-btn active" data-type="customer">
+          <span class="type-radio-dot"></span>
+          কাস্টমার
+        </button>
+
+        <button id="customerTypeSupplier" class="type-toggle-btn" data-type="supplier">
+          <span class="type-radio-dot"></span>
+          সাপ্লায়ার
+        </button>
+
+      </div>
+
     </div>
+
+    <button id="importContactBtn" class="import-contact-btn">
+  <img src="assets/svg/address-book.svg" class="address-book-icon" alt="Contacts">
+  ফোনবুক থেকে যোগ করি
+</button>
 
     <div class="premium-input-box" id="customerNameBox">
       <div class="premium-input-icon" id="customerNameIcon">
@@ -231,11 +251,35 @@
       <input id="customerPhone" type="tel" autocomplete="off">
     </div>
 
+    <div class="premium-input-box" id="openingBalContainer">
+      <img src="assets/svg/taka.svg" class="taka-icon-svg" alt="Taka">
+      <label id="customerOpeningLabel" class="floating-label">পূর্বের বাকি (জের)</label>
+      <input id="customerOpening" type="text" inputmode="none" readonly class="money-input">
+    </div>
+
+    <div class="customer-extra-actions">
+
+      <button id="customerDateBtn" class="customer-mini-pill">
+  <img src="assets/svg/calendar.svg" class="calendar-icon" alt="Calendar">
+  <span id="customerDateText">আজ</span>
+</button>
+
+      <input type="date" id="customerDatePicker" hidden>
+
+      <button id="customerAttachPhotoBtn" class="customer-mini-pill">
+  <img src="assets/svg/attach-camera.svg" class="attach-camera-icon" alt="Camera">
+  ছবি
+</button>
+
+      <input type="file" id="customerAttachPhotoInput" accept="image/*" capture="environment" hidden>
+
+    </div>
+
   </div>
 
   <div id="customerSaveFooter" class="premium-save-footer">
     <button id="saveCustomerBtn" class="premium-save-btn">
-      পরবর্তী
+      নিশ্চিত
     </button>
   </div>
 
@@ -311,95 +355,6 @@
   <i class="fa-regular fa-image"></i>
   গ্যালারি থেকে নিন
 </button>
-  </div>
-
-</section>
-
-<section id="customerAddScreen" class="screen">
-
-  <header class="simple-header premium-customer-header">
-    <button id="backFromCustomerAdd" class="back-btn">
-      <img src="assets/svg/back-arrow.svg" class="back-icon" alt="Back">
-    </button>
-
-    <h2>নতুন কাস্টমার/সাপ্লায়ার</h2>
-  </header>
-
-  <div class="premium-customer-form-body">
-
-    <div class="customer-type-row">
-
-      <div class="avatar-upload-wrap">
-        <div class="customer-avatar-circle">
-          <img id="addCustomerAvatarIcon" src="assets/svg/avatar-user.svg" class="avatar-user-icon" alt="User">
-          <img id="addCustomerAvatarPreview" class="customer-avatar-preview" />
-        </div>
-
-        <button id="addOpenAvatarPickerBtn" class="avatar-camera-btn">
-          <img src="assets/svg/mini-camera.svg" class="mini-camera-icon" alt="Camera">
-        </button>
-
-        <input type="file" id="addCustomerCameraInput" accept="image/*" capture="environment" hidden>
-        <input type="file" id="addCustomerGalleryInput" accept="image/*" hidden>
-      </div>
-
-      <div class="customer-type-toggle">
-        <button id="addCustomerTypeCustomer" class="type-toggle-btn active">
-          <span class="type-radio-dot"></span>
-          কাস্টমার
-        </button>
-
-        <button id="addCustomerTypeSupplier" class="type-toggle-btn">
-          <span class="type-radio-dot"></span>
-          সাপ্লায়ার
-        </button>
-      </div>
-
-    </div>
-
-    <button id="addImportContactBtn" class="import-contact-btn">
-      <img src="assets/svg/address-book.svg" class="address-book-icon" alt="Contacts">
-      ফোনবুক থেকে যোগ করি
-    </button>
-
-    <div class="premium-input-box" id="addCustomerNameBox">
-      <div class="premium-input-icon">
-        <img src="assets/svg/input-user.svg" class="input-user-icon" alt="User">
-      </div>
-
-      <label class="floating-label">নাম</label>
-      <input id="addCustomerName" type="text" autocomplete="off">
-
-      <div id="addCustomerNameWarning" style="display:none;margin-right:16px;">
-        <img src="assets/svg/error-alert.svg" class="error-alert-icon" alt="">
-      </div>
-    </div>
-
-    <div id="addCustomerNameError" style="display:none;color:#b91c1c;font-size:13px;margin:-10px 0 14px 4px;">
-      নাম ৩ থেকে ৩৫ অক্ষরের মধ্যে হতে হবে।
-    </div>
-
-    <div class="premium-input-box" id="addCustomerPhoneBox">
-      <div class="premium-input-icon">
-        <img src="assets/svg/phone.svg" class="phone-icon" alt="Phone">
-      </div>
-
-      <label class="floating-label">মোবাইল নম্বর</label>
-      <input id="addCustomerPhone" type="tel" autocomplete="off">
-    </div>
-
-    <div class="premium-input-box" id="addOpeningBalContainer">
-      <img src="assets/svg/taka.svg" class="taka-icon-svg" alt="Taka">
-      <label class="floating-label">পূর্বের বাকি (জের)</label>
-      <input id="addCustomerOpening" type="text" inputmode="none" readonly class="money-input">
-    </div>
-
-  </div>
-
-  <div class="premium-save-footer">
-    <button id="addSaveCustomerBtn" class="premium-save-btn">
-      নিশ্চিত
-    </button>
   </div>
 
 </section>
@@ -603,8 +558,15 @@
 
 <script src="db.js"></script>
 <script src="utils.js"></script>
-<script src="global-ui.js"></script>
 <script src="app.js"></script>
+
+<script src="home.js"></script>
+<script src="addcustomer.js"></script>
+<script src="editcustomer.js"></script>
+<script src="ledger.js"></script>
+<script src="report.js"></script>
+
+<script src="global-ui.js"></script>
 
 </body>
 </html>
