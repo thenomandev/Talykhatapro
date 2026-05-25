@@ -151,3 +151,88 @@ document.addEventListener("focusin",(e)=>{
     hideCalculator();
   }
 });
+
+if (window.visualViewport) {
+  window.visualViewport.addEventListener("resize", () => {
+    const footer = document.getElementById("customerSaveFooter");
+    const formScreen = document.getElementById("customerFormScreen");
+
+    if (!footer || !formScreen.classList.contains("active")) return;
+
+    const vh = window.visualViewport.height;
+    const full = window.innerHeight;
+
+    if (vh < full * 0.85) {
+      footer.style.bottom =
+        (full - window.visualViewport.offsetTop - vh) + "px";
+    } else {
+      footer.style.bottom = "0px";
+    }
+  });
+}
+
+function setupLedgerKeyboardLift(){
+  const footer = document.querySelector(".ledger-save-footer");
+  if(!footer) return;
+
+  function resetFooter(){
+    footer.style.transform = "translateX(-50%)";
+  }
+
+  function raiseFooterForCalculator(){
+    setTimeout(() => {
+      const calc = document.getElementById("inlineCalculator");
+      const calcHeight = calc && calc.offsetHeight > 0 ? calc.offsetHeight : 280;
+      footer.style.transform = `translateX(-50%) translateY(-${calcHeight}px)`;
+    }, 50);
+  }
+
+  function updateKeyboardFooter(){
+    if(!window.visualViewport){
+      resetFooter();
+      return;
+    }
+
+    const keyboardHeight =
+      window.innerHeight - window.visualViewport.height;
+
+    if(document.activeElement === txnNote && keyboardHeight > 120){
+      footer.style.transform =
+        `translateX(-50%) translateY(-${keyboardHeight}px)`;
+    }else{
+      resetFooter();
+    }
+  }
+
+  if(txnGive){
+    txnGive.addEventListener("focus", raiseFooterForCalculator);
+  }
+
+  if(txnReceive){
+    txnReceive.addEventListener("focus", raiseFooterForCalculator);
+  }
+
+  if(txnNote){
+    txnNote.addEventListener("focus", updateKeyboardFooter);
+
+    txnNote.addEventListener("blur", ()=>{
+      setTimeout(resetFooter,150);
+    });
+  }
+
+  if(window.visualViewport){
+    window.visualViewport.addEventListener(
+      "resize",
+      updateKeyboardFooter
+    );
+  }
+
+  document.addEventListener("click",(e)=>{
+    if(
+      !e.target.closest(".transaction-form") &&
+      !e.target.closest(".inline-calculator")
+    ){
+      resetFooter();
+    }
+  });
+}
