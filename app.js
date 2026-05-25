@@ -1245,6 +1245,8 @@ document.getElementById("backFromEditConfirm").onclick = ()=>{
 document.getElementById("confirmEditBtn").onclick = async ()=>{
   if(!currentCustomer || !editState.draft) return;
 
+  document.getElementById("confirmEditBtn").disabled = true;
+
   const savedDraft = {...editState.draft};
 
   currentCustomer.name = savedDraft.name;
@@ -1255,16 +1257,16 @@ document.getElementById("confirmEditBtn").onclick = async ()=>{
   await updateCustomer(currentCustomer);
   await loadDashboard();
 
+  document.getElementById("editConfirmScreen").classList.remove("show");
+  switchScreen(homeScreen);
+
   showCustomerSuccess(
     currentCustomer.userType === "supplier"
       ? "সাপ্লায়ারের তথ্য আপডেট করা হয়েছে।"
       : "কাস্টমারের তথ্য আপডেট করা হয়েছে।"
   );
 
-  document.getElementById("confirmEditBtn").disabled = true;
-document.getElementById("editConfirmScreen").classList.remove("show");
-
-setTimeout(()=>{
+  setTimeout(()=>{
     document.getElementById("confirmEditBtn").disabled = false;
 
     editState.isEditMode = false;
@@ -1273,8 +1275,7 @@ setTimeout(()=>{
     window.__editModeActive = false;
 
     currentCustomer = null;
-    switchScreen(homeScreen);
-  }, 2100);
+  }, 1900);
 };
 
 function setupLedgerKeyboardLift(){
