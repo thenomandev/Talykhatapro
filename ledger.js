@@ -220,3 +220,129 @@ async function openLedger(customer) {
     }
   }
 }
+
+if (deleteCustomerBtn) {
+  deleteCustomerBtn.onclick = (e) => {
+    e.stopPropagation();
+
+    if (threeDotMenu) {
+      threeDotMenu.classList.toggle("active");
+    }
+  };
+}
+
+document.addEventListener("click", () => {
+  if (threeDotMenu) {
+    threeDotMenu.classList.remove("active");
+  }
+});
+
+if (optTagada) {
+  optTagada.onclick = () => {
+    alert(`"${currentCustomer.name}" এর মোবাইলে তাগাদা মেসেজ পাঠানো হয়েছে!`);
+  };
+}
+
+if (optReport) {
+  optReport.onclick = () => {
+    if (reportViewContainer) {
+      reportViewContainer.style.display = "flex";
+    }
+  };
+}
+
+if (closeReportBtn) {
+  closeReportBtn.onclick = () => {
+    if (reportViewContainer) {
+      reportViewContainer.style.display = "none";
+    }
+  };
+}
+
+if (optDelete) {
+  optDelete.onclick = async () => {
+    if (
+      confirm(
+        `আপনি কি নিশ্চিতভাবে "${currentCustomer.name}" কে সম্পূর্ণ ডিলিট করতে চান?`
+      )
+    ) {
+      if (liveInterval) {
+        clearInterval(liveInterval);
+      }
+
+      await deleteCustomer(currentCustomer.id);
+
+      currentCustomer = null;
+
+      await loadDashboard();
+
+      switchScreen(homeScreen);
+    }
+  };
+}
+
+if (saveTxnBtn) {
+  saveTxnBtn.onclick = async () => {
+    const giveVal = parseFloat(txnGive.value) || 0;
+    const recVal = parseFloat(txnReceive.value) || 0;
+    const noteVal = txnNote.value.trim();
+
+    if (giveVal === 0 && recVal === 0) {
+      alert("অনুগ্রহ করে সঠিক অংক লিখুন!");
+      return;
+    }
+
+    const newTxn = {
+      id: Date.now().toString(),
+      customerId: currentCustomer.id,
+      give: giveVal,
+      receive: recVal,
+      note: noteVal,
+      createdAt: selectedTxnDate.getTime()
+    };
+
+    await addTransaction(newTxn);
+
+    currentCustomer.lastActivityAt = Date.now();
+    await updateCustomer(currentCustomer);
+
+    txnGive.value = "";
+    txnReceive.value = "";
+    txnNote.value = "";
+
+    document
+      .getElementById("txnGiveBox")
+      ?.classList.remove("active", "has-value");
+
+    document
+      .getElementById("txnReceiveBox")
+      ?.classList.remove("active", "has-value");
+
+    document
+      .getElementById("txnNoteBox")
+      ?.classList.remove("active", "has-value");
+
+    const ledgerFooter =
+      document.querySelector(".ledger-save-footer");
+
+    if (ledgerFooter) {
+      ledgerFooter.style.transform = "translateX(-50%)";
+    }
+
+    updateSaveBtnState();
+
+    selectedTxnDate = new Date();
+    updateTxnDateButton();
+
+    await loadDashboard();
+
+    const updatedCust = customers.find(
+      c => c.id === currentCustomer.id
+    );
+
+    if (updatedCust) {
+      await openLedger(updatedCust);
+    }
+  };
+}
+
