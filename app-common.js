@@ -237,7 +237,6 @@ function setupLedgerKeyboardLift(){
   });
 }
 
-
 async function handleUniversalBack(){
   if(hasTransientUIOpen()){
     closeTransientUI();
@@ -272,19 +271,62 @@ async function handleUniversalBack(){
   if(ledgerScreen.classList.contains("active")){
     if(liveInterval) clearInterval(liveInterval);
 
-    txnGive.value = "";
-txnReceive.value = "";
-txnNote.value = "";
+    await loadDashboard();
+    switchScreen(homeScreen);
 
-updateSaveBtnState();
-hideCalculator();
-
-await loadDashboard();
-switchScreen(homeScreen);
-
-return true;
+    return true;
   }
 
   return false;
 }
 
+function updateSaveBtnState(){
+  if(!saveTxnBtn) return;
+
+  const giveVal = (parseFloat(txnGive?.value) || 0);
+  const receiveVal = (parseFloat(txnReceive?.value) || 0);
+
+  const hasAmount = giveVal > 0 || receiveVal > 0;
+
+  if(hasAmount){
+    saveTxnBtn.classList.add("active");
+  }else{
+    saveTxnBtn.classList.remove("active");
+  }
+}
+
+function setupLedgerFloatingUI(){
+  const fields = [
+    { input: txnGive, box: document.getElementById("txnGiveBox") },
+    { input: txnReceive, box: document.getElementById("txnReceiveBox") },
+    { input: txnNote, box: document.getElementById("txnNoteBox") }
+  ];
+
+  fields.forEach(({input, box})=>{
+    if(!input || !box) return;
+
+    input.addEventListener("focus", ()=>{
+      box.classList.add("active");
+    });
+
+    input.addEventListener("blur", ()=>{
+      box.classList.remove("active");
+
+      if(input.value.trim()){
+        box.classList.add("has-value");
+      }else{
+        box.classList.remove("has-value");
+      }
+    });
+
+    input.addEventListener("input", ()=>{
+      if(input.value.trim()){
+        box.classList.add("has-value");
+      }else{
+        box.classList.remove("has-value");
+      }
+
+      updateSaveBtnState();
+    });
+  });
+}

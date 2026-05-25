@@ -47,56 +47,6 @@ const txnNote = document.getElementById("txnNote");
 const txnDateBtn = document.getElementById("txnDateBtn");
 const txnDate = document.getElementById("txnDate");
 const saveTxnBtn = document.getElementById("saveTxnBtn");
-function updateSaveBtnState(){
-  if(!saveTxnBtn) return;
-
-  const giveVal = (parseFloat(txnGive?.value) || 0);
-  const receiveVal = (parseFloat(txnReceive?.value) || 0);
-
-  const hasAmount = giveVal > 0 || receiveVal > 0;
-
-  if(hasAmount){
-    saveTxnBtn.classList.add("active");
-  }else{
-    saveTxnBtn.classList.remove("active");
-  }
-}
-
-function setupLedgerFloatingUI(){
-  const fields = [
-    { input: txnGive, box: document.getElementById("txnGiveBox") },
-    { input: txnReceive, box: document.getElementById("txnReceiveBox") },
-    { input: txnNote, box: document.getElementById("txnNoteBox") }
-  ];
-
-  fields.forEach(({input, box})=>{
-    if(!input || !box) return;
-
-    input.addEventListener("focus", ()=>{
-      box.classList.add("active");
-    });
-
-    input.addEventListener("blur", ()=>{
-      box.classList.remove("active");
-
-      if(input.value.trim()){
-        box.classList.add("has-value");
-      }else{
-        box.classList.remove("has-value");
-      }
-    });
-
-    input.addEventListener("input", ()=>{
-      if(input.value.trim()){
-        box.classList.add("has-value");
-      }else{
-        box.classList.remove("has-value");
-      }
-
-      updateSaveBtnState();
-    });
-  });
-}
 
 const moneyInputs = document.querySelectorAll(".money-input");
 const calcKeys = document.querySelectorAll(".calc-key");

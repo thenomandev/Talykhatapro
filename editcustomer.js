@@ -111,8 +111,6 @@ function showEditConfirmScreen(){
 
 document.getElementById("backFromEditConfirm").onclick = ()=>{
   document.getElementById("editConfirmScreen").classList.remove("show");
-  isEditMode = false;
-  editDraft = null;
 };
 
 document.getElementById("confirmEditBtn").onclick = async ()=>{
@@ -126,9 +124,6 @@ document.getElementById("confirmEditBtn").onclick = async ()=>{
   await updateCustomer(currentCustomer);
 
   document.getElementById("editConfirmScreen").classList.remove("show");
-
-isEditMode = false;
-editDraft = null;
 
   showCustomerSuccess(
     currentCustomer.userType === "supplier"
